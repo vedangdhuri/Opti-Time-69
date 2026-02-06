@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content1 %}
+{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+  <div class="card shadow-lg border-0 rounded-4 bg-light bg-opacity-75">
+    <div class="card-body">
+      <h2 class="text-center mb-4 text-primary fw-bold" style="font-family: 'Orbitron', sans-serif;">
+        💬 All Feedback
+      </h2>
+
+      <!-- Feedback Table -->
+      <div class="table-responsive">
+        <table class="table table-bordered table-hover align-middle rounded overflow-hidden">
+          <thead class="table-dark text-center">
+            <tr>
+              <th scope="col">👤 User</th>
+              <th scope="col">📝 Message</th>
+              <th scope="col">📅 Submitted On</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for fb in feedbacks %}
+            <tr>
+              <td class="fw-semibold">{{ fb.user.name }}</td>
+              <td class="text-wrap">{{ fb.message }}</td>
+              <td>{{ fb.created_at|date:"d M Y, h:i A" }}</td>
+            </tr>
+            {% empty %}
+            <tr>
+              <td colspan="3" class="text-center text-muted py-4">
+                🚫 No feedback submitted yet.
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="card-footer text-center text-muted small">
+      Showing {{ feedbacks|length }} feedback entries
+    </div>
+  </div>
+</div>
+{% endblock %}

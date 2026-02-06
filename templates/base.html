@@ -1,0 +1,342 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{% block title %}Opti-Time{% endblock %}</title>
+
+    <!-- Bootstrap CSS -->
+    <link
+        href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+        rel="stylesheet"
+    >
+    <!-- Custom CSS -->
+    <link href="{% static 'css/style.css' %}" rel="stylesheet">
+</head>
+
+<!-- Padding to prevent footer overlap -->
+<body class="bg-light pb-5">
+
+<!-- ===================== NAVBAR ===================== -->
+<nav class="navbar navbar-expand-lg navbar-light fixed-top">
+  <div class="container-fluid px-lg-5">
+
+    <!-- Logo + Institute Name -->
+    <a class="navbar-brand d-flex align-items-center gap-2" href="/">
+      <img
+        src="{% static 'images/college_logo.png' %}"
+        alt="College Logo"
+        height="50"
+      >
+      <div class="d-none d-md-block lh-1">
+        <span class="d-block text-dark fw-bold" style="font-size: 1.1rem;">
+          Yashwantrao Bhonsale
+        </span>
+        <small class="text-secondary" style="font-size: 0.85rem;">
+          Institute of Technology
+        </small>
+      </div>
+    </a>
+
+    <!-- Mobile Toggler -->
+    <button class="navbar-toggler border-0" type="button"
+            data-bs-toggle="collapse"
+            data-bs-target="#bankNav">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <!-- Navbar Content -->
+    <div class="collapse navbar-collapse" id="bankNav">
+
+      <!-- LEFT MENU -->
+      <ul class="navbar-nav ms-auto align-items-lg-center gap-lg-1">
+
+        <li class="nav-item">
+          <a class="nav-link px-3" href="/">Home</a>
+        </li>
+        {% if user.is_authenticated %}
+          <li class="nav-item">
+            <a class="nav-link px-3" href="{% url 'dashboard' %}">
+              Dashboard
+            </a>
+          </li>
+
+          <!-- Timetable Dropdown -->
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle px-3" href="#" role="button"
+              data-bs-toggle="dropdown">
+              Timetable
+            </a>
+            <ul class="dropdown-menu border-0 shadow-sm rounded-3">
+              <li>
+                <a class="dropdown-item py-2" href="{% url 'generate_timetable' 2 %}">
+                  Generate Timetable
+                </a>
+              </li>
+              <li>
+                <a class="dropdown-item py-2" href="{% url 'view_timetable' 2 %}">
+                  View Timetable
+                </a>
+              </li>
+            </ul>
+          </li>
+          <!-- OR tools -->
+          <li class="nav-item">
+            <a class="nav-link px-3" href="{% url 'ortools_app:timetable-input' %}">
+              Tools
+            </a>
+          </li>
+
+          <li class="nav-item">
+            <a class="nav-link px-3" href="{% url 'user_list' %}">
+              Messages
+            </a>
+          </li>
+
+          <li class="nav-item">
+            <a class="nav-link px-3" href="{% url 'feedback' %}">
+              Feedback
+            </a>
+          </li>
+        {% else %}
+          <li class="nav-item">
+            <a class="nav-link px-3" href="{% url 'about' %}">
+              About
+            </a>
+          </li>
+        {% endif %}
+
+      </ul>
+
+      <!-- RIGHT MENU -->
+      <ul class="navbar-nav ms-lg-3 align-items-lg-center gap-2">
+
+        {% if user.is_authenticated %}
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle fw-semibold d-flex align-items-center gap-2" href="#" role="button"
+               data-bs-toggle="dropdown">
+               <div class="bg-primary text-white rounded-circle d-flex align-items-center justify-content-center" style="width: 32px; height: 32px;">
+                  {{ user.username|first|upper }}
+               </div>
+              {{ user.username }}
+            </a>
+            <ul class="dropdown-menu dropdown-menu-end border-0 shadow-sm rounded-3 mt-2">
+              <li><a class="dropdown-item py-2" href="{% url 'profile' %}">Profile</a></li>
+              <li><a class="dropdown-item py-2" href="{% url 'edit_profile' %}">Edit Profile</a></li>
+              <li><a class="dropdown-item py-2" href="{% url 'change_password' %}">Change Password</a></li>
+              <li><hr class="dropdown-divider"></li>
+              <li>
+                <form method="post" action="{% url 'logout' %}">
+                  {% csrf_token %}
+                  <button class="dropdown-item text-danger py-2 fw-medium">
+                    Logout
+                  </button>
+                </form>
+              </li>
+            </ul>
+          </li>
+        {% else %}
+          <li class="nav-item">
+            <a href="{% url 'login' %}" class="btn btn-primary btn-sm px-4 py-2 rounded-pill shadow-sm">
+              Login
+            </a>
+          </li>
+          <!-- <li class="nav-item">
+            <a href="/admin/" class="btn btn-outline-primary btn-sm px-4 py-2 rounded-pill">
+              Admin
+            </a>
+          </li> -->
+        {% endif %}
+
+      </ul>
+
+    </div>
+  </div>
+</nav>
+<!-- ===================== NAVBAR END ===================== -->
+
+
+<!-- ===================== MAIN CONTENT ===================== -->
+<main class="container" style="margin-top: 100px;">
+    {% block content %}
+
+<!-- ===================== HERO SECTION ===================== -->
+<div class="card hero-card shadow-lg mb-5 border-0 overflow-hidden">
+  <div class="card-body text-center py-5 position-relative">
+    <!-- Optional pattern or shape could go here -->
+    <div class="position-relative z-1">
+        <h1 class="fw-bold mb-3 display-4">
+        College Timetable System
+        </h1>
+        <p class="fs-5 mb-4 opacity-75" style="max-width: 600px; margin: 0 auto;">
+        An automated, intelligent solution for managing academic schedules, eliminating conflicts, and optimizing resource usage.
+        </p>
+
+        <div class="d-flex justify-content-center gap-3">
+        <a href="{% url 'view_timetable' 1 %}" class="btn btn-light text-primary px-4 py-2 fw-bold shadow-sm">
+            View Timetable
+        </a>
+        <a href="{% url 'dashboard' %}" class="btn btn-outline-light px-4 py-2 fw-semibold">
+            View Analytics
+        </a>
+        </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== FEATURES SECTION ===================== -->
+<div class="row g-4 mb-5">
+
+  <div class="col-md-4">
+    <div class="card h-100 border-0 shadow-sm p-3">
+      <div class="card-body text-center">
+        <div class="mb-3 text-primary">
+            <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" fill="currentColor" class="bi bi-calendar-check" viewBox="0 0 16 16">
+                <path d="M10.854 7.146a.5.5 0 0 1 0 .708l-3 3a.5.5 0 0 1-.708 0l-1.5-1.5a.5.5 0 1 1 .708-.708L7.5 9.793l2.646-2.647a.5.5 0 0 1 .708 0z"/>
+                <path d="M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h1V.5a.5.5 0 0 1 .5-.5zM1 4v10a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V4H1z"/>
+            </svg>
+        </div>
+        <h5 class="fw-bold mb-2">Automated Scheduling</h5>
+        <p class="text-muted small">
+          Generate conflict-free timetables automatically using
+          predefined academic rules and constraints.
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-md-4">
+    <div class="card h-100 border-0 shadow-sm p-3">
+      <div class="card-body text-center">
+        <div class="mb-3 text-success">
+            <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" fill="currentColor" class="bi bi-layers" viewBox="0 0 16 16">
+                <path d="M8.235 1.559a.5.5 0 0 0-.47 0l-7.5 4a.5.5 0 0 0 0 .882L3.188 8 .264 9.559a.5.5 0 0 0 0 .882l7.5 4a.5.5 0 0 0 .47 0l7.5-4a.5.5 0 0 0 0-.882L12.813 8l2.922-1.559a.5.5 0 0 0 0-.882l-7.5-4zm3.515 7.008L14.438 10 8 13.233 1.562 10 4.25 8.567l3.515 1.874a.5.5 0 0 0 .47 0l3.515-1.874zM8 9.433 1.562 6 8 2.567 14.438 6 8 9.433z"/>
+            </svg>
+        </div>
+        <h5 class="fw-bold mb-2">Centralized Management</h5>
+        <p class="text-muted small">
+          Manage classes, subjects, rooms, batches, and schedules
+          from a single unified system.
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-md-4">
+    <div class="card h-100 border-0 shadow-sm p-3">
+      <div class="card-body text-center">
+        <div class="mb-3 text-info">
+            <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" fill="currentColor" class="bi bi-graph-up-arrow" viewBox="0 0 16 16">
+                <path fill-rule="evenodd" d="M0 0h1v15h15v1H0V0Zm10 3.5a.5.5 0 0 1 .5-.5h4a.5.5 0 0 1 .5.5v4a.5.5 0 0 1-1 0V4.9l-3.613 4.417a.5.5 0 0 1-.74.037L7.06 6.767l-3.656 5.027a.5.5 0 0 1-.808-.588l4-5.5a.5.5 0 0 1 .758-.06l2.609 2.61L13.445 4H10.5a.5.5 0 0 1-.5-.5Z"/>
+            </svg>
+        </div>
+        <h5 class="fw-bold mb-2">Analytics Dashboard</h5>
+        <p class="text-muted small">
+          Get insights into lecture distribution, practical load,
+          breaks, and overall timetable utilization.
+        </p>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- ===================== ABOUT SYSTEM ===================== -->
+<div class="card border-0 shadow-sm mb-5">
+  <div class="card-body p-4 p-md-5">
+    <div class="row align-items-center">
+        <div class="col-md-8">
+            <h4 class="fw-bold mb-3">About This System</h4>
+            <p class="text-muted">
+            This web-based application is developed using
+            <strong>Django</strong>, <strong>SQLite</strong>, and
+            <strong>Bootstrap</strong> to automate the process of
+            academic timetable generation and management.
+            </p>
+            <p class="text-muted mb-0">
+            It minimizes manual effort, reduces scheduling conflicts,
+            and provides a clean interface for administrators, faculty,
+            and students.
+            </p>
+        </div>
+         <div class="col-md-4 text-center d-none d-md-block">
+             <!-- Placeholder for a small illustration if needed -->
+             <div class="bg-light rounded-circle d-inline-flex align-items-center justify-content-center" style="width: 150px; height: 150px;">
+                <span class="fs-1 text-secondary">INFO</span>
+             </div>
+         </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== QUICK STATS ===================== -->
+<div class="row g-4 mb-5">
+
+  <div class="col-md-3 col-6">
+    <div class="card text-center border-0 shadow-sm h-100">
+      <div class="card-body">
+        <h2 class="fw-bold text-primary mb-0">{{ total_classes|default:"1" }}</h2>
+        <small class="text-uppercase text-muted fw-bold" style="font-size: 0.7rem;">Classes</small>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-md-3 col-6">
+    <div class="card text-center border-0 shadow-sm h-100">
+      <div class="card-body">
+        <h2 class="fw-bold text-success mb-0">{{ total_subjects|default:"6" }}</h2>
+        <small class="text-uppercase text-muted fw-bold" style="font-size: 0.7rem;">Subjects</small>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-md-3 col-6">
+    <div class="card text-center border-0 shadow-sm h-100">
+      <div class="card-body">
+        <h2 class="fw-bold text-info mb-0">{{ total_rooms|default:"2" }}</h2>
+        <small class="text-uppercase text-muted fw-bold" style="font-size: 0.7rem;">Rooms</small>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-md-3 col-6">
+    <div class="card text-center border-0 shadow-sm h-100">
+      <div class="card-body">
+         <h2 class="fw-bold text-warning mb-0">{{ total_entries|default:"40+" }}</h2>
+        <small class="text-uppercase text-muted fw-bold" style="font-size: 0.7rem;">Sessions</small>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+{% endblock %}
+
+</main>
+<!-- ===================== MAIN CONTENT END ===================== -->
+
+
+<!-- ===================== FOOTER ===================== -->
+<footer class="text-center py-4 mt-auto">
+  <div class="container">
+    <div class="mb-2">
+        <span class="fw-bold text-dark">Opti-Time</span>
+        <span class="mx-2 text-muted">|</span>
+        <span class="text-muted">Academic Scheduling System</span>
+    </div>
+    <small class="text-muted">
+      © {{ now|date:"Y" }} Yashwantrao Bhonsale Institute of Technology, Sawantwadi
+    </small>
+  </div>
+</footer>
+<!-- ===================== FOOTER END ===================== -->
+
+
+<!-- Bootstrap JS -->
+<script
+  src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js">
+</script>
+
+</body>
+</html>

@@ -1,0 +1,113 @@
+{% extends "base.html" %}
+
+{% block title %}
+About | Yashwantrao Bhonsale Institute of Technology
+{% endblock %}
+
+{% block content %}
+
+<div class="row justify-content-center">
+  <div class="col-lg-10">
+
+    <!-- Page Header -->
+    <div class="text-center mb-5 mt-4">
+        <h2 class="fw-bold display-6 mb-2">Yashwantrao Bhonsale Institute of Technology</h2>
+        <p class="text-muted fs-5">Sawantwadi, Maharashtra</p>
+    </div>
+
+    <!-- About College -->
+    <div class="card border-0 shadow-sm mb-5 overflow-hidden">
+      <div class="card-body p-4 p-md-5">
+        <h4 class="fw-bold mb-4 text-primary">About the Institute</h4>
+        <div class="row g-4 align-items-center">
+            <div class="col-md-8">
+                <p class="text-secondary lead fs-6">
+                Yashwantrao Bhonsale Institute of Technology, Sawantwadi is a reputed
+                technical institute committed to delivering quality education in the
+                field of engineering and technology. The institute focuses on
+                academic excellence, practical learning, and industry-oriented
+                skill development.
+                </p>
+                <p class="text-secondary">
+                The curriculum is designed to bridge the gap between theoretical
+                concepts and real-world applications, preparing students for
+                professional careers and higher education.
+                </p>
+            </div>
+             <div class="col-md-4 text-center">
+                <!-- Optional placeholder for a college image -->
+                <div class="bg-light rounded p-4 d-inline-block">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="80" height="80" fill="currentColor" class="bi bi-building text-primary opacity-50" viewBox="0 0 16 16">
+                        <path fill-rule="evenodd" d="M14.763.075A.5.5 0 0 1 15 .5v15a.5.5 0 0 1-.5.5h-3a.5.5 0 0 1-.5-.5V14h-1v1.5a.5.5 0 0 1-.5.5h-9a.5.5 0 0 1-.5-.5V10a.5.5 0 0 1 .342-.474L6 7.64V4.5a.5.5 0 0 1 .276-.447l8-4a.5.5 0 0 1 .487.022zM6 8.694 1 10.36V15h5V8.694zM7 15h2v-1.5a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 .5.5V15h2V1.309l-7 3.5V15z"/>
+                        <path d="M2 11h1v1H2v-1zm2 0h1v1H4v-1zm-2 2h1v1H2v-1zm2 0h1v1H4v-1zm4-4h1v1H8V9zm2 0h1v1h-1V9zm-2 2h1v1H8v-1zm2 0h1v1h-1v-1zm2-2h1v1h-1V9zm0 2h1v1h-1v-1zM8 7h1v1H8V7zm2 0h1v1h-1V7zm2 0h1v1h-1V7zM8 5h1v1H8V5zm2 0h1v1h-1V5zm2 0h1v1h-1V5zm0-2h1v1h-1V3z"/>
+                    </svg>
+                </div>
+             </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="row g-4 mb-5">
+        <!-- About Project -->
+        <div class="col-md-7">
+            <div class="card h-100 border-0 shadow-sm p-3">
+            <div class="card-body">
+                <h5 class="fw-bold mb-3 d-flex align-items-center gap-2">
+                    <span class="text-success">
+                         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-code-square" viewBox="0 0 16 16">
+                            <path d="M14 1a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1h12zM2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2z"/>
+                            <path d="M6.854 4.646a.5.5 0 0 1 0 .708L4.207 8l2.647 2.646a.5.5 0 0 1-.708.708l-3-3a.5.5 0 0 1 0-.708l3-3a.5.5 0 0 1 .708 0zm2.292 0a.5.5 0 0 0 0 .708L11.793 8l-2.647 2.646a.5.5 0 0 0 .708.708l3-3a.5.5 0 0 0 0-.708l-3-3a.5.5 0 0 0-.708 0z"/>
+                        </svg>
+                    </span>
+                    About the Project
+                </h5>
+                <p class="text-muted">
+                    The <strong>College Timetable Management System</strong> is a web-based
+                    application developed using modern web technologies to automate the process 
+                    of academic scheduling.
+                </p>
+                <ul class="list-unstyled text-muted ps-2">
+                    <li class="mb-2 d-flex align-items-center gap-2">
+                        <span class="text-success small">✔</span> Automatic timetable generation
+                    </li>
+                    <li class="mb-2 d-flex align-items-center gap-2">
+                         <span class="text-success small">✔</span> Admin-controlled data management
+                    </li>
+                    <li class="mb-2 d-flex align-items-center gap-2">
+                         <span class="text-success small">✔</span>  Batch-wise and day-wise scheduling
+                    </li>
+                    <li class="mb-2 d-flex align-items-center gap-2">
+                         <span class="text-success small">✔</span>  Analytics dashboard for insights
+                    </li>
+                </ul>
+            </div>
+            </div>
+        </div>
+
+        <!-- Technologies Used -->
+        <div class="col-md-5">
+            <div class="card h-100 border-0 shadow-sm p-3">
+            <div class="card-body">
+                <h5 class="fw-bold mb-3">Tech Stack</h5>
+                <div class="d-flex flex-wrap gap-2">
+                    <span class="badge rounded-pill bg-light text-dark border py-2 px-3">Python</span>
+                    <span class="badge rounded-pill bg-light text-dark border py-2 px-3">Django</span>
+                    <span class="badge rounded-pill bg-light text-dark border py-2 px-3">SQLite</span>
+                    <span class="badge rounded-pill bg-light text-dark border py-2 px-3">Bootstrap 5</span>
+                    <span class="badge rounded-pill bg-light text-dark border py-2 px-3">CSS3</span>
+                    <span class="badge rounded-pill bg-light text-dark border py-2 px-3">HTML5</span>
+                </div>
+                
+                <div class="mt-4 pt-3 border-top">
+                    <small class="text-muted d-block text-uppercase fw-bold mb-1" style="font-size: 0.7rem;">Academic Year</small>
+                    <span class="fw-semibold">2025–2026</span>
+                </div>
+            </div>
+            </div>
+        </div>
+    </div>
+
+  </div>
+</div>
+
+{% endblock %}

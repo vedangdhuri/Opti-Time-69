@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+{% block title %}Generate Timetable{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+  <div class="col-md-6">
+
+    <div class="card border-0 shadow-lg rounded-4">
+      <div class="card-body p-5">
+        <div class="text-center mb-4">
+            <div class="bg-primary bg-opacity-10 text-primary rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 60px; height: 60px;">
+                <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-sliders" viewBox="0 0 16 16">
+                    <path fill-rule="evenodd" d="M11.5 2a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3zM9.05 3a2.5 2.5 0 0 1 4.9 0H16v1h-2.05a2.5 2.5 0 0 1-4.9 0H0V3h9.05zM4.5 7a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3zM2.05 8a2.5 2.5 0 0 1 4.9 0H16v1H6.95a2.5 2.5 0 0 1-4.9 0H0V8h2.05zm9.45 4a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3zm-2.45 1a2.5 2.5 0 0 1 4.9 0H16v1h-2.05a2.5 2.5 0 0 1-4.9 0H0v-1h9.05z"/>
+                </svg>
+            </div>
+            <h3 class="fw-bold">Timetable Configuration</h3>
+            <p class="text-muted">Set parameters to generate a new schedule</p>
+        </div>
+
+        <form method="post">
+          {% csrf_token %}
+
+          <div class="mb-4">
+            <label class="form-label fw-semibold">Number of Days</label>
+            <input type="number" name="days" value="5"
+                   class="form-control form-control-lg" required>
+            <div class="form-text">Usually 5 or 6 working days</div>
+          </div>
+
+          <div class="mb-4">
+            <label class="form-label fw-semibold">Slots Per Day</label>
+            <input type="number" name="slots" value="6"
+                   class="form-control form-control-lg" required>
+            <div class="form-text">Number of lecture hours per day</div>
+          </div>
+
+          <div class="d-grid pt-2">
+            <button class="btn btn-primary btn-lg rounded-pill shadow-sm">
+              Generate Timetable
+            </button>
+          </div>
+        </form>
+      </div>
+
+    </div>
+  </div>
+</div>
+{% endblock %}

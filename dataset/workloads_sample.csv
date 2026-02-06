@@ -1,0 +1,28 @@
+teacher,sub_code,sub_title,class_raw,kind,weekly_sessions,preferred_room
+P D Kate,313315,Database Management System,CO3K (A),TH,3,R101
+P D Kate,313315,Database Management System,CO3K (B),TH,3,R101
+P D Kate,315003,Seminar And Project Initiation Course,CO5K (A),TH,2,R102
+P D Kate,311002,Workshop Practices,CO1K (A),PR,2,LAB-A
+S M Mavskar,313519,Operating System,CO3K (B),TH,3,R102
+S M Mavskar,313501,Object Oriented Programming Using C++,CO3K (B),TH,3,R101
+S M Mavskar,311002,Workshop Practices,CO1K (B),PR,2,LAB-A
+T V Gawade,313301,Data Structure Using C,CO3K (A),TH,3,R101
+T V Gawade,315002,Entrepreneurship Development and Startups,CO5K (A),TH,2,R102
+T V Gawade,311002,Workshop Practices,CO1K (A),PR,2,LAB-B
+T C Mhapasekar,313501,Object Oriented Programming Using C++,CO3K (A),TH,3,R101
+T C Mhapasekar,313501,Object Oriented Programming Using C++,CO3K (B),TH,3,R102
+S A Palav,313407,Digital Techniques,CO3K (A),TH,4,R102
+S A Palav,313407,Digital Techniques,CO3K (B),TH,4,R102
+S A Palav,315002,Entrepreneurship Development and Startups,CO5K (B),TH,2,R101
+S A Sawant,313319,Operating System,CO3K (A),TH,3,R101
+S A Sawant,311001,Fundamental of ICT,CO1K (A),TH,2,R101
+J A Gawade,313301,Data Structure Using C,CO3K (B),TH,3,R101
+J A Gawade,311001,Fundamental of ICT,CO1K (B),TH,2,R101
+T M Patil,313523,Cloud Computing,CO5K (A),TH,3,R101
+A S Padwal,313223,Software Engineering,CO5K (B),TH,4,R102
+P B Mhadgut,313001,Computer Graphics,CO3K (A),TH,3,R101
+P B Mhadgut,313001,Computer Graphics,CO3K (B),TH,3,R102
+S S Kadam,311001,Fundamental of ICT (Lab),CO1K (A),PR,2,LAB-A
+S S Kadam,311001,Fundamental of ICT (Lab),CO1K (A),PR,2,LAB-B
+P P Pokharkar,311002,Workshop Practices,CO1K (B),PR,2,LAB-A
+P P Pokharkar,311002,Workshop Practices,CO1K (B),PR,2,LAB-B

@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+{% block content1 %}
+{% endblock %}
+{% block content %}
+<div class="container my-5">
+    <h2 class="mb-4">Start a Chat</h2>
+    <div class="row">
+        {% for u in users %}
+            <div class="col-md-4">
+                <div class="card shadow-sm mb-4">
+                    <div class="card-body text-center">
+                        <h5 class="card-title">{{ u.get_full_name|default:u.username }}</h5> <!-- Fallback to username -->
+                        <p class="card-text text-muted">{{ u.email }}</p>
+                        <a href="{% url 'chat' user_id=u.id %}" class="btn btn-primary btn-sm">
+                            Start Chat
+                        </a>
+                    </div>
+                </div>
+            </div>
+        {% empty %}
+            <div class="col-12">
+                <div class="alert alert-warning">No other users available to chat.</div>
+            </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

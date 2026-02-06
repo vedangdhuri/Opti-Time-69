@@ -1,0 +1,75 @@
+{% extends "base.html" %}
+{% load static %}
+{% load crispy_forms_tags %}
+{% block content1 %}
+{% endblock %}
+{% block content %}
+<div class="container my-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card shadow-lg rounded-4 border-0">
+                <div class="card-body p-5">
+                    <div class="text-center mb-4">
+                        <img src="{% static 'images/college_logo.png' %}" alt="Logo" height="60" class="mb-3">
+                        <h2 class="fw-bold">Create an Account</h2>
+                        <p class="text-muted">Join our community and start your journey</p>
+                    </div>
+
+                    <form method="post" novalidate>
+                        {% csrf_token %}
+                        <div class="row">
+                            <div class="col-md-6">
+                                {% for field in form.visible_fields %}
+                                    {% if forloop.counter0|divisibleby:2 %}
+                                        <div class="mb-3">
+                                            {{ field|as_crispy_field }}
+                                            {% if field.errors %}
+                                                <div class="text-danger small">
+                                                    {% for error in field.errors %}
+                                                        <p class="mb-0">{{ error }}</p>
+                                                    {% endfor %}
+                                                </div>
+                                            {% endif %}
+                                        </div>
+                                    {% endif %}
+                                {% endfor %}
+                            </div>
+                            <div class="col-md-6">
+                                {% for field in form.visible_fields %}
+                                    {% if not forloop.counter0|divisibleby:2 %}
+                                        <div class="mb-3">
+                                            {{ field|as_crispy_field }}
+                                            {% if field.errors %}
+                                                <div class="text-danger small">
+                                                    {% for error in field.errors %}
+                                                        <p class="mb-0">{{ error }}</p>
+                                                    {% endfor %}
+                                                </div>
+                                            {% endif %}
+                                        </div>
+                                    {% endif %}
+                                {% endfor %}
+                            </div>
+                        </div>
+
+                        <div class="d-grid gap-2 mt-4">
+                            <button type="submit" class="btn btn-primary btn-lg rounded-pill shadow-sm">Register</button>
+                        </div>
+                    </form>
+
+                    {% if form.errors %}
+                        <div class="alert alert-danger mt-4" role="alert">
+                            Please correct the error{{ form.errors|length|pluralize }} below.
+                        </div>
+                    {% endif %}
+
+                    <div class="text-center mt-4 pt-3 border-top">
+                        <p class="mb-1 text-muted">Already have an account?</p>
+                        <a href="{% url 'login' %}" class="btn btn-outline-primary btn-sm rounded-pill px-4">Login</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
