@@ -1,4 +1,5 @@
 import random
+import itertools
 from datetime import time, datetime, timedelta
 from .models import (
     TycoAInput, TycoATimetable,
@@ -133,6 +134,9 @@ def generate_timetable_for_class(class_key):
     # Try different start slots per day to vary time?
     # Standard: Start 0, 2, 4.
     
+    # Sort inputs by practical credits initially to load heavy items first?
+    # Actually just shuffle, we want to solve fully.
+    
     for day in days_list:
         possible_starts = [0, 2, 4]
         random.shuffle(possible_starts)
@@ -145,48 +149,55 @@ def generate_timetable_for_class(class_key):
             if (day, s1) in grid or (day, s2) in grid:
                 continue
 
-            # Need to pick [L1, L2, L3] from [PoolA1, PoolA2, PoolA3]
-            # Constraint: L1.teacher != L2.teacher != L3.teacher
-            # Constraint: Preferably distinct subjects if possible?
+            # Check if pools are empty
+            if not lab_pools['A1'] or not lab_pools['A2'] or not lab_pools['A3']:
+                break
+                
+            # Create all valid combinations from available pools
+            # Use smaller sample if pools are huge, but likely < 10 items.
+            # itertools.product generates tuples (poolA1_item, poolA2_item, poolA3_item)
             
-            # Simple Backtracking / Greedy Attempt
-            # Try 50 attempts to find a valid combination
+            # Optimization: To avoid huge product if pools grow, cap at 200 via islice?
+            # Or just shuffle the product list.
+            
+            p1 = lab_pools['A1']
+            p2 = lab_pools['A2']
+            p3 = lab_pools['A3']
+            
+            # Generate all combinations
+            # Start generator
+            gen = itertools.product(p1, p2, p3)
+            
+            # To randomize, we can convert to list. Safe for small N.
+            candidates = list(gen)
+            random.shuffle(candidates)
+            
             found_trio = None
             
-            # Sort pools by frequency to prioritize harder-to-place items?
-            # Or just shuffle every attempt? Shuffle is easier.
-            
-            for _ in range(50):
-                if not lab_pools['A1'] or not lab_pools['A2'] or not lab_pools['A3']:
-                    # Cannot form complete trio, maybe partial?
-                    # For now, require complete trio or skip day
-                    # If pools empty, maybe we are done.
-                    break
+            for tri_tuple in candidates:
+                c1, c2, c3 = tri_tuple
                 
-                # Pick candidates
-                c1 = random.choice(lab_pools['A1'])
-                c2 = random.choice(lab_pools['A2'])
-                c3 = random.choice(lab_pools['A3'])
-                
-                # Check teacher unique
+                # 1. Unique Teachers Check
                 teachers = {c1.teacher_name, c2.teacher_name, c3.teacher_name}
                 if len(teachers) < 3:
-                     continue
-                
-                # Check teacher busy elsewhere
+                    continue
+                    
+                # 2. Conflict Check (External Timetables)
+                # Check for both hours
                 if check_teacher_conflict_bulk(list(teachers), day, ACADEMIC_SLOTS[s1][0], class_key): continue
                 if check_teacher_conflict_bulk(list(teachers), day, ACADEMIC_SLOTS[s2][0], class_key): continue
                 
+                # Found valid!
                 found_trio = [c1, c2, c3]
                 break
             
             if found_trio:
                 # Place
-                grid[(day, s1)] = {'type': 'PR', 'trio': found_trio}
-                grid[(day, s2)] = {'type': 'PR', 'trio': found_trio}
+                grid[(day, s1)] = {'type': 'PR', 'trio': found_trio, 'batches': ['A1', 'A2', 'A3']}
+                grid[(day, s2)] = {'type': 'PR', 'trio': found_trio, 'batches': ['A1', 'A2', 'A3']}
                 
                 # Remove from pools
-                # Note: list.remove removes first occurrence, which is fine since duplicates are identical objects
+                # Remove FIRST instance of object found in pool list
                 lab_pools['A1'].remove(found_trio[0])
                 lab_pools['A2'].remove(found_trio[1])
                 lab_pools['A3'].remove(found_trio[2])
@@ -194,9 +205,9 @@ def generate_timetable_for_class(class_key):
                 placed_pr = True
                 break
         
-        # Optionally, if we fail to place a trio on a day (e.g. conflicts), we try next day.
-        # But for full load, we might need to retry or relax constraints.
-        # Given standard load, it usually fits. 
+        # Limit 1 PR block per day
+        if placed_pr:
+            continue 
             
     # --- STEP B: SCHEDULE THEORY ---
     # Improve standard shuffle with daily limits
