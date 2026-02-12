@@ -38,8 +38,6 @@ CLASS_CONFIG = {
     'tyco_b': {'input': TycoBInput, 'timetable': TycoBTimetable, 'name': 'TYCO B'},
     'syco_a': {'input': SycoAInput, 'timetable': SycoATimetable, 'name': 'SYCO A'},
     'syco_b': {'input': SycoBInput, 'timetable': SycoBTimetable, 'name': 'SYCO B'},
-    'fyco_a': {'input': SycoAInput, 'timetable': SycoATimetable, 'name': 'FYCO A'},
-    'fyco_b': {'input': SycoBInput, 'timetable': SycoBTimetable, 'name': 'FYCO B'},
 }
 
 def check_teacher_conflict_bulk(teacher_list, day, start_time, exclude_class_key):
