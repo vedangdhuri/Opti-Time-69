@@ -98,7 +98,7 @@ def dashboard(request):
 
 
 def about(request):
-    return render(request, 'about/about.html')
+    return render(request, 'about.html')
 
 # chat
 @login_required

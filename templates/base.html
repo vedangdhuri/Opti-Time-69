@@ -55,31 +55,15 @@
             </a>
           </li>
 
-          <!-- Timetable Dropdown -->
-          <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle px-3" href="#" role="button" data-bs-toggle="dropdown">
-              Timetable
+          <!-- Class-wise Timetable Link -->
+          <li class="nav-item">
+            <a class="nav-link px-3" href="{% url 'class_timetable:dashboard' %}">
+              Class-wise System
             </a>
-            <ul class="dropdown-menu border-0 shadow-sm rounded-3">
-              <li>
-                <a class="dropdown-item py-2" href="{% url 'generate_timetable' 2 %}">
-                  Generate Timetable
-                </a>
-              </li>
-              <li>
-                <a class="dropdown-item py-2" href="{% url 'view_timetable' 2 %}">
-                  View Timetable
-                </a>
-              </li>
-              <li>
-                <hr class="dropdown-divider">
-              </li>
-              <li>
-                <a class="dropdown-item py-2 fw-bold text-primary" href="{% url 'class_timetable:dashboard' %}">
-                  Class-wise System
-                </a>
-              </li>
-            </ul>
+          <li class="nav-item">
+            <a class="nav-link px-3" href="{% url 'about' %}">
+              About
+            </a>
           </li>
 
 

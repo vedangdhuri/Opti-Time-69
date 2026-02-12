@@ -1,0 +1,143 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}About | Opti-Time{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+
+    <!-- Hero Section -->
+    <div class="row align-items-center mb-5">
+        <div class="col-lg-8 mx-auto text-center">
+            <h1 class="display-4 fw-bold text-primary mb-3">About Opti-Time</h1>
+            <p class="lead text-muted">
+                An advanced Academic Timetable Management System designed to simplify scheduling, eliminate conflicts,
+                and optimize resource allocation for educational institutes.
+            </p>
+        </div>
+    </div>
+
+    <hr class="my-5">
+
+    <!-- How to Use Section -->
+    <div class="row mb-5">
+        <div class="col-12 text-center mb-4">
+            <h2 class="fw-bold">How to Use This System</h2>
+            <p class="text-muted">Follow these simple steps to generate and manage your class timetables.</p>
+        </div>
+
+        <div class="col-md-6 mb-4">
+            <div class="card h-100 border-0 shadow-sm">
+                <div class="card-body p-4">
+                    <div class="d-flex align-items-center mb-3">
+                        <div class="bg-primary text-white rounded-circle d-flex align-items-center justify-content-center fw-bold"
+                            style="width: 40px; height: 40px; font-size: 1.2rem;">1</div>
+                        <h4 class="ms-3 mb-0 fw-bold">Input Data</h4>
+                    </div>
+                    <p class="card-text text-muted">
+                        Navigate to the <strong>Class-wise System</strong>. Select a class (e.g., TYCO A). Use the
+                        <strong>"Fill Input Data"</strong> form to add subjects, teachers, and workload details
+                        (Theory/Practical credits).
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6 mb-4">
+            <div class="card h-100 border-0 shadow-sm">
+                <div class="card-body p-4">
+                    <div class="d-flex align-items-center mb-3">
+                        <div class="bg-primary text-white rounded-circle d-flex align-items-center justify-content-center fw-bold"
+                            style="width: 40px; height: 40px; font-size: 1.2rem;">2</div>
+                        <h4 class="ms-3 mb-0 fw-bold">Generate Timetable</h4>
+                    </div>
+                    <p class="card-text text-muted">
+                        Once data is entered, click the <strong>"Generate Timetable"</strong> button on the dashboard.
+                        The system's algorithm will automatically process the inputs, resolve conflicts, and create a
+                        schedule.
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6 mb-4">
+            <div class="card h-100 border-0 shadow-sm">
+                <div class="card-body p-4">
+                    <div class="d-flex align-items-center mb-3">
+                        <div class="bg-primary text-white rounded-circle d-flex align-items-center justify-content-center fw-bold"
+                            style="width: 40px; height: 40px; font-size: 1.2rem;">3</div>
+                        <h4 class="ms-3 mb-0 fw-bold">View & Analyze</h4>
+                    </div>
+                    <p class="card-text text-muted">
+                        Click <strong>"View Timetable"</strong> to see the generated schedule. The view is color-coded
+                        and organized. You can verify workload distribution and ensure all sessions are placed
+                        correctly.
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6 mb-4">
+            <div class="card h-100 border-0 shadow-sm">
+                <div class="card-body p-4">
+                    <div class="d-flex align-items-center mb-3">
+                        <div class="bg-primary text-white rounded-circle d-flex align-items-center justify-content-center fw-bold"
+                            style="width: 40px; height: 40px; font-size: 1.2rem;">4</div>
+                        <h4 class="ms-3 mb-0 fw-bold">Export</h4>
+                    </div>
+                    <p class="card-text text-muted">
+                        Need a hard copy? Use the export buttons at the top right of the timetable view to download the
+                        schedule in <strong>PNG, PDF, or Excel</strong> formats instantly.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Project Info Section -->
+    <div class="bg-light p-5 rounded-4 mb-5">
+        <div class="row align-items-center">
+            <div class="col-md-6 mb-4 mb-md-0">
+                <h3 class="fw-bold mb-3">About the Project</h3>
+                <p class="text-muted mb-4">
+                    Opti-Time addresses the complex problem of manual academic scheduling. By leveraging intelligent
+                    algorithms, it ensures:
+                </p>
+                <ul class="list-unstyled text-muted">
+                    <li class="mb-2"><i class="bi bi-check-circle-fill text-success me-2"></i> Conflict-free teacher
+                        allocation</li>
+                    <li class="mb-2"><i class="bi bi-check-circle-fill text-success me-2"></i> Balanced workload
+                        distribution</li>
+                    <li class="mb-2"><i class="bi bi-check-circle-fill text-success me-2"></i> Support for Theory and
+                        Practical batches</li>
+                    <li class="mb-2"><i class="bi bi-check-circle-fill text-success me-2"></i> User-friendly interface
+                        for administration</li>
+                </ul>
+            </div>
+            <div class="col-md-6 text-center">
+                <!-- Illustration or Graphic -->
+                <div class="p-4 bg-white rounded-3 shadow-sm d-inline-block">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" fill="currentColor"
+                        class="bi bi-calendar-range text-primary" viewBox="0 0 16 16">
+                        <path d="M9 7a1 1 0 0 1 1-1h5v2h-5a1 1 0 0 1-1-1zM1 9h4a1 1 0 0 1 0 2H1V9z" />
+                        <path
+                            d="M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h1V.5a.5.5 0 0 1 .5-.5zM1 4v10a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V4H1z" />
+                    </svg>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="text-center">
+        <h5 class="fw-bold text-muted text-uppercase mb-3">Developed By</h5>
+        <div class="d-flex justify-content-center gap-4 flex-wrap">
+            <span class="badge bg-secondary bg-opacity-10 text-dark border px-3 py-2 rounded-pill">Vedang Dhuri - Full Stack</span>
+            <span class="badge bg-secondary bg-opacity-10 text-dark border px-3 py-2 rounded-pill">Yash Bhurkhe - Full Stack</span>
+            <span class="badge bg-secondary bg-opacity-10 text-dark border px-3 py-2 rounded-pill">Utkarsh Dicholkar - Frontend Developer & UI/UX Designer</span>
+            <span class="badge bg-secondary bg-opacity-10 text-dark border px-3 py-2 rounded-pill">Saish Desai - Documentation & Presentation</span>
+            <!-- Add other team members here -->
+        </div>
+    </div>
+
+</div>
+{% endblock %}
