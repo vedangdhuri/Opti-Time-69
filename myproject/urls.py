@@ -22,6 +22,7 @@ urlpatterns = [
     path('', include('myapp.urls')),
     path('timetable/', include('timetable.urls')),
     
-    path("timetable-input/", include("ortools_app.urls")),
+
+    path('class-timetable/', include('class_timetable.urls')),
     
 ]

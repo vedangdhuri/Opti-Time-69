@@ -40,7 +40,8 @@ INSTALLED_APPS = [
     'myapp',
     'timetable',
     
-    "ortools_app",
+
+    'class_timetable',
     
     'crispy_forms',
     'crispy_bootstrap5',

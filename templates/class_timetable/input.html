@@ -1,0 +1,73 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+
+{% block title %}Manage Inputs - {{ class_name }}{% endblock %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col-md-8 mx-auto">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <h2 class="fw-bold text-primary">Inputs for {{ class_name }}</h2>
+            <a href="{% url 'class_timetable:dashboard' %}" class="btn btn-secondary">Back to Dashboard</a>
+        </div>
+
+        <!-- Input Form -->
+        <div class="card shadow-sm border-0 mb-4">
+            <div class="card-header bg-primary text-white">
+                <h5 class="mb-0">Add New Subject Requirement</h5>
+            </div>
+            <div class="card-body">
+                <form method="post">
+                    {% csrf_token %}
+                    {{ form|crispy }}
+                    <div class="d-grid mt-3">
+                        <button type="submit" class="btn btn-primary fw-bold">Add Input</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Existing Inputs List -->
+        <div class="card shadow-sm border-0">
+            <div class="card-header bg-white">
+                <h5 class="mb-0 fw-bold">Existing Inputs</h5>
+            </div>
+            <div class="table-responsive">
+                <table class="table table-hover table-bordered mb-0">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Subject</th>
+                            <th>Teacher</th>
+                            <th>Theory Load (Hrs)</th>
+                            <th>Practical Load (Hrs)</th>
+                            <th class="text-center">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for input in inputs %}
+                        <tr>
+                            <td class="fw-bold">{{ input.subject_name }}</td>
+                            <td>{{ input.teacher_name }}</td>
+                            <td>{{ input.theory_credits }}</td>
+                            <td>{{ input.practical_credits }}</td>
+                            <td class="text-center">
+                                <a href="{% url 'class_timetable:delete_input' class_key input.id %}"
+                                    class="btn btn-sm btn-danger px-3 py-0 round-pill"
+                                    onclick="return confirm('Delete this input?');">
+                                    &times;
+                                </a>
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="5" class="text-center text-muted py-4">No inputs added yet.</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+    </div>
+</div>
+{% endblock %}

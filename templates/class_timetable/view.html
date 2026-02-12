@@ -1,0 +1,170 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Timetable - {{ class_name }}{% endblock %}
+
+{% block content %}
+<div class="timetable-container my-4">
+    <!-- Header -->
+    <div class="timetable-header">
+        <div class="row align-items-center mb-3">
+            <div class="col-md-8 text-center mx-auto">
+                <small class="d-block fw-bold text-uppercase mb-1" style="font-size: 0.8rem; letter-spacing: 1px;">Shri
+                    Yashwantrao Bhonsale Education Society's</small>
+                <h2 class="mb-1" style="font-size: 1.8rem;">YASHWANTRAO BHONSALE INSTITUTE OF TECHNOLOGY</h2>
+                <div class="code-info">
+                    (DTE CODE : 3470) (MSBTE CODE : 1742)
+                </div>
+                <small class="d-block text-secondary" style="font-size: 0.85rem;">Approved by AICTE, DTE & Affiliated to
+                    Mumbai University & MSBTE Mumbai</small>
+                <small class="d-block text-secondary fw-bold" style="font-size: 0.85rem;">(NBA Accredited ME, CE, EE
+                    Diploma Programs)</small>
+            </div>
+        </div>
+
+        <div class="d-flex justify-content-between align-items-end border-bottom pb-2 mt-4"
+            style="border-color: #000 !important; border-bottom-width: 2px !important;">
+            <h5 class="fw-bold m-0 text-uppercase">{{ class_name }}</h5>
+            <h5 class="fw-bold m-0 text-uppercase">TIME TABLE 2025-2026</h5>
+            <!-- Semester can be dynamic if available, otherwise omitted or hardcoded -->
+            <h5 class="fw-bold m-0 text-uppercase">SEM V</h5>
+        </div>
+    </div>
+
+    <!-- Messages -->
+    {% if messages %}
+    <div class="mb-3">
+        {% for message in messages %}
+        <div class="alert alert-{{ message.tags }} py-2">{{ message }}</div>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    <!-- Actions -->
+    <div class="d-flex justify-content-end gap-2 mb-3 no-print">
+        <button onclick="exportPNG()" class="btn btn-outline-primary btn-sm">
+            <i class="bi bi-card-image"></i> Export PNG
+        </button>
+        <button onclick="exportPDF()" class="btn btn-outline-danger btn-sm">
+            <i class="bi bi-file-earmark-pdf"></i> Export PDF
+        </button>
+        <button onclick="exportExcel()" class="btn btn-outline-success btn-sm">
+            <i class="bi bi-file-earmark-spreadsheet"></i> Export Excel
+        </button>
+    </div>
+
+    <!-- Main Table -->
+    <div class="table-responsive" id="timetable-capture">
+        <table class="timetable-table" id="timetable-table">
+            <thead>
+                <tr>
+                    <th style="width: 15%;">TIME</th>
+                    {% for day in days %}
+                    <th>{{ day|slice:":3"|upper }}</th>
+                    {% endfor %}
+                </tr>
+            </thead>
+            <tbody>
+                {% for row in timetable_rows %}
+                {% if row.type == 'break' %}
+                <tr class="break-row">
+                    <td>
+                        {{ row.start|time:"h:i A"|lower }} to {{ row.end|time:"h:i A"|lower }}
+                    </td>
+                    <td colspan="{{ days|length }}">{{ row.label }}</td>
+                </tr>
+                {% else %}
+                <tr>
+                    <td class="fw-bold">
+                        {{ row.label }}
+                    </td>
+                    {% for cell in row.days %}
+                    {% if not cell.skipped %}
+                    <td {% if cell.rowspan > 1 %}rowspan="{{ cell.rowspan }}"{% endif %}>
+                        {% if cell.entries %}
+                        <!-- Check entries count -->
+                        {% if cell.is_practical %}
+                        <!-- Practical Block (Stacked Batches) -->
+                        <div class="d-flex flex-column gap-2 justify-content-center h-100">
+                            {% for entry in cell.entries %}
+                            <div class="d-flex justify-content-center align-items-center border-bottom pb-1"
+                                style="font-size: 0.85rem; border-color: #ccc !important;">
+                                <span class="fw-bold text-dark me-2">{{ entry.batch }} -</span>
+                                <span class="text-dark fw-bold">{{ entry.subject_name }}</span>
+                            </div>
+                            {% endfor %}
+                        </div>
+                        {% else %}
+                        <!-- Single Entry (Theory/Extra) -->
+                        {% with entry=cell.entries.0 %}
+                        <div class="subject-code">
+                            {{ entry.subject_name }}
+                        </div>
+                        {% endwith %}
+                        {% endif %}
+                        {% else %}
+                        <span class="text-muted">-</span>
+                        {% endif %}
+                    </td>
+                    {% endif %}
+                    {% endfor %}
+                </tr>
+                {% endif %}
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <div class="mt-4 text-center no-print">
+        <a href="{% url 'class_timetable:dashboard' %}" class="btn btn-secondary">Back to Dashboard</a>
+    </div>
+
+</div>
+
+<!-- Scripts for Export -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+
+<script>
+    function exportPNG() {
+        const element = document.getElementById("timetable-capture");
+        html2canvas(element).then(canvas => {
+            const link = document.createElement('a');
+            link.download = 'timetable.png';
+            link.href = canvas.toDataURL();
+            link.click();
+        });
+    }
+
+    function exportPDF() {
+        const { jsPDF } = window.jspdf;
+        const element = document.getElementById("timetable-capture");
+
+        html2canvas(element).then(canvas => {
+            const imgData = canvas.toDataURL('image/png');
+            const pdf = new jsPDF('l', 'mm', 'a4'); // Landscape
+            const imgProps = pdf.getImageProperties(imgData);
+            const pdfWidth = pdf.internal.pageSize.getWidth();
+            const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
+
+            pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
+            pdf.save('timetable.pdf');
+        });
+    }
+
+    function exportExcel() {
+        const table = document.getElementById("timetable-table");
+        const wb = XLSX.utils.table_to_book(table, { sheet: "Timetable" });
+        XLSX.writeFile(wb, 'timetable.xlsx');
+    }
+</script>
+
+<style>
+    @media print {
+        .no-print {
+            display: none !important;
+        }
+    }
+</style>
+{% endblock %}
