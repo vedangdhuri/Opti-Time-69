@@ -1,0 +1,157 @@
+{% extends "base.html" %}
+
+{% block title %}Analytics - {{ class_name }}{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <div class="d-flex align-items-center justify-content-between mb-4">
+        <h2 class="fw-bold m-0">{{ class_name }} - Analytics Report</h2>
+        <div class="d-flex gap-2">
+            <a href="{% url 'class_timetable:view_timetable' class_key %}" class="btn btn-outline-primary">
+                View Timetable
+            </a>
+            <a href="{% url 'class_timetable:dashboard' %}" class="btn btn-secondary">
+                Back to Dashboard
+            </a>
+        </div>
+    </div>
+
+    <!-- Status Overview -->
+    <div class="row g-4 mb-4">
+        <div class="col-md-6">
+            <div
+                class="card h-100 border-0 shadow-sm {% if analysis.is_balanced %}border-start border-success border-5{% else %}border-start border-warning border-5{% endif %}">
+                <div class="card-body">
+                    <h5 class="fw-bold mb-3">Workload Distribution</h5>
+                    {% if analysis.is_balanced %}
+                    <div class="d-flex align-items-center text-success">
+                        <i class="bi bi-check-circle-fill fs-4 me-2"></i>
+                        <span class="fs-5 fw-bold">Balanced</span>
+                    </div>
+                    <p class="text-muted mt-2 mb-0">All subjects meet their theory and practical requirements.</p>
+                    {% else %}
+                    <div class="d-flex align-items-center text-warning">
+                        <i class="bi bi-exclamation-triangle-fill fs-4 me-2"></i>
+                        <span class="fs-5 fw-bold">Issues Found</span>
+                    </div>
+                    <p class="text-muted mt-2 mb-0">Some subjects have discrepancies in assigned hours.</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <div
+                class="card h-100 border-0 shadow-sm {% if analysis.has_conflicts %}border-start border-danger border-5{% else %}border-start border-success border-5{% endif %}">
+                <div class="card-body">
+                    <h5 class="fw-bold mb-3">Teacher Conflicts</h5>
+                    {% if not analysis.has_conflicts %}
+                    <div class="d-flex align-items-center text-success">
+                        <i class="bi bi-shield-check fs-4 me-2"></i>
+                        <span class="fs-5 fw-bold">No Conflicts</span>
+                    </div>
+                    <p class="text-muted mt-2 mb-0">No teachers are scheduled in other classes at the same time.</p>
+                    {% else %}
+                    <div class="d-flex align-items-center text-danger">
+                        <i class="bi bi-x-circle-fill fs-4 me-2"></i>
+                        <span class="fs-5 fw-bold">Conflicts Detected</span>
+                    </div>
+                    <p class="text-muted mt-2 mb-0">Teachers are overlapping with other class schedules.</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Conflicts Detail -->
+    {% if analysis.has_conflicts %}
+    <div class="card border-0 shadow-sm mb-4">
+        <div class="card-header bg-danger text-white">
+            <h5 class="mb-0 fw-bold"><i class="bi bi-exclamation-octagon me-2"></i>Conflict Details</h5>
+        </div>
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-striped mb-0">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Teacher</th>
+                            <th>Day</th>
+                            <th>Time</th>
+                            <th>Conflict With</th>
+                            <th>Subject</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for c in analysis.conflicts %}
+                        <tr>
+                            <td class="fw-bold text-danger">{{ c.teacher }}</td>
+                            <td>{{ c.day }}</td>
+                            <td>{{ c.time }}</td>
+                            <td>{{ c.other_class }}</td>
+                            <td>{{ c.other_subject }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- Workload Detail -->
+    <div class="card border-0 shadow-sm">
+        <div class="card-header bg-white border-bottom py-3">
+            <h5 class="mb-0 fw-bold">Workload Breakdown</h5>
+        </div>
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0">
+                    <thead class="table-light">
+                        <tr>
+                            <th style="width: 25%;">Subject</th>
+                            <th style="width: 20%;">Teacher</th>
+                            <th class="text-center">Theory (Exp / Act)</th>
+                            <th class="text-center">Practical (Exp / B-Act)</th>
+                            <th class="text-center">Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for item in analysis.distribution %}
+                        <tr>
+                            <td class="fw-medium">{{ item.subject }}</td>
+                            <td class="text-muted small">{{ item.teacher }}</td>
+
+                            <!-- Theory -->
+                            <td class="text-center">
+                                <span
+                                    class="badge {% if item.actual_th < item.expected_th %}bg-warning text-dark{% elif item.actual_th > item.expected_th|add:2 %}bg-info{% else %}bg-success{% endif %}">
+                                    {{ item.expected_th }} / {{ item.actual_th }}
+                                </span>
+                            </td>
+
+                            <!-- Practical -->
+                            <td class="text-center">
+                                <span class="d-block small text-muted">Exp: {{ item.expected_pr }} hrs</span>
+                                <small class="fw-bold {{ item.practical_status|yesno:'text-danger,text-success' }}">
+                                    {{ item.practical_status }}
+                                </small>
+                            </td>
+
+                            <!-- Status -->
+                            <td class="text-center">
+                                {% if item.status == 'Balanced' and item.practical_status == 'OK' %}
+                                <span class="badge bg-success">OK</span>
+                                {% else %}
+                                <span class="badge bg-danger">Check</span>
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+</div>
+{% endblock %}

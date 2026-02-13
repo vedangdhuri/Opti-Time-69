@@ -10,28 +10,13 @@ from .models import (
 )
 
 # === CONFIGURATION ===
-# Based on User Images:
-# 10:00 - 11:00
-# 11:00 - 12:00
-# 12:00 - 12:45 (LUNCH)
-# 12:45 - 01:45
-# 01:45 - 02:45
-# 02:45 - 03:00 (TEA)
-# 03:00 - 04:00
-# 04:00 - 05:00
-
-# We only define SCHEDULABLE slots here for the algorithm to pick from.
-# We will handle breaks visually in the template or via a fixed schedule utility.
-
 ACADEMIC_SLOTS = [
-    (time(10, 0), time(11, 0)),    # Slot 0
-    (time(11, 0), time(12, 0)),    # Slot 1
-    # Lunch Break Gap
-    (time(12, 45), time(13, 45)),  # Slot 2 (12:45 PM - 1:45 PM)
-    (time(13, 45), time(14, 45)),  # Slot 3 (1:45 PM - 2:45 PM)
-    # Tea Break Gap
-    (time(15, 0), time(16, 0)),    # Slot 4 (3:00 PM - 4:00 PM)
-    (time(16, 0), time(17, 0)),    # Slot 5 (4:00 PM - 5:00 PM)
+    (time(10, 0), time(11, 0)),
+    (time(11, 0), time(12, 0)),
+    (time(12, 45), time(13, 45)),
+    (time(13, 45), time(14, 45)),
+    (time(15, 0), time(16, 0)),
+    (time(16, 0), time(17, 0)),
 ]
 
 CLASS_CONFIG = {
@@ -40,6 +25,32 @@ CLASS_CONFIG = {
     'syco_a': {'input': SycoAInput, 'timetable': SycoATimetable, 'name': 'SYCO A'},
     'syco_b': {'input': SycoBInput, 'timetable': SycoBTimetable, 'name': 'SYCO B'},
 }
+
+# --- HELPER FOR ABBREVIATIONS ---
+SUBJECT_ABBR = {
+    "OPERATING SYSTEM": "OSY",
+    "SOFTWARE ENGINEERING": "STE",
+    "ENTREPRENEURSHIP DEVELOPMENT AND STARTUPS": "ENDS",
+    "SEMINAR AND PROJECT INITIATION COURSE": "SPI",
+    "CLOUD COMPUTING": "CLC",
+    # SYCO A (Sem III)
+    "Data Structure Using C": "DSU",
+    "Database Management System": "DMS",
+    "Digital Techniques": "DTE",
+    "Object Oriented Programming Using C++": "OOP",
+    "Computer Graphics": "CGR",
+    "Essence Of Indian Constitution": "EIC",
+    # SYCO A (Sem IV)
+    "Environmental Education And Sustainability": "EES",
+    "Java Programming": "JPR",
+    "Data Communication And Computer Network": "DCN",
+    "Microprocessor": "MIC",
+    "Python Programming": "PWP",
+    "User Interface Design": "UID"
+}
+
+def get_abbr(name):
+    return SUBJECT_ABBR.get(name, name[:3].upper())
 
 def check_teacher_conflict_bulk(teacher_list, day, start_time, exclude_class_key):
     """
@@ -73,48 +84,22 @@ def generate_timetable_for_class(class_key):
     # 1. Clear Timetable
     TimetableModel.objects.all().delete()
 
-    # 2. Fetch Inputs & Categorize
-    # 2. Fetch Inputs & Categorize
+    # 2. Fetch Inputs
     all_inputs = list(InputModel.objects.all())
     
-    # Logic Update: A single input can have BOTH Theory and Practical credits.
-    # We don't split inputs into "labs" list and "theories" list anymore.
-    # We iterate all inputs to build requirements.
-    
-    # Expand requirements
-    # 1 Theory Credit = 1 Hour (1 Slot)
     theory_pool = []
     
-    # Practical Requirements: (InputObj, count_of_blocks)
-    # 2 Practical Credits = 1 Block of 2 hours.
-    lab_reqs = {} 
-
     for inp in all_inputs:
         # Theory
         for _ in range(inp.theory_credits):
             theory_pool.append(inp)
-            
-        # Practical
-        # If practical_credits = 2, we need 1 block.
-        # If practical_credits = 4, we need 2 blocks.
-        if inp.practical_credits > 0:
-            blocks_needed = inp.practical_credits // 2
-            if blocks_needed > 0:
-                lab_reqs[inp.id] = blocks_needed
                 
     random.shuffle(theory_pool)
     
-    # Slot Definitions relative to ACADEMIC_SLOTS list
-    # Practical Candidates: (0,1), (2,3), (4,5) -> These are continuous pairs
-    
-    days_list = [d[0] for d in DAYS] # ['Monday', 'Tuesday'...]
-    
-    # Grid Initialization: (Day, SlotIndex) -> Entry
+    days_list = [d[0] for d in DAYS]
     grid = {} 
     
     # --- STEP A: SCHEDULE PRACTICALS ---
-    # Create per-batch pools for practicals
-    # Each item is the Input Object itself. Blocks needed = practical_credits // 2
     lab_pools = {'A1': [], 'A2': [], 'A3': []}
     
     for inp in all_inputs:
@@ -123,20 +108,9 @@ def generate_timetable_for_class(class_key):
             for batch in ['A1', 'A2', 'A3']:
                 lab_pools[batch].append(inp) # Add input object reference
                 
-    # Shuffle pools initially
     for b in lab_pools:
         random.shuffle(lab_pools[b])
 
-    # We need to fill at most 1 PR block per day (Mon-Sat = 6 blocks total)
-    # Total requirements should be ~6 per batch.
-    
-    # Iterate through days
-    # Try different start slots per day to vary time?
-    # Standard: Start 0, 2, 4.
-    
-    # Sort inputs by practical credits initially to load heavy items first?
-    # Actually just shuffle, we want to solve fully.
-    
     for day in days_list:
         possible_starts = [0, 2, 4]
         random.shuffle(possible_starts)
@@ -149,26 +123,19 @@ def generate_timetable_for_class(class_key):
             if (day, s1) in grid or (day, s2) in grid:
                 continue
 
-            # Check if pools are empty
+            # Check pools
             if not lab_pools['A1'] or not lab_pools['A2'] or not lab_pools['A3']:
                 break
                 
-            # Create all valid combinations from available pools
-            # Use smaller sample if pools are huge, but likely < 10 items.
-            # itertools.product generates tuples (poolA1_item, poolA2_item, poolA3_item)
-            
-            # Optimization: To avoid huge product if pools grow, cap at 200 via islice?
-            # Or just shuffle the product list.
-            
+            # Create all valid combinations from available pools using itertools
             p1 = lab_pools['A1']
             p2 = lab_pools['A2']
             p3 = lab_pools['A3']
             
             # Generate all combinations
-            # Start generator
             gen = itertools.product(p1, p2, p3)
             
-            # To randomize, we can convert to list. Safe for small N.
+            # To randomize, convert to list and shuffle (safe for small N)
             candidates = list(gen)
             random.shuffle(candidates)
             
@@ -183,7 +150,6 @@ def generate_timetable_for_class(class_key):
                     continue
                     
                 # 2. Conflict Check (External Timetables)
-                # Check for both hours
                 if check_teacher_conflict_bulk(list(teachers), day, ACADEMIC_SLOTS[s1][0], class_key): continue
                 if check_teacher_conflict_bulk(list(teachers), day, ACADEMIC_SLOTS[s2][0], class_key): continue
                 
@@ -197,7 +163,6 @@ def generate_timetable_for_class(class_key):
                 grid[(day, s2)] = {'type': 'PR', 'trio': found_trio, 'batches': ['A1', 'A2', 'A3']}
                 
                 # Remove from pools
-                # Remove FIRST instance of object found in pool list
                 lab_pools['A1'].remove(found_trio[0])
                 lab_pools['A2'].remove(found_trio[1])
                 lab_pools['A3'].remove(found_trio[2])
@@ -210,28 +175,16 @@ def generate_timetable_for_class(class_key):
             continue 
             
     # --- STEP B: SCHEDULE THEORY ---
-    # Improve standard shuffle with daily limits
-    
-    # Track daily counts: (day, subject_id) -> count
     subject_daily_counts = {} 
     
     for day in days_list:
         available_slots = [i for i in range(len(ACADEMIC_SLOTS)) if (day, i) not in grid]
-        
-        # Sort slots: Fill morning/afternoon evenly? Random is fine.
         random.shuffle(available_slots)
         
         for slot_idx in available_slots:
             if not theory_pool: break
             
-            # Try to find a valid subject for this slot
             placed_t = None
-            
-            # Iterate through pool to find best candidate
-            # Prioritize subjects that haven't been taught today
-            
-            # Snapshot of pool to iterate safely
-            # We want to pick `i` such that we can pop it.
             
             candidates_indices = list(range(len(theory_pool)))
             random.shuffle(candidates_indices)
@@ -245,7 +198,6 @@ def generate_timetable_for_class(class_key):
                     continue
                     
                 # 2. Daily Limit Check (Max 2 per day)
-                # Key for subject? ID or Name.
                 s_key = (day, candidate.id)
                 current_count = subject_daily_counts.get(s_key, 0)
                 if current_count >= 2:
@@ -255,50 +207,25 @@ def generate_timetable_for_class(class_key):
                 placed_t = candidate
                 theory_pool.pop(i) # Remove from pool
                 
-                # Update counters
                 subject_daily_counts[s_key] = current_count + 1
                 break
             
             if placed_t:
                 grid[(day, slot_idx)] = {'type': 'TH', 'subject': placed_t, 'batch': 'ALL'}
-            else:
-                 # Could not fill slot with current pool (conflicts or limits)
-                 # Leave empty for Extra lecture
-                 pass
                 
     # --- STEP C: FILL GAPS WITH EXTRA LECTURES ---
-    # Collect all theor subjects to pick from for extras
     extra_candidates = list(all_inputs) 
     
     for day in days_list:
         for i in range(len(ACADEMIC_SLOTS)):
             if (day, i) not in grid:
                 # Pick a random subject for extra lecture
+                # Only if we really can't fill with theory
                 if extra_candidates:
                     rand_subj = random.choice(extra_candidates)
                     grid[(day, i)] = {'type': 'EXTRA', 'subject': rand_subj, 'batch': 'ALL'}
                 else:
-                    # Fallback if no inputs
                     grid[(day, i)] = {'type': 'FILLER', 'subject_name': 'Free', 'batch': 'ALL'}
-
-    # --- HELPER FOR ABBREVIATIONS ---
-    SUBJECT_ABBR = {
-        "OPERATING SYSTEM": "OSY",
-        "SOFTWARE ENGINEERING": "STE",
-        "ENTREPRENEURSHIP DEVELOPMENT AND STARTUPS": "ENDS",
-        "SEMINAR AND PROJECT INITIATION COURSE": "SPI",
-        "CLOUD COMPUTING": "CLC",
-        # SYCO A (Sem III)
-        "Data Structure Using C": "DSU",
-        "Database Management System": "DMS",
-        "Digital Techniques": "DTE",
-        "Object Oriented Programming Using C++": "OOP",
-        "Computer Graphics": "CGR",
-        "Essence Of Indian Constitution": "EIC"
-    }
-    
-    def get_abbr(name):
-        return SUBJECT_ABBR.get(name, name[:3].upper())
 
     # --- STEP D: SAVE TO DB ---
     for item in grid.items():
@@ -347,3 +274,101 @@ def generate_timetable_for_class(class_key):
             )
 
     return True, "Generated"
+
+def analyze_timetable(class_key):
+    """
+    Analyzes the generated timetable for conflicts and workload distribution.
+    """
+    if class_key not in CLASS_CONFIG:
+        return {'error': 'Invalid Class'}
+        
+    cfg = CLASS_CONFIG[class_key]
+    TimetableModel = cfg['timetable']
+    InputModel = cfg['input']
+    
+    analysis = {
+        'conflicts': [],
+        'distribution': [],
+        'is_balanced': True,
+        'has_conflicts': False
+    }
+    
+    # 1. Check Conflicts
+    my_entries = TimetableModel.objects.all()
+    
+    for entry in my_entries:
+        if entry.teacher_name in ['-', 'Free']:
+            continue
+            
+        # Check against all other classes
+        for other_key, other_cfg in CLASS_CONFIG.items():
+            if other_key == class_key:
+                continue
+            
+            OtherTimetable = other_cfg['timetable']
+            
+            overlaps = OtherTimetable.objects.filter(
+                teacher_name=entry.teacher_name,
+                day=entry.day,
+                start_time=entry.start_time
+            )
+            
+            for overlap in overlaps:
+                analysis['conflicts'].append({
+                    'teacher': entry.teacher_name,
+                    'day': entry.day,
+                    'time': f"{entry.start_time} - {entry.end_time}",
+                    'other_class': other_cfg['name'],
+                    'other_subject': overlap.subject_name
+                })
+                analysis['has_conflicts'] = True
+
+    # 2. Check Workload Distribution
+    inputs = InputModel.objects.all()
+    
+    for inp in inputs:
+        exp_th = inp.theory_credits
+        exp_pr = inp.practical_credits # Total practical hours (credits)
+        
+        abbr = get_abbr(inp.subject_name)
+        
+        act_th = TimetableModel.objects.filter(
+            subject_name__startswith=abbr, 
+            batch='ALL'
+        ).count()
+        
+        # ACT PR: Sum of entries across all batches
+        act_pr = TimetableModel.objects.filter(
+            subject_name=abbr,
+            batch__in=['A1', 'A2', 'A3']
+        ).count()
+        
+        status = "Balanced"
+        if act_th < exp_th:
+            status = "Underloaded (Theory)"
+            analysis['is_balanced'] = False
+        elif act_th > (exp_th + 2): 
+            status = "Overloaded (Theory)"
+        
+        # Check Practical Batch-wise
+        batches = ['A1', 'A2', 'A3']
+        pr_status = []
+        for b in batches:
+            b_act = TimetableModel.objects.filter(subject_name=abbr, batch=b).count()
+            if b_act < exp_pr:
+                pr_status.append(f"{b}: Low ({b_act}/{exp_pr})")
+                analysis['is_balanced'] = False
+            elif b_act > exp_pr:
+                 pr_status.append(f"{b}: High ({b_act}/{exp_pr})")
+        
+        analysis['distribution'].append({
+            'subject': inp.subject_name,
+            'teacher': inp.teacher_name,
+            'expected_th': exp_th,
+            'actual_th': act_th,
+            'expected_pr': exp_pr,
+            'practical_status': ", ".join(pr_status) if pr_status else "OK",
+            'status': status
+        })
+
+    return analysis
