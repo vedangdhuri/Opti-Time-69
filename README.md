@@ -14,6 +14,7 @@ The project is divided into three main applications:
 
 ### 2. The Core Workflow (User Journey)
 
+
 #### **Step 1: Dashboard & Navigation**
 *   **User Action:** detailed in [myapp/views.py](cci:7://file:///d:/PROGRAMMING/Main/made_with_anti/myapp/views.py:0:0-0:0).
 *   Users log in and land on the main **Dashboard** (`/dashboard/`).

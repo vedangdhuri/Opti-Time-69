@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     
 
     'class_timetable',
+    'class_timetable_v2',
     
     'crispy_forms',
     'crispy_bootstrap5',

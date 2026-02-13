@@ -24,5 +24,6 @@ urlpatterns = [
     
 
     path('class-timetable/', include('class_timetable.urls')),
+    path('class-timetable-v2/', include('class_timetable_v2.urls')),
     
 ]
