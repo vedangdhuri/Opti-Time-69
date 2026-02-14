@@ -46,6 +46,11 @@
                         <i class="bi bi-graph-up-arrow"></i> Analytics
                     </a>
 
+                    <a href="{% url 'class_timetable:validation' class_key %}"
+                        class="btn btn-warning text-dark shadow-sm fw-bold">
+                        <i class="bi bi-clipboard-check"></i> Validation
+                    </a>
+
                     <a href="{% url 'class_timetable:delete_timetable' class_key %}" class="btn btn-danger shadow-sm"
                         onclick="return confirm('Are you sure you want to delete this timetable? Inputs will be preserved.');">
                         <i class="bi bi-trash-fill"></i> Delete

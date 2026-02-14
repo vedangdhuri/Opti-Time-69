@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
-from .utils import CLASS_CONFIG, generate_timetable_for_class, ACADEMIC_SLOTS, analyze_timetable
+from .utils import CLASS_CONFIG, generate_timetable_for_class, ACADEMIC_SLOTS, analyze_timetable, validate_workload_distribution
 from .forms import TycoAInputForm, TycoBInputForm, SycoAInputForm, SycoBInputForm
 from datetime import time
 
@@ -65,6 +65,19 @@ def generate_timetable_view(request, class_key):
         messages.error(request, f"Error: {msg}")
         
     return redirect('class_timetable:view_timetable', class_key=class_key)
+
+def validate_workload_view(request, class_key):
+    if class_key not in CLASS_CONFIG:
+        return redirect('class_timetable:dashboard')
+    
+    cfg = CLASS_CONFIG[class_key]
+    validation = validate_workload_distribution(class_key)
+    
+    return render(request, 'class_timetable/validation.html', {
+        'class_name': cfg['name'],
+        'class_key': class_key,
+        'validation': validation
+    })
 
 def analytics_view(request, class_key):
     if class_key not in CLASS_CONFIG:
