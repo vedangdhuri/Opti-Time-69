@@ -46,16 +46,18 @@ The core of Opti-Time uses a **Constrained-Based Randomized Heuristic Algorithm*
 
 ## 📚 Reference & Research
 
-For a detailed analysis and bibliography, please refer to the project report:
+This project is based on standard algorithms and methodologies for the University Timetabling Problem (UTP). Key research papers and concepts referred to include:
 
-- `report/College_Timetable_Management_System_Report.docx`
+1.  **Burke, E. K., Jackson, K., Kingston, J. H., & Weare, R. F. (1997).** "Automated University Timetabling: The State of the Art". _The Computer Journal_, 40(9), 565-571.
+    - _Concept_: Overview of heuristic layout and constraint satisfaction in academic scheduling.
 
-This project implements concepts from:
+2.  **Schaerf, A. (1999).** "A Survey of Automated Timetabling". _Artificial Intelligence Review_, 13(2), 87-127.
+    - _Concept_: Classification of timetabling problems (School vs. University) and algorithmic approaches like Tabu Search and Simulated Annealing.
 
-- **Constraint Satisfaction Problems (CSP)** in scheduling.
-- **Heuristic Search Algorithms** for optimization.
+3.  **de Werra, D. (1985).** "An Introduction to Timetabling". _European Journal of Operational Research_, 19(2), 151-162.
+    - _Concept_: Foundational work linking timetabling problems to **Graph Coloring** and **Constraint Satisfaction Problems (CSP)**.
 
-_Note: Specific implementation details follow standard Operations Research methodologies for University Timetabling Problems (UTP)._
+The implementation specifically utilizes a **Randomized Heuristic Construction Algorithm** with backtracking (retry logic), significantly inspired by the constraint handling techniques discussed in these works.
 
 ## 📦 Installation & Setup
 
