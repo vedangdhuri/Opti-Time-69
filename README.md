@@ -1,127 +1,208 @@
-# Opti-Time: Automated Class Timetable Generator
+<div align="center">
 
-Opti-Time is a robust Django-based application designed to automate the complex process of generating academic timetables. It handles multiple classes, subject constraints, practical batches, and teacher availability to produce conflict-free schedules.
+# 🗓️ Opti-Time: Automated Class Timetable Generator
 
-## 🚀 Features
+[![Python Version](https://img.shields.io/badge/Python-3.11%2B-blue?style=flat-square&logo=python&logoColor=white)](https://www.python.org/)
+[![Django](https://img.shields.io/badge/Django-Framework-092E20?style=flat-square&logo=django&logoColor=white)](https://www.djangoproject.com/)
+[![License](https://img.shields.io/badge/License-MIT-yellow?style=flat-square)](LICENSE)
+[![Status](https://img.shields.io/badge/Status-Active-success?style=flat-square)]()
+[![PRs Welcome](https://img.shields.io/badge/PRs-Welcome-brightgreen.svg?style=flat-square)](http://makeapullrequest.com)
+[![GitHub issues](https://img.shields.io/github/issues/vedangdhuri/Opti-Time-69?style=flat-square)](https://github.com/vedangdhuri/Opti-Time-69/issues)
+[![GitHub last commit](https://img.shields.io/github/last-commit/vedangdhuri/Opti-Time-69?style=flat-square)](https://github.com/vedangdhuri/Opti-Time-69/commits/main)
 
-- **Automated Scheduling**: Generates timetables for multiple classes (e.g., SYCO A/B, TYCO A/B) simultaneously.
-- **Conflict Detection**: Ensures teachers are not assigned to multiple classes at the same time.
-- **Batch Management**: Automatically schedules practical sessions for distinct batches (A1, A2, A3) ensuring unique teacher assignments per slot.
-- **Smart Allocation**:
-  - Prioritizes practical sessions (2-hour blocks).
-  - Distributes theory lectures evenly (Max 2 per day per subject).
-  - Fills gaps with "Extra" lectures or Library slots to ensure no empty periods.
-- **Analytics Dashboard**: Visualizes workload distribution, helping to identify underloaded or overloaded subjects/teachers.
-- **Export Options**: Download timetables in PDF, Excel, and PNG formats.
-- **Data Seeding**: Scripts included to populate initial sample data for testing.
+**A robust, randomized heuristic-based system for automated academic scheduling.**
+
+[Features](#-key-features) • [Tech Stack](#-tech-stack) • [Algorithm](#-algorithm-logic) • [Installation](#-installation--setup) • [Research](#-research--references)
+
+</div>
+
+---
+
+## 📖 About The Project
+
+**Opti-Time** is a powerful Django-based application engineered to solve the NP-hard problem of university timetabling. It automates the complex process of scheduling classes, practical batches, and teacher assignments while strictly adhering to hard constraints and optimizing for soft constraints.
+
+It handles multiple classes (e.g., SYCO A/B, TYCO A/B), subject constraints, practical batches (A1, A2, A3), and teacher availability to produce **conflict-free, optimized schedules**.
+
+---
+
+## 🚀 Key Features
+
+| Feature                     | Description                                                                                                        |
+| :-------------------------- | :----------------------------------------------------------------------------------------------------------------- |
+| **🤖 Automated Scheduling** | Generates valid timetables for multiple classes simultaneously with a single click.                                |
+| **⚡ Conflict Detection**   | Real-time validation ensures no teacher or room is double-booked across different classes.                         |
+| **🧪 Batch Management**     | Automatically handles practical sessions for distinct batches (A1, A2, A3) ensuring unique teacher assignments.    |
+| **⚖️ Smart Allocation**     | Prioritizes practicals (2hr blocks), distributes theory lectures evenly (Max 2/day), and fills gaps intelligently. |
+| **📊 Analytics Dashboard**  | Visualizes workload distribution to identify underloaded or overloaded resources.                                  |
+| **📥 Export Ready**         | Download generated timetables in professional **PDF**, **Excel**, and **PNG** formats.                             |
+| **🌱 Data Seeding**         | Includes scripts to populate initial sample data for robust testing and demonstration.                             |
+
+---
 
 ## 🛠️ Tech Stack
 
-- **Backend**: Python 3.11+, Django Framework
-- **Database**: SQLite (Default), compatible with PostgreSQL/MySQL via Django ORM
-- **Frontend**: HTML5, CSS3, JavaScript
-- **Libraries**:
-  - `itertools` & `random`: For combinatorics and randomized slot allocation.
-  - `reportlab` / `xlsxwriter` (Implied for exports): Key for document generation.
+This project uses a modern, robust technology stack:
 
-## 🧠 Algorithm
+### Backend
 
-The core of Opti-Time uses a **Constrained-Based Randomized Heuristic Algorithm**. It approaches the scheduling problem in distinct phases:
+- ![Python](https://img.shields.io/badge/Python-3776AB?style=flat-square&logo=python&logoColor=white) **Python 3.11+** - The core programming language.
+- ![Django](https://img.shields.io/badge/Django-092E20?style=flat-square&logo=django&logoColor=white) **Django** - The high-level web framework.
+- ![SQLite](https://img.shields.io/badge/SQLite-07405e?style=flat-square&logo=sqlite&logoColor=white) **SQLite** - Lightweight relational database (default).
 
-1.  **Practical Scheduling (The Hard Constraint)**:
-    - Uses `itertools.product` to generate valid combinations of practical subjects for batches A1, A2, and A3.
-    - Enforces a strict constraint: All three teachers in a combined practical slot must be unique.
-    - Checks for cross-class conflicts (e.g., Is the teacher busy in TYCO-A while needed for SYCO-B?).
+### Frontend
 
-2.  **Theory Scheduling**:
+- ![HTML5](https://img.shields.io/badge/HTML5-E34F26?style=flat-square&logo=html5&logoColor=white) **HTML5** - Structuring the web pages.
+- ![CSS3](https://img.shields.io/badge/CSS3-1572B6?style=flat-square&logo=css3&logoColor=white) **CSS3** - Styling and layout.
+- ![JavaScript](https://img.shields.io/badge/JavaScript-F7DF1E?style=flat-square&logo=javascript&logoColor=black) **JavaScript** - Dynamic interactivity.
+
+### Libraries & Tools
+
+- **`itertools` & `random`**: For combinatorics and randomized slot allocation.
+- **`reportlab`**: For generating PDF reports.
+- **`xlsxwriter`**: For Excel exports.
+
+---
+
+## 🧠 Algorithm Logic
+
+The core of **Opti-Time** operates on a **Constrained-Based Randomized Heuristic Algorithm**. It approaches the scheduling problem in distinct, logical phases:
+
+1.  **🧬 Phase 1: Practical Scheduling (Hard Constraint)**
+    - Uses `itertools.product` to generate valid combinations of practical subjects for batches (A1, A2, A3).
+    - **Constraint**: All three teachers in a combined practical slot _must_ be unique.
+    - **Cross-Check**: Verifies teacher availability against other classes (e.g., Is the teacher busy in TYCO-A while needed for SYCO-B?).
+
+2.  **🕗 Phase 2: Theory Scheduling**
     - Iterates through available time slots.
     - Selects subjects from a weighted pool.
-    - Applies constraints:
+    - **Constraints**:
       - **Teacher Availability**: Checks against all other generated timetables.
       - **Daily Load**: Limits a subject to a maximum of 2 lectures per day.
 
-3.  **Gap Filling**:
+3.  **🔄 Phase 3: Gap Filling & Optimization**
     - Scans for remaining empty slots.
-    - Assigns "Extra" lectures from the available pool or "Library" slots if no teachers are available.
+    - Assigns "Extra" lectures or "Library" slots if no teachers are available, ensuring a complete schedule.
 
-## 📚 Reference & Research
+---
 
-This project is based on standard algorithms and methodologies for the University Timetabling Problem (UTP). Key research papers and concepts referred to include:
+## 📚 Research & References
 
-1.  **Burke, E. K., Jackson, K., Kingston, J. H., & Weare, R. F. (1997).** "Automated University Timetabling: The State of the Art". _The Computer Journal_, 40(9), 565-571.
-    - _Concept_: Overview of heuristic layout and constraint satisfaction in academic scheduling.
+This project is built upon foundational research in the **University Timetabling Problem (UTP)**. Key academic references include:
 
-2.  **Schaerf, A. (1999).** "A Survey of Automated Timetabling". _Artificial Intelligence Review_, 13(2), 87-127.
-    - _Concept_: Classification of timetabling problems (School vs. University) and algorithmic approaches like Tabu Search and Simulated Annealing.
+> **1. Burke, E. K., Jackson, K., Kingston, J. H., & Weare, R. F. (1997).**
+> _"Automated University Timetabling: The State of the Art". The Computer Journal._
+>
+> - **Concept**: Heuristic layout and constraint satisfaction.
 
-3.  **de Werra, D. (1985).** "An Introduction to Timetabling". _European Journal of Operational Research_, 19(2), 151-162.
-    - _Concept_: Foundational work linking timetabling problems to **Graph Coloring** and **Constraint Satisfaction Problems (CSP)**.
+> **2. Schaerf, A. (1999).**
+> _"A Survey of Automated Timetabling". Artificial Intelligence Review._
+>
+> - **Concept**: Classification of timetabling problems and algorithmic approaches like Tabu Search.
 
-The implementation specifically utilizes a **Randomized Heuristic Construction Algorithm** with backtracking (retry logic), significantly inspired by the constraint handling techniques discussed in these works.
+> **3. de Werra, D. (1985).**
+> _"An Introduction to Timetabling". European Journal of Operational Research._
+>
+> - **Concept**: Graph Coloring and Constraint Satisfaction Problems (CSP).
+
+---
 
 ## 📦 Installation & Setup
 
-Follow these steps to set up the project locally:
+Get the project running locally in just a few steps.
 
-### 1. Clone the Repository
+### Prerequisites
 
-```bash
-git clone https://github.com/vedangdhuri/Opti-Time-69.git
-cd Opti-Time
-```
+- Python 3.11 or higher
+- Git
 
-### 2. Create a Virtual Environment
+### Steps
 
-```bash
-python -m venv .venv
-# Windows
-.venv\Scripts\activate
-# macOS/Linux
-source .venv/bin/activate
-```
+1.  **Clone the Repository**
 
-### 3. Install Dependencies
+    ```bash
+    git clone https://github.com/vedangdhuri/Opti-Time-69.git
+    cd Opti-Time
+    ```
 
-```bash
-pip install -r requirements.txt
-```
+2.  **Create a Virtual Environment**
 
-### 4. Apply Database Migrations
+    ```bash
+    # Windows
+    python -m venv .venv
+    .venv\Scripts\activate
 
-```bash
-python manage.py makemigrations
-python manage.py migrate
-```
+    # macOS/Linux
+    python3 -m venv .venv
+    source .venv/bin/activate
+    ```
 
-### 5. Populate Sample Data (Optional)
+3.  **Install Dependencies**
 
-To load initial data for Second Year and Third Year classes:
+    ```bash
+    pip install -r requirements.txt
+    ```
 
-```bash
-python populate_syco_a_real.py
-python populate_syco_b_real.py
-python populate_tyco_a_real.py
-python populate_tyco_b_real.py
-```
+4.  **Database Setup**
 
-### 6. Run the Development Server
+    ```bash
+    python manage.py makemigrations
+    python manage.py migrate
+    ```
 
-```bash
-python manage.py runserver
-```
+5.  **Seed Sample Data (Optional)**
+    _Populate the database with initial data for testing:_
 
-Access the application at `http://127.0.0.1:8000/`.
+    ```bash
+    python populate_syco_a_real.py
+    python populate_syco_b_real.py
+    python populate_tyco_a_real.py
+    python populate_tyco_b_real.py
+    ```
+
+6.  **Run the Server**
+    ```bash
+    python manage.py runserver
+    ```
+    🎉 Open your browser and go to `http://127.0.0.1:8000/`
+
+---
 
 ## 📂 Project Structure
 
-```
+```bash
 Opti-Time/
-├── class_timetable/       # Main scheduling logic & models
+├── class_timetable/       # 🧠 Main scheduling logic & models
 │   ├── utils.py           # Core scheduling algorithm
 │   ├── views.py           # View controllers & analytics
-│   └── models.py          # Value inputs (Teachers, Subjects)
-├── templates/             # HTML Templates for Dashboard/Views
-├── static/                # CSS/JS assets
-├── populate_*.py          # Data seeding scripts
-└── manage.py              # Django CLI utility
+│   └── models.py          # Data models (Teachers, Subjects)
+├── templates/             # 🎨 HTML Templates
+├── static/                # 💅 CSS/JS assets
+├── populate_*.py          # 🌱 Data seeding scripts
+├── manage.py              # ⚙️ Django CLI utility
+└── requirements.txt       # 📦 Project dependencies
 ```
+
+---
+
+## 🤝 Contributing
+
+Contributions are what make the open source community such an amazing place to learn, inspire, and create. Any contributions you make are **greatly appreciated**.
+
+1.  Fork the Project
+2.  Create your Feature Branch (`git checkout -b feature/AmazingFeature`)
+3.  Commit your Changes (`git commit -m 'Add some AmazingFeature'`)
+4.  Push to the Branch (`git push origin feature/AmazingFeature`)
+5.  Open a Pull Request
+
+---
+
+## 📝 License
+
+Distributed under the MIT License. See `LICENSE` for more information.
+
+---
+
+<div align="center">
+  <sub>Built with ❤️ by <a href="https://github.com/vedangdhuri">Vedang Dhuri</a></sub>
+</div>

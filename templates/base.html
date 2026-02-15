@@ -49,20 +49,20 @@
             <a class="nav-link px-3" href="/">Home</a>
           </li>
           {% if user.is_authenticated %}
-          <!-- <li class="nav-item">
-            <a class="nav-link px-3" href="{% url 'dashboard' %}">
-              Dashboard
+          <li class="nav-item">
+            <a class="nav-link px-3" href="{% url 'class_timetable:dashboard' %}">
+              Class-wise Timetable
             </a>
-          </li> -->
-
-          <!-- Class-wise Timetable Link -->
-          <a class="nav-link px-3" href="{% url 'class_timetable:overall_analytics' %}">
-            Overall Analytics
-          </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link px-3" href="{% url 'class_timetable:overall_analytics' %}">
+              Overall Analytics
+            </a>
           </li>
           <li class="nav-item">
             <a class="nav-link px-3" href="{% url 'class_timetable:overall_validation' %}">
               Overall Validation
+            </a>
             </a>
           </li>
           <li class="nav-item">
