@@ -1,0 +1,201 @@
+{% extends "base.html" %}
+
+{% block title %}Overall Validation{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="display-6 fw-bold text-success">Overall Project Validation</h1>
+        <a href="{% url 'class_timetable:overall_analytics' %}" class="btn btn-info text-white fw-bold">
+            <i class="bi bi-graph-up-arrow"></i> Go to Overall Analytics
+        </a>
+    </div>
+
+    {% for key, val in results.items %}
+    <div class="card mb-5 border-0 shadow-lg">
+        <div
+            class="card-header bg-gradient bg-success text-white py-3 d-flex justify-content-between align-items-center">
+            <div>
+                <h3 class="h4 mb-0 fw-bold">{{ val.name }}</h3>
+                <span class="badge bg-light text-success mt-1">{{ key|upper }}</span>
+            </div>
+            <div>
+                {% if val.overall_status == 'BALANCED' %}
+                <span class="badge bg-light text-success fs-6 fw-bold"><i class="bi bi-check-circle-fill me-1"></i>
+                    BALANCED</span>
+                {% elif 'CRITICAL' in val.overall_status %}
+                <span class="badge bg-danger fs-6 fw-bold"><i class="bi bi-exclamation-triangle-fill me-1"></i>
+                    CRITICAL</span>
+                {% else %}
+                <span class="badge bg-warning text-dark fs-6 fw-bold"><i
+                        class="bi bi-exclamation-triangle-fill me-1"></i> WARNING</span>
+                {% endif %}
+                <a href="{% url 'class_timetable:view_timetable' val.class_key %}"
+                    class="btn btn-light btn-sm ms-3 text-success fw-bold shadow-sm">
+                    View Timetable
+                </a>
+            </div>
+        </div>
+
+        <div class="card-body bg-light">
+            <!-- Theory & Practical Summary -->
+            <div class="row g-3 mb-4">
+                <div class="col-md-6">
+                    <div class="card h-100 border-0 shadow-sm border-start border-primary border-5">
+                        <div class="card-body">
+                            <h6 class="text-primary fw-bold text-uppercase small">Theory Status</h6>
+                            <div class="d-flex align-items-center">
+                                <h2
+                                    class="mb-0 me-3 {% if val.theory_balanced %}text-success{% else %}text-danger{% endif %}">
+                                    {% if val.theory_balanced %}Balanced{% else %}Unbalanced{% endif %}
+                                </h2>
+                                {% if val.total_theory_deficit > 0 %}
+                                <span class="badge bg-danger rounded-pill">Deficit: {{ val.total_theory_deficit
+                                    }}</span>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="card h-100 border-0 shadow-sm border-start border-success border-5">
+                        <div class="card-body">
+                            <h6 class="text-success fw-bold text-uppercase small">Practical Status</h6>
+                            <div class="d-flex align-items-center">
+                                <h2
+                                    class="mb-0 me-3 {% if val.practical_balanced %}text-success{% else %}text-danger{% endif %}">
+                                    {% if val.practical_balanced %}Balanced{% else %}Unbalanced{% endif %}
+                                </h2>
+                                {% if val.total_practical_deficit > 0 %}
+                                <span class="badge bg-danger rounded-pill">Deficit: {{ val.total_practical_deficit
+                                    }}</span>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Recommendations -->
+            {% if val.recommendations %}
+            <div class="alert alert-warning shadow-sm mb-4">
+                <h6 class="alert-heading fw-bold"><i class="bi bi-lightbulb-fill me-2"></i>Action Items</h6>
+                <hr>
+                <ul class="mb-0 list-unstyled">
+                    {% for rec in val.recommendations %}
+                    <li class="mb-2"><i class="bi bi-arrow-right-short text-danger"></i> {{ rec }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+            {% endif %}
+
+            <!-- Detailed Tables Accordion -->
+            <div class="accordion" id="accordionValidation{{ forloop.counter }}">
+                <!-- Theory Table -->
+                <div class="accordion-item border-0 mb-2 shadow-sm">
+                    <h2 class="accordion-header" id="headingTheory{{ forloop.counter }}">
+                        <button class="accordion-button collapsed fw-bold text-primary" type="button"
+                            data-bs-toggle="collapse" data-bs-target="#collapseTheory{{ forloop.counter }}">
+                            <i class="bi bi-book me-2"></i> Theory Distribution Detail
+                        </button>
+                    </h2>
+                    <div id="collapseTheory{{ forloop.counter }}" class="accordion-collapse collapse"
+                        data-bs-parent="#accordionValidation{{ forloop.counter }}">
+                        <div class="accordion-body p-0">
+                            <div class="table-responsive">
+                                <table class="table table-sm table-hover mb-0">
+                                    <thead class="table-light">
+                                        <tr>
+                                            <th>Subject</th>
+                                            <th>Teacher</th>
+                                            <th class="text-center">Exp</th>
+                                            <th class="text-center">Act</th>
+                                            <th class="text-center">Extra</th>
+                                            <th class="text-center">Status</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for t_dist in val.theory_distribution %}
+                                        <tr>
+                                            <td>{{ t_dist.subject }}</td>
+                                            <td class="text-muted small">{{ t_dist.teacher }}</td>
+                                            <td class="text-center">{{ t_dist.expected }}</td>
+                                            <td
+                                                class="text-center fw-bold {% if t_dist.actual < t_dist.expected %}text-danger{% elif t_dist.actual > t_dist.expected %}text-warning{% else %}text-success{% endif %}">
+                                                {{ t_dist.actual }}
+                                            </td>
+                                            <td class="text-center text-muted">{{ t_dist.extra }}</td>
+                                            <td class="text-center">
+                                                {% if 'DEFICIT' in t_dist.status %}
+                                                <span class="badge bg-danger">Deficit</span>
+                                                {% elif 'EXCESS' in t_dist.status %}
+                                                <span class="badge bg-warning text-dark">Excess</span>
+                                                {% else %}
+                                                <i class="bi bi-check-circle text-success"></i>
+                                                {% endif %}
+                                            </td>
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Practical Table -->
+                <div class="accordion-item border-0 shadow-sm">
+                    <h2 class="accordion-header" id="headingPractical{{ forloop.counter }}">
+                        <button class="accordion-button collapsed fw-bold text-success" type="button"
+                            data-bs-toggle="collapse" data-bs-target="#collapsePractical{{ forloop.counter }}">
+                            <i class="bi bi-laptop me-2"></i> Practical Distribution Detail
+                        </button>
+                    </h2>
+                    <div id="collapsePractical{{ forloop.counter }}" class="accordion-collapse collapse"
+                        data-bs-parent="#accordionValidation{{ forloop.counter }}">
+                        <div class="accordion-body p-0">
+                            <div class="table-responsive">
+                                <table class="table table-sm table-hover mb-0">
+                                    <thead class="table-light">
+                                        <tr>
+                                            <th>Subject</th>
+                                            <th>Batch</th>
+                                            <th class="text-center">Exp Blocks</th>
+                                            <th class="text-center">Act Blocks</th>
+                                            <th class="text-center">Status</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for p_dist in val.practical_distribution %}
+                                        <tr>
+                                            <td>{{ p_dist.subject }}</td>
+                                            <td class="text-center"><span class="badge bg-dark">{{ p_dist.batch
+                                                    }}</span></td>
+                                            <td class="text-center">{{ p_dist.expected_blocks }}</td>
+                                            <td
+                                                class="text-center fw-bold {% if p_dist.actual_blocks < p_dist.expected_blocks %}text-danger{% elif p_dist.actual_blocks > p_dist.expected_blocks %}text-warning{% else %}text-success{% endif %}">
+                                                {{ p_dist.actual_blocks }}
+                                            </td>
+                                            <td class="text-center">
+                                                {% if 'DEFICIT' in p_dist.status %}
+                                                <span class="badge bg-danger">Deficit</span>
+                                                {% elif 'EXCESS' in p_dist.status %}
+                                                <span class="badge bg-warning text-dark">Excess</span>
+                                                {% else %}
+                                                <i class="bi bi-check-circle text-success"></i>
+                                                {% endif %}
+                                            </td>
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}

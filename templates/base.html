@@ -49,17 +49,22 @@
             <a class="nav-link px-3" href="/">Home</a>
           </li>
           {% if user.is_authenticated %}
-          <li class="nav-item">
+          <!-- <li class="nav-item">
             <a class="nav-link px-3" href="{% url 'dashboard' %}">
               Dashboard
             </a>
-          </li>
+          </li> -->
 
           <!-- Class-wise Timetable Link -->
+          <a class="nav-link px-3" href="{% url 'class_timetable:overall_analytics' %}">
+            Overall Analytics
+          </a>
+          </li>
           <li class="nav-item">
-            <a class="nav-link px-3" href="{% url 'class_timetable:dashboard' %}">
-              Class-wise System
+            <a class="nav-link px-3" href="{% url 'class_timetable:overall_validation' %}">
+              Overall Validation
             </a>
+          </li>
           <li class="nav-item">
             <a class="nav-link px-3" href="{% url 'about' %}">
               About
@@ -151,8 +156,12 @@
               class="btn btn-light text-primary px-4 py-2 fw-bold shadow-sm">
               View Timetable
             </a>
-            <a href="{% url 'dashboard' %}" class="btn btn-outline-light px-4 py-2 fw-semibold">
-              View Analytics
+            <a href="{% url 'class_timetable:overall_analytics' %}" class="btn btn-outline-light px-4 py-2 fw-semibold">
+              Overall Analytics
+            </a>
+            <a href="{% url 'class_timetable:overall_validation' %}"
+              class="btn btn-outline-light px-4 py-2 fw-semibold">
+              Overall Validation
             </a>
           </div>
         </div>

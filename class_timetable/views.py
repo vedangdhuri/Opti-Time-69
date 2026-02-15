@@ -79,6 +79,26 @@ def validate_workload_view(request, class_key):
         'validation': validation
     })
 
+def overall_analytics_view(request):
+    results = {}
+    for class_key in CLASS_CONFIG:
+        # Check if timetable has entries? Or just run analysis
+        # analysis handles empty timetable gracefully (counts 0)
+        results[class_key] = analyze_timetable(class_key)
+        results[class_key]['name'] = CLASS_CONFIG[class_key]['name']
+        results[class_key]['class_key'] = class_key
+    
+    return render(request, 'class_timetable/overall_analytics.html', {'results': results})
+
+def overall_validation_view(request):
+    results = {}
+    for class_key in CLASS_CONFIG:
+        results[class_key] = validate_workload_distribution(class_key)
+        results[class_key]['name'] = CLASS_CONFIG[class_key]['name']
+        results[class_key]['class_key'] = class_key
+        
+    return render(request, 'class_timetable/overall_validation.html', {'results': results})
+
 def analytics_view(request, class_key):
     if class_key not in CLASS_CONFIG:
         return redirect('class_timetable:dashboard')
