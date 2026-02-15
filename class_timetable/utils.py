@@ -28,11 +28,21 @@ CLASS_CONFIG = {
 
 # --- HELPER FOR ABBREVIATIONS ---
 SUBJECT_ABBR = {
+    # TYCO A (Sem V)
     "OPERATING SYSTEM": "OSY",
     "SOFTWARE ENGINEERING": "STE",
     "ENTREPRENEURSHIP DEVELOPMENT AND STARTUPS": "ENDS",
     "SEMINAR AND PROJECT INITIATION COURSE": "SPI",
     "CLOUD COMPUTING": "CLC",
+    # TYCO A (Sem VI)
+    "Management": "MAN",
+    "Mobile Application Development": "MAD",
+    "ENTREPRENEURSHIP DEVELOPMENT AND STARTUPS": "ENDS",
+    "Emerging Trends In Computer & Information Tech.": "ETI",
+    "Cilent-Side Scripting": "CSS",
+    "Software Testing": "SFT",
+    "Capstone Project": "CPE",
+    "Network And Information Security": "NIS",
     # SYCO A (Sem III)
     "Data Structure Using C": "DSU",
     "Database Management System": "DMS",
@@ -98,211 +108,8 @@ def generate_timetable_for_class(class_key):
     
     days_list = [d[0] for d in DAYS]
     grid = {} 
-    
-    # --- STEP A: SCHEDULE PRACTICALS ---
-    lab_pools = {'A1': [], 'A2': [], 'A3': []}
-    
-    for inp in all_inputs:
-        blocks = inp.practical_credits // 2
-        for _ in range(blocks):
-            for batch in ['A1', 'A2', 'A3']:
-                lab_pools[batch].append(inp) # Add input object reference
-                
-    for b in lab_pools:
-        random.shuffle(lab_pools[b])
 
-    for day in days_list:
-        possible_starts = [0, 2, 4]
-        random.shuffle(possible_starts)
-        
-        placed_pr = False
-        
-        for start_slot in possible_starts:
-            s1 = start_slot
-            s2 = start_slot + 1
-            if (day, s1) in grid or (day, s2) in grid:
-                continue
-
-            # Check pools
-            if not lab_pools['A1'] or not lab_pools['A2'] or not lab_pools['A3']:
-                break
-                
-            # Create all valid combinations from available pools using itertools
-            p1 = lab_pools['A1']
-            p2 = lab_pools['A2']
-            p3 = lab_pools['A3']
-            
-            # Generate all combinations
-            gen = itertools.product(p1, p2, p3)
-            
-            # To randomize, convert to list and shuffle (safe for small N)
-            candidates = list(gen)
-            random.shuffle(candidates)
-            
-            found_trio = None
-            
-            for tri_tuple in candidates:
-                c1, c2, c3 = tri_tuple
-                
-                # 1. Unique Teachers Check
-                teachers = {c1.teacher_name, c2.teacher_name, c3.teacher_name}
-                if len(teachers) < 3:
-                    continue
-                    
-                # 2. Conflict Check (External Timetables)
-                if check_teacher_conflict_bulk(list(teachers), day, ACADEMIC_SLOTS[s1][0], class_key): continue
-                if check_teacher_conflict_bulk(list(teachers), day, ACADEMIC_SLOTS[s2][0], class_key): continue
-                
-                # Found valid!
-                found_trio = [c1, c2, c3]
-                break
-            
-            if found_trio:
-                # Place
-                grid[(day, s1)] = {'type': 'PR', 'trio': found_trio, 'batches': ['A1', 'A2', 'A3']}
-                grid[(day, s2)] = {'type': 'PR', 'trio': found_trio, 'batches': ['A1', 'A2', 'A3']}
-                
-                # Remove from pools
-                lab_pools['A1'].remove(found_trio[0])
-                lab_pools['A2'].remove(found_trio[1])
-                lab_pools['A3'].remove(found_trio[2])
-                
-                placed_pr = True
-                break
-        
-        # Limit 1 PR block per day? No, allow multiple if needed (e.g. Morning & Afternoon)
-        # if placed_pr:
-        #     continue 
-    
-    # --- STEP A.5: BACKFILL PRACTICAL WORKLOAD (DEFICIT) BEFORE THEORY ---
-    # This ensures any low-load batches get filled in empty slots even if not full trios.
-    
-    # 1. Calculate deficit
-    practical_deficit = {} 
-    
-    # We must scan current grid to see what was placed in Step A
-    for inp in all_inputs:
-        if inp.practical_credits > 0:
-            expected_blocks = inp.practical_credits // 2
-            for batch in ['A1', 'A2', 'A3']:
-                actual_count = 0
-                for (day, slot_idx), data in grid.items():
-                    if data.get('type') == 'PR':
-                        trio = data.get('trio', [])
-                        batches = data.get('batches', [])
-                        for idx, b in enumerate(batches):
-                            if b == batch and idx < len(trio) and trio[idx].id == inp.id:
-                                actual_count += 1
-                                break
-                actual_blocks = actual_count // 2
-                if actual_blocks < expected_blocks:
-                    deficit = expected_blocks - actual_blocks
-                    practical_deficit[(inp.id, batch)] = {'subject': inp, 'deficit': deficit}
-                    
-    if practical_deficit:
-        # Find empty 2-hour blocks
-        empty_blocks = []
-        for day in days_list:
-            for start_slot in [0, 2, 4]:
-                s1, s2 = start_slot, start_slot + 1
-                if (day, s1) not in grid and (day, s2) not in grid:
-                    empty_blocks.append((day, start_slot))
-        
-        random.shuffle(empty_blocks)
-        
-        class DummyLab:
-             subject_name = "Library"
-             teacher_name = "-"
-             id = -1
-
-        for day, start_slot in empty_blocks:
-            if not practical_deficit: break
-            s1, s2 = start_slot, start_slot + 1
-            
-            # Group candidates
-            batch_candidates = {'A1': [], 'A2': [], 'A3': []}
-            for key, data in practical_deficit.items():
-                batch_candidates[data['subject'].id, key[1]] = data['subject'] # Avoid duplicates? No, keys distinct
-                batch_candidates[key[1]].append(data['subject'])
-
-            def is_valid_combo(combo_items):
-                real_items = [x for x in combo_items if x is not None]
-                if not real_items: return False
-                teachers = set()
-                for item in real_items:
-                    if item.teacher_name in teachers: return False
-                    teachers.add(item.teacher_name)
-                t_list = list(teachers)
-                if check_teacher_conflict_bulk(t_list, day, ACADEMIC_SLOTS[s1][0], class_key): return False
-                if check_teacher_conflict_bulk(t_list, day, ACADEMIC_SLOTS[s2][0], class_key): return False
-                return True
-
-            final_combo = None
-            
-            # 1. Full Trio
-            if batch_candidates['A1'] and batch_candidates['A2'] and batch_candidates['A3']:
-                # Limited attempts for performance
-                prod_iter = itertools.product(batch_candidates['A1'], batch_candidates['A2'], batch_candidates['A3'])
-                # Convert first 50 to list to shuffle? Or just iterate?
-                # If lists are small, list(all) is fine.
-                try: 
-                    # If lists are huge, list() might hang. But lab candidates are few.
-                    cands = list(prod_iter)
-                    random.shuffle(cands)
-                    for c in cands:
-                        if is_valid_combo(c):
-                            final_combo = c
-                            break
-                except: pass
-
-            # 2. Pair
-            if not final_combo:
-                 l1 = batch_candidates['A1'] + [None]
-                 l2 = batch_candidates['A2'] + [None]
-                 l3 = batch_candidates['A3'] + [None]
-                 
-                 # Random probing
-                 for _ in range(50):
-                     c1 = random.choice(l1)
-                     c2 = random.choice(l2)
-                     c3 = random.choice(l3)
-                     if c1 is None and c2 is None and c3 is None: continue
-                     # Ensure we have at least TWO real items for Pair priority
-                     real = [x for x in [c1,c2,c3] if x]
-                     if len(real) < 2: continue
-                     
-                     if is_valid_combo((c1, c2, c3)):
-                         final_combo = (c1, c2, c3)
-                         break
-
-            # 3. Single
-            if not final_combo:
-                 # Explicit iterate over all single candidates
-                 singles = []
-                 for x in batch_candidates['A1']: singles.append((x, None, None))
-                 for x in batch_candidates['A2']: singles.append((None, x, None))
-                 for x in batch_candidates['A3']: singles.append((None, None, x))
-                 random.shuffle(singles)
-                 for c in singles:
-                     if is_valid_combo(c):
-                         final_combo = c
-                         break
-
-            if final_combo:
-                safe_trio = [x if x else DummyLab() for x in final_combo]
-                grid[(day, s1)] = {'type': 'PR', 'trio': safe_trio, 'batches': ['A1', 'A2', 'A3']}
-                grid[(day, s2)] = {'type': 'PR', 'trio': safe_trio, 'batches': ['A1', 'A2', 'A3']}
-                
-                for idx, batch in enumerate(['A1', 'A2', 'A3']):
-                    subj = safe_trio[idx]
-                    if subj.id != -1:
-                        key = (subj.id, batch)
-                        if key in practical_deficit:
-                            practical_deficit[key]['deficit'] -= 1
-                            if practical_deficit[key]['deficit'] <= 0:
-                                del practical_deficit[key]
-            
-    # --- STEP B: SCHEDULE THEORY ---
+    # --- STEP B: SCHEDULE THEORY (MOVED TO TOP) ---
     subject_daily_counts = {} 
     
     for day in days_list:
@@ -341,7 +148,7 @@ def generate_timetable_for_class(class_key):
             if placed_t:
                 grid[(day, slot_idx)] = {'type': 'TH', 'subject': placed_t, 'batch': 'ALL'}
                 
-    # --- STEP C: BACKFILL UNSCHEDULED WORKLOAD (REQUIRED) ---
+    # --- STEP C: BACKFILL UNSCHEDULED WORKLOAD (MOVED TO TOP) ---
     # 1. Try to place remaining theory items into empty slots
     if theory_pool:
         empty_slots = []
@@ -367,10 +174,207 @@ def generate_timetable_for_class(class_key):
             
             if placed_idx != -1:
                 theory_pool.pop(placed_idx)
+    
+    # --- STEP A: SCHEDULE PRACTICALS ---
+    lab_pools = {'A1': [], 'A2': [], 'A3': []}
+    
+    for inp in all_inputs:
+        blocks = inp.practical_credits // 2
+        for _ in range(blocks):
+            for batch in ['A1', 'A2', 'A3']:
+                lab_pools[batch].append(inp) # Add input object reference
+                
+    for b in lab_pools:
+        random.shuffle(lab_pools[b])
 
+    for day in days_list:
+        possible_starts = [0, 2, 4]
+        random.shuffle(possible_starts)
+        
+        placed_pr = False
+        
+        for start_slot in possible_starts:
+            s1 = start_slot
+            s2 = start_slot + 1
+            if (day, s1) in grid or (day, s2) in grid:
+                continue
 
+            # Check pools
+            if not lab_pools['A1'] or not lab_pools['A2'] or not lab_pools['A3']:
+                break
+                
+            # Create all valid combinations from available pools using itertools
+            p1 = lab_pools['A1']
+            p2 = lab_pools['A2']
+            p3 = lab_pools['A3']
+            
+            # Generate all combinations
+            gen = itertools.product(p1, p2, p3)
+            
+            # To randomize, convert to list and shuffle (safe for small N)
+            try:
+                candidates = list(gen)
+                random.shuffle(candidates)
+            except:
+                candidates = []
+            
+            found_trio = None
+            
+            for tri_tuple in candidates:
+                c1, c2, c3 = tri_tuple
+                
+                # 1. Unique Teachers Check
+                teachers = {c1.teacher_name, c2.teacher_name, c3.teacher_name}
+                if len(teachers) < 3:
+                    continue
+                    
+                # 2. Conflict Check (External Timetables)
+                if check_teacher_conflict_bulk(list(teachers), day, ACADEMIC_SLOTS[s1][0], class_key): continue
+                if check_teacher_conflict_bulk(list(teachers), day, ACADEMIC_SLOTS[s2][0], class_key): continue
+                
+                # Found valid!
+                found_trio = [c1, c2, c3]
+                break
+            
+            if found_trio:
+                # Place
+                grid[(day, s1)] = {'type': 'PR', 'trio': found_trio, 'batches': ['A1', 'A2', 'A3']}
+                grid[(day, s2)] = {'type': 'PR', 'trio': found_trio, 'batches': ['A1', 'A2', 'A3']}
+                
+                # Remove from pools
+                lab_pools['A1'].remove(found_trio[0])
+                lab_pools['A2'].remove(found_trio[1])
+                lab_pools['A3'].remove(found_trio[2])
+                
+                placed_pr = True
+                break
+    
+    # --- STEP A.5: BACKFILL PRACTICAL WORKLOAD (DEFICIT) ---
+    # This ensures any low-load batches get filled in empty slots even if not full trios.
+    
+    # 1. Calculate deficit
+    practical_deficit = {} 
+    
+    # We must scan current grid to see what was placed in Step A
+    for inp in all_inputs:
+        if inp.practical_credits > 0:
+            expected_blocks = inp.practical_credits // 2
+            for batch in ['A1', 'A2', 'A3']:
+                actual_count = 0
+                for (day, slot_idx), data in grid.items():
+                    if data.get('type') == 'PR':
+                        trio = data.get('trio', [])
+                        batches = data.get('batches', [])
+                        for idx, b in enumerate(batches):
+                            if b == batch and idx < len(trio) and trio[idx].id == inp.id:
+                                actual_count += 1
+                                break
+                actual_blocks = actual_count // 2
+                if actual_blocks < expected_blocks:
+                    deficit = expected_blocks - actual_blocks
+                    practical_deficit[(inp.id, batch)] = {'subject': inp, 'deficit': deficit}
+                    
+    if practical_deficit:
+        # Find empty 2-hour blocks OR Library blocks
+        empty_blocks = []
+        for day in days_list:
+            for start_slot in [0, 2, 4]:
+                s1, s2 = start_slot, start_slot + 1
+                # Check empty
+                if (day, s1) not in grid and (day, s2) not in grid:
+                    empty_blocks.append((day, start_slot))
+                # Check library/filler if needed? Step D hasn't run yet so no FILLERs.
+                # But Step B/C might have left gaps.
+        
+        random.shuffle(empty_blocks)
+        
+        class DummyLab:
+             subject_name = "Library"
+             teacher_name = "-"
+             id = -1
 
+        for day, start_slot in empty_blocks:
+            if not practical_deficit: break
+            s1, s2 = start_slot, start_slot + 1
+            
+            # Group candidates
+            batch_candidates = {'A1': [], 'A2': [], 'A3': []}
+            for key, data in practical_deficit.items():
+                batch_candidates[data['subject'].id, key[1]] = data['subject'] # Avoid duplicates? No, keys distinct
+                batch_candidates[key[1]].append(data['subject'])
 
+            def is_valid_combo(combo_items):
+                real_items = [x for x in combo_items if x is not None]
+                if not real_items: return False
+                teachers = set()
+                for item in real_items:
+                    if item.teacher_name in teachers: return False
+                    teachers.add(item.teacher_name)
+                t_list = list(teachers)
+                if check_teacher_conflict_bulk(t_list, day, ACADEMIC_SLOTS[s1][0], class_key): return False
+                if check_teacher_conflict_bulk(t_list, day, ACADEMIC_SLOTS[s2][0], class_key): return False
+                return True
+
+            final_combo = None
+            
+            # 1. Full Trio
+            if batch_candidates['A1'] and batch_candidates['A2'] and batch_candidates['A3']:
+                # Limited attempts for performance
+                prod_iter = itertools.product(batch_candidates['A1'], batch_candidates['A2'], batch_candidates['A3'])
+                try: 
+                    cands = list(prod_iter)
+                    random.shuffle(cands)
+                    for c in cands:
+                        if is_valid_combo(c):
+                            final_combo = c
+                            break
+                except: pass
+
+            # 2. Pair
+            if not final_combo:
+                 l1 = batch_candidates['A1'] + [None]
+                 l2 = batch_candidates['A2'] + [None]
+                 l3 = batch_candidates['A3'] + [None]
+                 
+                 # Random probing
+                 for _ in range(50):
+                     c1 = random.choice(l1)
+                     c2 = random.choice(l2)
+                     c3 = random.choice(l3)
+                     if c1 is None and c2 is None and c3 is None: continue
+                     real = [x for x in [c1,c2,c3] if x]
+                     if len(real) < 2: continue
+                     
+                     if is_valid_combo((c1, c2, c3)):
+                         final_combo = (c1, c2, c3)
+                         break
+
+            # 3. Single
+            if not final_combo:
+                 # Explicit iterate over all single candidates
+                 singles = []
+                 for x in batch_candidates['A1']: singles.append((x, None, None))
+                 for x in batch_candidates['A2']: singles.append((None, x, None))
+                 for x in batch_candidates['A3']: singles.append((None, None, x))
+                 random.shuffle(singles)
+                 for c in singles:
+                     if is_valid_combo(c):
+                         final_combo = c
+                         break
+
+            if final_combo:
+                safe_trio = [x if x else DummyLab() for x in final_combo]
+                grid[(day, s1)] = {'type': 'PR', 'trio': safe_trio, 'batches': ['A1', 'A2', 'A3']}
+                grid[(day, s2)] = {'type': 'PR', 'trio': safe_trio, 'batches': ['A1', 'A2', 'A3']}
+                
+                for idx, batch in enumerate(['A1', 'A2', 'A3']):
+                    subj = safe_trio[idx]
+                    if subj.id != -1:
+                        key = (subj.id, batch)
+                        if key in practical_deficit:
+                            practical_deficit[key]['deficit'] -= 1
+                            if practical_deficit[key]['deficit'] <= 0:
+                                del practical_deficit[key]
 
     # --- STEP D: FILL REMAINING GAPS WITH EXTRA LECTURES ---
     # User Request: "extra lecture should be 1 dont add library lecture"
