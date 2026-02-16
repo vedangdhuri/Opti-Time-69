@@ -86,27 +86,6 @@ The core of **Opti-Time** operates on a **Constrained-Based Randomized Heuristic
 
 ---
 
-## 📚 Research & References
-
-This project is built upon foundational research in the **University Timetabling Problem (UTP)**. Key academic references include:
-
-> **1. Burke, E. K., Jackson, K., Kingston, J. H., & Weare, R. F. (1997).**
-> _"Automated University Timetabling: The State of the Art". The Computer Journal._
->
-> - **Concept**: Heuristic layout and constraint satisfaction.
-
-> **2. Schaerf, A. (1999).**
-> _"A Survey of Automated Timetabling". Artificial Intelligence Review._
->
-> - **Concept**: Classification of timetabling problems and algorithmic approaches like Tabu Search.
-
-> **3. de Werra, D. (1985).**
-> _"An Introduction to Timetabling". European Journal of Operational Research._
->
-> - **Concept**: Graph Coloring and Constraint Satisfaction Problems (CSP).
-
----
-
 ## 📦 Installation & Setup
 
 Get the project running locally in just a few steps.
@@ -203,6 +182,3 @@ Distributed under the MIT License. See `LICENSE` for more information.
 
 ---
 
-<div align="center">
-  <sub>Built with ❤️ by <a href="https://github.com/vedangdhuri">Vedang Dhuri</a></sub>
-</div>
