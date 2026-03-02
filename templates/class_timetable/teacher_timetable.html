@@ -1,0 +1,271 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Individual Teacher Timetables{% endblock %}
+
+{% block content %}
+<div class="timetable-container my-4">
+
+  <!-- Page Header -->
+  <div class="row mb-4">
+    <div class="col-12 text-center">
+      <h2 class="display-5 fw-bold text-primary">Individual Teacher Timetables</h2>
+      <p class="text-muted">All teacher schedules aggregated across TYCO, SYCO &amp; FYCO — Academic Year 2025-2026</p>
+      <a href="{% url 'class_timetable:dashboard' %}" class="btn btn-outline-secondary btn-sm">
+        ← Back to Dashboard
+      </a>
+    </div>
+  </div>
+
+  {% if not has_data %}
+  <!-- Empty State -->
+  <div class="text-center py-5">
+    <div class="display-1 mb-3">📭</div>
+    <h4 class="text-muted fw-semibold">No Timetable Data Found</h4>
+    <p class="text-muted">Please generate timetables for TYCO, SYCO or FYCO first.</p>
+    <a href="{% url 'class_timetable:dashboard' %}" class="btn btn-primary mt-2">Go to Dashboard</a>
+  </div>
+
+  {% else %}
+
+  <!-- Search Bar -->
+  <div class="row justify-content-center mb-4">
+    <div class="col-md-6 col-lg-5">
+      <div class="input-group shadow-sm">
+        <span class="input-group-text bg-white border-end-0">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+            class="bi bi-search text-muted" viewBox="0 0 16 16">
+            <path
+              d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.099zm-5.242 1.656a5.5 5.5 0 1 1 0-11 5.5 5.5 0 0 1 0 11" />
+          </svg>
+        </span>
+        <input type="text" id="teacherSearchInput" class="form-control border-start-0 ps-0"
+          placeholder="Search teacher by name…" oninput="filterTeachers(this.value)" autocomplete="off">
+        <button class="btn btn-outline-secondary" type="button" onclick="clearSearch()" title="Clear">&times;</button>
+      </div>
+      <div id="searchResultCount" class="text-muted small mt-1 text-center"></div>
+    </div>
+  </div>
+
+  <!-- Legend -->
+  <div class="d-flex justify-content-center gap-3 mb-4 flex-wrap">
+    <span class="badge bg-primary fs-6 px-3 py-2">TYCO</span>
+    <span class="badge bg-success fs-6 px-3 py-2">SYCO</span>
+    <span class="badge bg-warning text-dark fs-6 px-3 py-2">FYCO</span>
+  </div>
+
+  <!-- No results message (hidden by default) -->
+  <div id="noSearchResults" class="text-center py-5 d-none">
+    <div class="display-4 mb-2">🔍</div>
+    <h5 class="text-muted">No teacher found</h5>
+    <p class="text-muted small">Try a different name.</p>
+  </div>
+
+  <!-- One card per teacher -->
+  {% for teacher in teachers %}
+  <div class="card border-0 shadow-sm mb-5 teacher-card" id="teacher-{{ forloop.counter }}"
+    data-teacher-name="{{ teacher.name|lower }}">
+    <div class="card-body p-0">
+
+      <!-- Teacher card header -->
+      <div class="d-flex align-items-center justify-content-between bg-primary text-white px-4 py-3 rounded-top">
+        <div class="d-flex align-items-center gap-3">
+          <div class="bg-white text-primary rounded-circle d-flex align-items-center justify-content-center fw-bold"
+            style="width:42px; height:42px; font-size:1.1rem;">
+            {{ teacher.name|first|upper }}
+          </div>
+          <div>
+            <h5 class="mb-0 fw-bold">{{ teacher.name }}</h5>
+            <small class="opacity-75">Faculty Timetable</small>
+          </div>
+        </div>
+        <div class="d-flex gap-2 no-print">
+          <button onclick="exportTeacherPNG({{ forloop.counter }})" class="btn btn-light btn-sm fw-bold">
+            Export PNG
+          </button>
+          <button onclick="exportTeacherPDF({{ forloop.counter }})" class="btn btn-outline-light btn-sm fw-bold">
+            Export PDF
+          </button>
+        </div>
+      </div>
+
+      <!-- Capture area -->
+      <div id="teacher-export-{{ forloop.counter }}" class="p-3 bg-white">
+
+        <!-- Institute header (shown on export) -->
+        <div class="text-center mb-3 d-none export-header-{{ forloop.counter }}" style="font-size:0.8rem;">
+          <strong>Shri Yashwantrao Bhonsale Education Society's</strong><br>
+          <span style="font-size:1rem; font-weight:700;">YASHWANTRAO BHONSALE INSTITUTE OF TECHNOLOGY</span><br>
+          (DTE CODE : 3470) (MSBTE CODE : 1742)<br>
+          <strong>Faculty Timetable — {{ teacher.name }} — 2025-2026</strong>
+        </div>
+
+        <div class="table-responsive">
+          <table class="timetable-table teacher-table-{{ forloop.counter }}">
+            <thead>
+              <tr>
+                <th style="width:17%;">TIME</th>
+                {% for day in days %}
+                <th>{{ day|slice:":3"|upper }}</th>
+                {% endfor %}
+              </tr>
+            </thead>
+            <tbody>
+              {% for row in teacher.rows %}
+
+              {% if row.type == 'break' %}
+              <tr class="break-row">
+                <td>{{ row.start|time:"h:i A"|lower }} to {{ row.end|time:"h:i A"|lower }}</td>
+                <td colspan="{{ days|length }}">{{ row.label }}</td>
+              </tr>
+
+              {% else %}
+              <tr>
+                <td class="fw-bold" style="font-size:0.8rem;">{{ row.label }}</td>
+                {% for cell in row.days %}
+                {% if not cell.skipped %}
+                <td {% if cell.rowspan > 1 %}rowspan="{{ cell.rowspan }}" class="align-middle"{% endif %}>
+                  {% if cell.entries %}
+                  {% if cell.is_practical %}
+                  <!-- Practical: multiple batches -->
+                  <div class="d-flex flex-column gap-1 justify-content-center h-100">
+                    {% for entry in cell.entries %}
+                    <div class="d-flex flex-column align-items-center border-bottom pb-1"
+                      style="font-size:0.78rem; border-color:#eee !important;">
+                      <span
+                        class="badge bg-{{ entry.class_color }} text-{% if entry.class_color == 'warning' %}dark{% else %}white{% endif %} mb-1"
+                        style="font-size:0.65rem;">{{ entry.class_label }}</span>
+                      <span class="fw-bold text-dark">{{ entry.batch }} – {{ entry.subject_name }}</span>
+                    </div>
+                    {% endfor %}
+                  </div>
+                  {% else %}
+                  <!-- Theory: single entry -->
+                  {% with entry=cell.entries.0 %}
+                  <div class="text-center">
+                    <span
+                      class="badge bg-{{ entry.class_color }} text-{% if entry.class_color == 'warning' %}dark{% else %}white{% endif %} mb-1"
+                      style="font-size:0.65rem;">{{ entry.class_label }}</span>
+                    <div class="subject-code" style="font-size:0.85rem;">{{ entry.subject_name }}</div>
+                  </div>
+                  {% endwith %}
+                  {% endif %}
+                  {% else %}
+                  <span class="text-muted">—</span>
+                  {% endif %}
+                </td>
+                {% endif %}
+                {% endfor %}
+              </tr>
+              {% endif %}
+
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div><!-- end capture area -->
+
+    </div>
+  </div>
+  {% endfor %}
+
+  {% endif %}
+
+</div><!-- .timetable-container -->
+
+<!-- Export libraries -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+<script>
+  function exportTeacherPNG(idx) {
+    const el = document.getElementById('teacher-export-' + idx);
+    html2canvas(el, { scale: 3, backgroundColor: '#ffffff', useCORS: true, logging: false }).then(canvas => {
+      const link = document.createElement('a');
+      link.download = 'Teacher_Timetable_' + idx + '.png';
+      link.href = canvas.toDataURL('image/png', 1.0);
+      link.click();
+    });
+  }
+
+  function exportTeacherPDF(idx) {
+    const header = document.querySelector('.export-header-' + idx);
+    if (header) header.classList.remove('d-none');
+    window.print();
+    if (header) header.classList.add('d-none');
+  }
+
+  function filterTeachers(query) {
+    const q = query.trim().toLowerCase();
+    const cards = document.querySelectorAll('.teacher-card');
+    let visibleCount = 0;
+
+    cards.forEach(card => {
+      const name = card.dataset.teacherName || '';
+      const match = name.includes(q);
+      card.style.display = match ? '' : 'none';
+      if (match) visibleCount++;
+    });
+
+    // Update result count label
+    const countEl = document.getElementById('searchResultCount');
+    if (q === '') {
+      countEl.textContent = '';
+    } else {
+      countEl.textContent = visibleCount === 0
+        ? 'No teachers match "' + query + '"'
+        : visibleCount + ' teacher' + (visibleCount > 1 ? 's' : '') + ' found';
+    }
+
+    // Show/hide the no-results placeholder
+    document.getElementById('noSearchResults').classList.toggle('d-none', visibleCount > 0 || q === '');
+  }
+
+  function clearSearch() {
+    const input = document.getElementById('teacherSearchInput');
+    input.value = '';
+    filterTeachers('');
+    input.focus();
+  }
+
+  // Keyboard shortcut: '/' focuses the search box
+  document.addEventListener('keydown', e => {
+    if (e.key === '/' && document.activeElement.tagName !== 'INPUT') {
+      e.preventDefault();
+      document.getElementById('teacherSearchInput').focus();
+    }
+  });
+</script>
+
+<style>
+  @media print {
+    body * {
+      visibility: hidden;
+    }
+
+    /* Only print the card being exported — triggered by JS removing d-none */
+    .teacher-table-1,
+    .teacher-table-1 * {
+      visibility: visible;
+    }
+
+    .no-print {
+      display: none !important;
+    }
+
+    .timetable-container {
+      margin: 0 !important;
+    }
+
+    .timetable-table {
+      border-collapse: collapse;
+      width: 100%;
+    }
+
+    .timetable-table th,
+    .timetable-table td {
+      border: 1px solid #000 !important;
+    }
+  }
+</style>
+{% endblock %}

@@ -17,49 +17,43 @@ def populate():
     data = [
         {
             "subject": "Basic Mathematics",
-            "teacher": "Mr. S. S. Olkar",
+            "teacher": "Mr.S.S.Olkar",
             "th": 4,
             "pr": 0
         },
         {
             "subject": "Basic Science (Physics)",
-            "teacher": "Mr. A. A. Madgaonkar",
+            "teacher": "Mr.A.A.Madgaonkar",
             "th": 2,
             "pr": 2
         },
         {
             "subject": "Basic Science (Chemistry)",
-            "teacher": "Mr. A. G. Prabhu",
+            "teacher": "Mr.A.G.Prabhu",
             "th": 2,
             "pr": 2
         },
         {
             "subject": "Communication Skills",
-            "teacher": "Mrs. V. C. D'Souza",
+            "teacher": "Mrs.V.C.D'Souza",
             "th": 3,
             "pr": 2
         },
         {
             "subject": "Engineering Graphics",
-            "teacher": "Mr. S. S. Lanjekar",
-            "th": 2,
-            "pr": 4
-        },
-        {
-            "subject": "Professional Communication",
-            "teacher": "Mrs. V. C. D'Souza",
+            "teacher": "Mr.S.S.Lanjekar",
             "th": 2,
             "pr": 4
         },
         {
             "subject": "Engineering Workshop Practice",
-            "teacher": "Mr. P. D. Kate",
+            "teacher": "Mr.P.D.Kate",
             "th": 0,
             "pr": 4
         },
         {
             "subject": "Fundamentals of ICT",
-            "teacher": "Mr. S. S. Kolapate",
+            "teacher": "Mr.S.S.Kolapate",
             "th": 1,
             "pr": 2
         },

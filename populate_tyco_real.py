@@ -35,7 +35,7 @@ def populate():
         },
         {
             "subject": "SEMINAR AND PROJECT INITIATION COURSE",
-            "teacher": "Mr.P.D.kate",
+            "teacher": "Mr.P.D.Kate",
             "th": 0,
             "pr": 2 # Adjusted from 1 to 2 to ensure it gets a block
         },

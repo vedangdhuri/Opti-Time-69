@@ -1,0 +1,100 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}All Class Timetables{% endblock %}
+
+{% block content %}
+<div class="container-fluid my-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h2 class="display-6 fw-bold text-primary mb-0">All Class Timetables</h2>
+            <p class="text-muted mb-0">TYCO &bull; SYCO &bull; FYCO — Academic Year 2025–2026</p>
+        </div>
+        <a href="{% url 'class_timetable:dashboard' %}" class="btn btn-secondary">
+            <i class="bi bi-arrow-left"></i> Back to Dashboard
+        </a>
+    </div>
+
+    {% for tt in all_timetables %}
+    <div class="card mb-5 border-0 shadow" id="class-{{ tt.class_key }}">
+        <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center py-3">
+            <h4 class="mb-0 fw-bold">{{ tt.class_name }}</h4>
+            <a href="{% url 'class_timetable:view_timetable' tt.class_key %}"
+                class="btn btn-light btn-sm text-primary fw-bold">
+                <i class="bi bi-fullscreen"></i> Full View
+            </a>
+        </div>
+        <div class="card-body p-0">
+            {% if not tt.has_data %}
+            <div class="alert alert-warning m-3">
+                <i class="bi bi-exclamation-triangle-fill me-2"></i>
+                No timetable generated yet for {{ tt.class_name }}.
+                <a href="{% url 'class_timetable:generate' tt.class_key %}" class="alert-link">Generate now →</a>
+            </div>
+            {% else %}
+            <div class="table-responsive">
+                <table class="timetable-table w-100" style="margin: 0;">
+                    <thead>
+                        <tr>
+                            <th style="width: 140px;">TIME</th>
+                            {% for day in days %}
+                            <th>{{ day|slice:":3"|upper }}</th>
+                            {% endfor %}
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for row in tt.timetable_rows %}
+                        {% if row.type == 'break' %}
+                        <tr class="break-row">
+                            <td>{{ row.start|time:"h:i A"|lower }} to {{ row.end|time:"h:i A"|lower }}</td>
+                            <td colspan="{{ days|length }}">{{ row.label }}</td>
+                        </tr>
+                        {% else %}
+                        <tr>
+                            <td class="fw-bold" style="font-size: 0.78rem;">{{ row.label }}</td>
+                            {% for cell in row.days %}
+                            {% if not cell.skipped %}
+                            <td rowspan="{{ cell.rowspan }}">
+                                {% if cell.entries %}
+                                {% if cell.is_practical %}
+                                <div class="d-flex flex-column gap-1 justify-content-center h-100">
+                                    {% for entry in cell.entries %}
+                                    <div class="d-flex justify-content-center align-items-center"
+                                        style="font-size: 0.8rem; border-bottom: 1px solid #ddd; padding-bottom: 2px;">
+                                        <span class="fw-bold text-primary me-1">{{ entry.batch }}</span>
+                                        <span class="text-dark fw-bold">{{ entry.subject_name }}</span>
+                                    </div>
+                                    {% endfor %}
+                                </div>
+                                {% else %}
+                                {% with entry=cell.entries.0 %}
+                                <div class="subject-code" style="font-size: 0.85rem;">{{ entry.subject_name }}</div>
+                                {% endwith %}
+                                {% endif %}
+                                {% else %}
+                                <span class="text-muted">-</span>
+                                {% endif %}
+                            </td>
+                            {% endif %}
+                            {% endfor %}
+                        </tr>
+                        {% endif %}
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+    {% endfor %}
+
+    <!-- Quick Jump -->
+    <div class="position-fixed bottom-0 end-0 m-4 d-flex flex-column gap-2" style="z-index: 999;">
+        {% for tt in all_timetables %}
+        <a href="#class-{{ tt.class_key }}" class="btn btn-primary btn-sm shadow fw-bold">
+            ↑ {{ tt.class_name }}
+        </a>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

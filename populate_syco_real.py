@@ -23,7 +23,7 @@ def populate():
         },
         {
             "subject": "Database Management System",
-            "teacher": "Mr.P.D.kate",
+            "teacher": "Mr.P.D.Kate",
             "th": 3,
             "pr": 4
         },
