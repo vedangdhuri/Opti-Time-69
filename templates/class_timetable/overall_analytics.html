@@ -3,94 +3,89 @@
 {% block title %}Overall Analytics{% endblock %}
 
 {% block content %}
-<div class="container py-4">
-    <div class="d-flex justify-content-between align-items-center mb-4">
-        <h1 class="display-6 fw-bold text-primary">Overall Project Analytics</h1>
-        <a href="{% url 'class_timetable:overall_validation' %}" class="btn btn-warning text-dark fw-bold">
-            <i class="bi bi-clipboard-check"></i> Go to Overall Validation
+<div>
+    <!-- Header -->
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
+        <h1 class="text-2xl font-bold text-gray-900" style="font-family:'Outfit',sans-serif;">
+            Overall Project Analytics
+        </h1>
+        <a href="{% url 'class_timetable:overall_validation' %}"
+            class="flex items-center gap-2 px-4 py-2 bg-amber-100 text-amber-800 font-semibold text-sm rounded-xl hover:bg-amber-200 transition-all self-start sm:self-auto">
+            <i class="bi bi-clipboard-check"></i> Go to Validation
         </a>
     </div>
 
     {% for key, data in results.items %}
-    <div class="card mb-5 border-0 shadow-lg">
-        <div
-            class="card-header bg-gradient bg-primary text-white py-3 d-flex justify-content-between align-items-center">
+    <div class="bg-white rounded-2xl shadow-md border border-gray-100 overflow-hidden mb-6">
+
+        <!-- Class Header -->
+        <div class="flex items-center justify-between px-6 py-4 bg-gradient-to-r from-indigo-600 to-purple-700">
             <div>
-                <h3 class="h4 mb-0 fw-bold">{{ data.name }}</h3>
-                <span class="badge bg-light text-primary mt-1">{{ key|upper }}</span>
+                <h3 class="text-lg font-bold text-white" style="font-family:'Outfit',sans-serif;">{{ data.name }}</h3>
+                <span class="text-xs text-white/70 font-mono mt-0.5">{{ key|upper }}</span>
             </div>
-            <div>
+            <div class="flex items-center gap-2">
                 {% if data.is_balanced and not data.has_conflicts %}
-                <span class="badge bg-success fs-6"><i class="bi bi-check-circle-fill me-1"></i> Perfect</span>
+                <span class="badge-pill bg-emerald-400 text-white">
+                    <i class="bi bi-check-circle-fill mr-1"></i>Perfect
+                </span>
                 {% else %}
-                <span class="badge bg-warning text-dark fs-6"><i class="bi bi-exclamation-triangle-fill me-1"></i> Needs
-                    Attention</span>
+                <span class="badge-pill bg-amber-400 text-white">
+                    <i class="bi bi-exclamation-triangle-fill mr-1"></i>Needs Attention
+                </span>
                 {% endif %}
                 <a href="{% url 'class_timetable:input_data' data.class_key %}"
-                    class="btn btn-light btn-sm ms-3 text-primary fw-bold shadow-sm">
-                    <i class="bi bi-gear-fill"></i> Manage Data
+                    class="px-3 py-1.5 bg-white/20 hover:bg-white/30 text-white text-xs font-bold rounded-full transition-all">
+                    <i class="bi bi-gear-fill mr-1"></i>Manage
                 </a>
                 <a href="{% url 'class_timetable:view_timetable' data.class_key %}"
-                    class="btn btn-light btn-sm ms-2 text-primary fw-bold shadow-sm">
-                    View Timetable
+                    class="px-3 py-1.5 bg-white/20 hover:bg-white/30 text-white text-xs font-bold rounded-full transition-all">
+                    View
                 </a>
             </div>
         </div>
 
-        <div class="card-body bg-light">
-            <!-- Summary Stats -->
-            <div class="row g-3 mb-4">
-                <div class="col-md-6">
-                    <div class="card h-100 border-0 shadow-sm">
-                        <div class="card-body d-flex align-items-center">
-                            <div class="flex-shrink-0 me-3">
-                                <div class="bg-primary bg-opacity-10 p-3 rounded-circle text-primary">
-                                    <i class="bi bi-people-fill fs-3"></i>
-                                </div>
-                            </div>
-                            <div>
-                                <h6 class="card-subtitle text-muted mb-1">Teacher Conflicts</h6>
-                                <h2
-                                    class="card-title mb-0 {% if data.has_conflicts %}text-danger{% else %}text-success{% endif %}">
-                                    {{ data.conflicts|length }}
-                                </h2>
-                            </div>
-                        </div>
+        <div class="p-5">
+            <!-- Stats -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-5">
+                <div class="flex items-center gap-4 bg-indigo-50 rounded-xl p-4">
+                    <div class="w-12 h-12 bg-indigo-100 rounded-xl flex items-center justify-center">
+                        <i class="bi bi-people-fill text-indigo-600 text-xl"></i>
+                    </div>
+                    <div>
+                        <p class="text-xs text-gray-500 font-semibold uppercase">Teacher Conflicts</p>
+                        <p
+                            class="text-2xl font-bold {% if data.has_conflicts %}text-red-600{% else %}text-emerald-600{% endif %}">
+                            {{ data.conflicts|length }}
+                        </p>
                     </div>
                 </div>
-                <div class="col-md-6">
-                    <div class="card h-100 border-0 shadow-sm">
-                        <div class="card-body d-flex align-items-center">
-                            <div class="flex-shrink-0 me-3">
-                                <div class="bg-success bg-opacity-10 p-3 rounded-circle text-success">
-                                    <i class="bi bi-bar-chart-fill fs-3"></i>
-                                </div>
-                            </div>
-                            <div>
-                                <h6 class="card-subtitle text-muted mb-1">Workload Balance</h6>
-                                <h2
-                                    class="card-title mb-0 {% if data.is_balanced %}text-success{% else %}text-warning{% endif %}">
-                                    {% if data.is_balanced %}Balanced{% else %}Unbalanced{% endif %}
-                                </h2>
-                            </div>
-                        </div>
+                <div class="flex items-center gap-4 bg-emerald-50 rounded-xl p-4">
+                    <div class="w-12 h-12 bg-emerald-100 rounded-xl flex items-center justify-center">
+                        <i class="bi bi-bar-chart-fill text-emerald-600 text-xl"></i>
+                    </div>
+                    <div>
+                        <p class="text-xs text-gray-500 font-semibold uppercase">Workload Balance</p>
+                        <p
+                            class="text-2xl font-bold {% if data.is_balanced %}text-emerald-600{% else %}text-amber-600{% endif %}">
+                            {% if data.is_balanced %}Balanced{% else %}Unbalanced{% endif %}
+                        </p>
                     </div>
                 </div>
             </div>
 
-            <!-- Conflicts Section -->
+            <!-- Conflicts -->
             {% if data.conflicts %}
-            <div class="alert alert-danger shadow-sm mb-4">
-                <h5 class="alert-heading fw-bold"><i class="bi bi-exclamation-octagon-fill me-2"></i>Conflicts Detected
+            <div class="bg-red-50 border border-red-200 rounded-xl p-4 mb-5">
+                <h5 class="text-red-700 font-bold mb-2">
+                    <i class="bi bi-exclamation-octagon-fill mr-2"></i>Conflicts Detected
                 </h5>
-                <hr>
-                <ul class="mb-0 list-unstyled">
+                <ul class="space-y-1.5">
                     {% for conflict in data.conflicts %}
-                    <li class="mb-2">
-                        <strong>{{ conflict.day }} ({{ conflict.time }})</strong>:
-                        {{ conflict.teacher }} is busy in
-                        <span class="badge bg-danger">{{ conflict.other_class }}</span>
-                        for <span class="fw-bold">{{ conflict.other_subject }}</span>.
+                    <li class="text-sm text-red-700">
+                        <strong>{{ conflict.day }} ({{ conflict.time }})</strong>: {{ conflict.teacher }} is busy in
+                        <span class="badge-pill bg-red-200 text-red-800 mx-1">{{ conflict.other_class }}</span>
+                        for <strong>{{ conflict.other_subject }}</strong>.
                     </li>
                     {% endfor %}
                 </ul>
@@ -98,46 +93,45 @@
             {% endif %}
 
             <!-- Distribution Table -->
-            <div class="card border-0 shadow-sm">
-                <div class="card-header bg-white py-2">
-                    <h5 class="mb-0 fw-bold text-muted small text-uppercase">Workload Distribution</h5>
+            <div class="rounded-xl overflow-hidden border border-gray-100">
+                <div class="bg-gray-50 px-4 py-2.5 border-b border-gray-100">
+                    <p class="text-xs font-bold text-gray-500 uppercase tracking-wide">Workload Distribution</p>
                 </div>
-                <div class="table-responsive">
-                    <table class="table table-hover align-middle mb-0">
-                        <thead class="table-light">
+                <div class="overflow-x-auto">
+                    <table class="w-full data-table">
+                        <thead>
                             <tr>
-                                <th>Subject</th>
-                                <th>Teacher</th>
-                                <th class="text-center">Expected Theory</th>
+                                <th class="text-left">Subject</th>
+                                <th class="text-left">Teacher</th>
+                                <th class="text-center">Exp Theory</th>
                                 <th class="text-center">Actual Theory</th>
-                                <th class="text-center">Exp. Total Practical</th>
+                                <th class="text-center">Exp Practical</th>
                                 <th class="text-center">Status</th>
                             </tr>
                         </thead>
                         <tbody>
                             {% for item in data.distribution %}
                             <tr>
-                                <td class="fw-medium">{{ item.subject }}</td>
-                                <td class="text-muted small">{{ item.teacher }}</td>
+                                <td class="font-semibold">{{ item.subject }}</td>
+                                <td class="text-gray-500 text-sm">{{ item.teacher }}</td>
                                 <td class="text-center">{{ item.expected_th }}</td>
                                 <td class="text-center">
                                     <span
-                                        class="badge {% if item.actual_th < item.expected_th %}bg-danger{% elif item.actual_th > item.expected_th|add:2 %}bg-warning text-dark{% else %}bg-success{% endif %}">
+                                        class="badge-pill {% if item.actual_th < item.expected_th %}bg-red-100 text-red-700{% elif item.actual_th > item.expected_th|add:2 %}bg-amber-100 text-amber-800{% else %}bg-emerald-100 text-emerald-800{% endif %}">
                                         {{ item.actual_th }}
                                     </span>
                                 </td>
                                 <td class="text-center">{{ item.expected_pr }}</td>
                                 <td class="text-center">
                                     {% if 'Underloaded' in item.status or 'Low' in item.practical_status %}
-                                    <span class="badge bg-danger">Deficit</span>
+                                    <span class="badge-pill bg-red-100 text-red-700">Deficit</span>
                                     {% elif 'Overloaded' in item.status or 'High' in item.practical_status %}
-                                    <span class="badge bg-warning text-dark">Excess</span>
+                                    <span class="badge-pill bg-amber-100 text-amber-800">Excess</span>
                                     {% else %}
-                                    <span class="badge bg-success">Good</span>
+                                    <span class="badge-pill bg-emerald-100 text-emerald-800">Good</span>
                                     {% endif %}
                                     {% if item.practical_status != "OK" %}
-                                    <div class="small text-muted mt-1" style="font-size: 0.75rem;">{{
-                                        item.practical_status }}</div>
+                                    <div class="text-xs text-gray-400 mt-1">{{ item.practical_status }}</div>
                                     {% endif %}
                                 </td>
                             </tr>

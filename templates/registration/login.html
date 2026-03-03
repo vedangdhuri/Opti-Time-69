@@ -1,48 +1,59 @@
 {% extends "base.html" %}
 {% load static %}
 {% load crispy_forms_tags %}
-{% block content1 %}
-{% endblock %}
-{% block content %}
-<div class="container my-5">
-    <div class="row justify-content-center">
-        <div class="col-md-5">
-            <div class="card shadow-lg rounded-4 border-0">
-                <div class="card-body p-5">
-                    <div class="text-center mb-4">
-                        <img src="{% static 'images/college_logo.png' %}" alt="Logo" height="60" class="mb-3">
-                        <h2 class="fw-bold">Welcome Back</h2>
-                        <p class="text-muted">Please sign in to your account</p>
-                    </div>
+{% block content1 %}{% endblock %}
 
-                    <form method="post" novalidate>
-                        {% csrf_token %}
-                        {{ form|crispy }}
-                        <div class="d-grid gap-2 mt-4">
-                            <button type="submit" class="btn btn-primary btn-lg rounded-pill shadow-sm">Login</button>
-                        </div>
-                    </form>
+{% block content %}
+<div class="min-h-screen flex items-center justify-center py-10 px-4">
+    <div class="w-full max-w-md animate-slide-up">
+
+        <!-- Card -->
+        <div class="bg-white rounded-3xl shadow-2xl overflow-hidden border border-gray-100">
+
+            <!-- Card top gradient strip -->
+            <div class="h-2 bg-gradient-to-r from-indigo-500 via-purple-500 to-violet-500"></div>
+
+            <div class="p-8">
+                <!-- Logo + Heading -->
+                <div class="text-center mb-7">
+                    <img src="{% static 'images/college_logo.png' %}" alt="Logo" class="h-16 mx-auto mb-4">
+                    <h2 class="text-2xl font-bold text-gray-900" style="font-family:'Outfit',sans-serif;">Welcome Back
+                    </h2>
+                    <p class="text-gray-500 text-sm mt-1">Please sign in to your account</p>
+                </div>
+
+                <form method="post" novalidate class="form-input-tw">
+                    {% csrf_token %}
+                    {{ form|crispy }}
 
                     {% if form.errors %}
-                        <div class="alert alert-danger mt-3">
-                            Please correct the error{{ form.errors|length|pluralize }} below.
-                        </div>
+                    <div class="bg-red-50 border border-red-200 rounded-xl p-3 mb-4 flex items-center gap-2">
+                        <i class="bi bi-exclamation-circle text-red-500"></i>
+                        <span class="text-red-600 text-sm">Please correct the error{{ form.errors|length|pluralize }}
+                            below.</span>
+                    </div>
                     {% endif %}
 
+                    <button type="submit" class="btn-indigo w-full py-3 text-sm mt-2 rounded-full">
+                        Sign In
+                    </button>
+                </form>
 
-                    <div class="text-center mt-3">
-                        <a href="{% url 'password_reset' %}" class="text-decoration-none text-muted small">
-                            Forgot Password?
-                        </a>
-                    </div>
+                <div class="text-center mt-4">
+                    <a href="{% url 'password_reset' %}" class="text-indigo-600 text-sm hover:underline">
+                        Forgot Password?
+                    </a>
+                </div>
 
-                    <div class="text-center mt-4 pt-3 border-top">
-                        <p class="mb-1 text-muted">Don't have an account?</p>
-                        <a href="{% url 'signup' %}" class="btn btn-outline-primary btn-sm rounded-pill px-4">Create Account</a>
-                    </div>
+                <div class="border-t border-gray-100 mt-6 pt-5 text-center">
+                    <p class="text-gray-500 text-sm mb-3">Don't have an account?</p>
+                    <a href="{% url 'signup' %}" class="btn-outline-indigo px-6 py-2 text-sm rounded-full inline-block">
+                        Create Account
+                    </a>
                 </div>
             </div>
         </div>
+
     </div>
 </div>
 {% endblock %}

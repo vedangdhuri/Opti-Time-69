@@ -10,6 +10,7 @@ class BootstrapFormMixin:
     """
     Automatically adds Bootstrap 5 classes to all fields
     """
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         for field in self.fields.values():
@@ -28,18 +29,14 @@ class BootstrapFormMixin:
 # 🔹 USER REGISTRATION FORM
 # ==================================================
 class CustomUserCreationForm(BootstrapFormMixin, UserCreationForm):
-
     class Meta:
         model = CustomUser
-        fields = ("username", "email", "name", "contact", "age", "gender")
+        fields = ("username", "email", "name")
 
         widgets = {
             "username": forms.TextInput(attrs={"placeholder": "Username"}),
             "email": forms.EmailInput(attrs={"placeholder": "Email address"}),
             "name": forms.TextInput(attrs={"placeholder": "Full name"}),
-            "contact": forms.TextInput(attrs={"placeholder": "Contact number"}),
-            "age": forms.NumberInput(attrs={"placeholder": "Age", "min": 18}),
-            "gender": forms.Select(),
         }
 
     def clean_username(self):
@@ -53,7 +50,6 @@ class CustomUserCreationForm(BootstrapFormMixin, UserCreationForm):
 # 🔹 PROFILE EDIT FORM
 # ==================================================
 class ProfileForm(BootstrapFormMixin, forms.ModelForm):
-
     class Meta:
         model = CustomUser
         fields = ["name", "email", "contact", "age", "gender"]
@@ -71,18 +67,19 @@ class ProfileForm(BootstrapFormMixin, forms.ModelForm):
 # 🔹 FEEDBACK FORM (UI-ENHANCED)
 # ==================================================
 class FeedbackForm(BootstrapFormMixin, forms.ModelForm):
-
     class Meta:
         model = Feedback
         fields = ["message"]
 
         widgets = {
-            "message": forms.Textarea(attrs={
-                "rows": 4,
-                "placeholder": "Write your feedback here...",
-                "class": "shadow-sm rounded-3",
-                "style": "resize:none; background-color:#ffffff;"
-            }),
+            "message": forms.Textarea(
+                attrs={
+                    "rows": 4,
+                    "placeholder": "Write your feedback here...",
+                    "class": "shadow-sm rounded-3",
+                    "style": "resize:none; background-color:#ffffff;",
+                }
+            ),
         }
 
         labels = {

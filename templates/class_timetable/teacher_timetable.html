@@ -7,171 +7,158 @@
 <div class="timetable-container my-4">
 
   <!-- Page Header -->
-  <div class="row mb-4">
-    <div class="col-12 text-center">
-      <h2 class="display-5 fw-bold text-primary">Individual Teacher Timetables</h2>
-      <p class="text-muted">All teacher schedules aggregated across TYCO, SYCO &amp; FYCO — Academic Year 2025-2026</p>
-      <a href="{% url 'class_timetable:dashboard' %}" class="btn btn-outline-secondary btn-sm">
-        ← Back to Dashboard
-      </a>
-    </div>
+  <div class="text-center mb-8">
+    <h2 class="text-3xl font-bold text-gray-900 mb-2" style="font-family:'Outfit',sans-serif;">Individual Teacher
+      Timetables</h2>
+    <p class="text-gray-500 text-sm">All teacher schedules aggregated across TYCO, SYCO & FYCO — Academic Year 2025–2026
+    </p>
+    <a href="{% url 'class_timetable:dashboard' %}"
+      class="inline-flex items-center gap-2 mt-3 px-4 py-2 bg-gray-100 text-gray-600 font-semibold text-sm rounded-xl hover:bg-gray-200 transition-all">
+      <i class="bi bi-arrow-left"></i> Back to Dashboard
+    </a>
   </div>
 
   {% if not has_data %}
   <!-- Empty State -->
-  <div class="text-center py-5">
-    <div class="display-1 mb-3">📭</div>
-    <h4 class="text-muted fw-semibold">No Timetable Data Found</h4>
-    <p class="text-muted">Please generate timetables for TYCO, SYCO or FYCO first.</p>
-    <a href="{% url 'class_timetable:dashboard' %}" class="btn btn-primary mt-2">Go to Dashboard</a>
+  <div class="text-center py-16 bg-white rounded-2xl shadow-md border border-gray-100">
+    <div class="text-6xl mb-4">📭</div>
+    <h4 class="text-lg font-bold text-gray-600 mb-2">No Timetable Data Found</h4>
+    <p class="text-gray-500 text-sm mb-5">Please generate timetables for TYCO, SYCO or FYCO first.</p>
+    <a href="{% url 'class_timetable:dashboard' %}" class="btn-indigo px-6 py-2.5 text-sm rounded-full inline-block">
+      Go to Dashboard
+    </a>
   </div>
 
   {% else %}
 
   <!-- Search Bar -->
-  <div class="row justify-content-center mb-4">
-    <div class="col-md-6 col-lg-5">
-      <div class="input-group shadow-sm">
-        <span class="input-group-text bg-white border-end-0">
-          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
-            class="bi bi-search text-muted" viewBox="0 0 16 16">
-            <path
-              d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.099zm-5.242 1.656a5.5 5.5 0 1 1 0-11 5.5 5.5 0 0 1 0 11" />
-          </svg>
-        </span>
-        <input type="text" id="teacherSearchInput" class="form-control border-start-0 ps-0"
-          placeholder="Search teacher by name…" oninput="filterTeachers(this.value)" autocomplete="off">
-        <button class="btn btn-outline-secondary" type="button" onclick="clearSearch()" title="Clear">&times;</button>
-      </div>
-      <div id="searchResultCount" class="text-muted small mt-1 text-center"></div>
+  <div class="flex justify-center mb-6">
+    <div class="relative w-full max-w-md">
+      <input type="text" id="teacherSearchInput"
+        class="w-full pl-10 pr-10 py-3 border-2 border-gray-200 rounded-2xl text-sm focus:border-indigo-500 focus:outline-none transition-all shadow-sm"
+        placeholder="Search teacher by name…" oninput="filterTeachers(this.value)" autocomplete="off">
+      <i class="bi bi-search absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"></i>
+      <button onclick="clearSearch()"
+        class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 text-lg">&times;</button>
+      <div id="searchResultCount" class="text-center text-xs text-gray-500 mt-1"></div>
     </div>
   </div>
 
   <!-- Legend -->
-  <div class="d-flex justify-content-center gap-3 mb-4 flex-wrap">
-    <span class="badge bg-primary fs-6 px-3 py-2">TYCO</span>
-    <span class="badge bg-success fs-6 px-3 py-2">SYCO</span>
-    <span class="badge bg-warning text-dark fs-6 px-3 py-2">FYCO</span>
+  <div class="flex justify-center gap-3 mb-6 flex-wrap">
+    <span class="badge-pill bg-indigo-600 text-white text-sm px-4 py-1.5">TYCO</span>
+    <span class="badge-pill bg-emerald-600 text-white text-sm px-4 py-1.5">SYCO</span>
+    <span class="badge-pill bg-amber-500 text-white text-sm px-4 py-1.5">FYCO</span>
   </div>
 
-  <!-- No results message (hidden by default) -->
-  <div id="noSearchResults" class="text-center py-5 d-none">
-    <div class="display-4 mb-2">🔍</div>
-    <h5 class="text-muted">No teacher found</h5>
-    <p class="text-muted small">Try a different name.</p>
+  <!-- No results -->
+  <div id="noSearchResults" class="text-center py-16 hidden">
+    <div class="text-6xl mb-3">🔍</div>
+    <h5 class="text-gray-600 font-semibold">No teacher found</h5>
+    <p class="text-gray-400 text-sm">Try a different name.</p>
   </div>
 
-  <!-- One card per teacher -->
+  <!-- Teacher Cards -->
   {% for teacher in teachers %}
-  <div class="card border-0 shadow-sm mb-5 teacher-card" id="teacher-{{ forloop.counter }}"
-    data-teacher-name="{{ teacher.name|lower }}">
-    <div class="card-body p-0">
+  <div class="bg-white rounded-2xl shadow-md border border-gray-100 mb-6 overflow-hidden teacher-card"
+    id="teacher-{{ forloop.counter }}" data-teacher-name="{{ teacher.name|lower }}">
 
-      <!-- Teacher card header -->
-      <div class="d-flex align-items-center justify-content-between bg-primary text-white px-4 py-3 rounded-top">
-        <div class="d-flex align-items-center gap-3">
-          <div class="bg-white text-primary rounded-circle d-flex align-items-center justify-content-center fw-bold"
-            style="width:42px; height:42px; font-size:1.1rem;">
-            {{ teacher.name|first|upper }}
-          </div>
-          <div>
-            <h5 class="mb-0 fw-bold">{{ teacher.name }}</h5>
-            <small class="opacity-75">Faculty Timetable</small>
-          </div>
+    <!-- Teacher Header -->
+    <div class="flex items-center justify-between bg-gradient-to-r from-indigo-600 to-purple-700 px-6 py-4">
+      <div class="flex items-center gap-3">
+        <div
+          class="w-10 h-10 rounded-full bg-white text-indigo-600 flex items-center justify-center font-bold text-lg flex-shrink-0">
+          {{ teacher.name|first|upper }}
         </div>
-        <div class="d-flex gap-2 no-print">
-          <button onclick="exportTeacherPNG({{ forloop.counter }})" class="btn btn-light btn-sm fw-bold">
-            Export PNG
-          </button>
-          <button onclick="exportTeacherPDF({{ forloop.counter }})" class="btn btn-outline-light btn-sm fw-bold">
-            Export PDF
-          </button>
+        <div>
+          <h5 class="text-white font-bold mb-0" style="font-family:'Outfit',sans-serif;">{{ teacher.name }}</h5>
+          <small class="text-white/60 text-xs">Faculty Timetable</small>
         </div>
       </div>
+      <div class="flex gap-2 no-print">
+        <button onclick="exportTeacherPNG({{ forloop.counter }})"
+          class="px-3 py-1.5 bg-white text-indigo-700 font-bold text-xs rounded-full hover:shadow-md transition-all">
+          Export PNG
+        </button>
+        <button onclick="exportTeacherPDF({{ forloop.counter }})"
+          class="px-3 py-1.5 bg-white/20 text-white font-bold text-xs rounded-full hover:bg-white/30 transition-all">
+          Export PDF
+        </button>
+      </div>
+    </div>
 
-      <!-- Capture area -->
-      <div id="teacher-export-{{ forloop.counter }}" class="p-3 bg-white">
+    <!-- Capture Area -->
+    <div id="teacher-export-{{ forloop.counter }}" class="p-4 bg-white">
+      <!-- Institute header for export -->
+      <div class="text-center mb-3 hidden export-header-{{ forloop.counter }}" style="font-size:0.8rem;">
+        <strong>Shri Yashwantrao Bhonsale Education Society's</strong><br>
+        <span style="font-size:1rem;font-weight:700;">YASHWANTRAO BHONSALE INSTITUTE OF TECHNOLOGY</span><br>
+        (DTE CODE : 3470) (MSBTE CODE : 1742)<br>
+        <strong>Faculty Timetable — {{ teacher.name }} — 2025-2026</strong>
+      </div>
 
-        <!-- Institute header (shown on export) -->
-        <div class="text-center mb-3 d-none export-header-{{ forloop.counter }}" style="font-size:0.8rem;">
-          <strong>Shri Yashwantrao Bhonsale Education Society's</strong><br>
-          <span style="font-size:1rem; font-weight:700;">YASHWANTRAO BHONSALE INSTITUTE OF TECHNOLOGY</span><br>
-          (DTE CODE : 3470) (MSBTE CODE : 1742)<br>
-          <strong>Faculty Timetable — {{ teacher.name }} — 2025-2026</strong>
-        </div>
-
-        <div class="table-responsive">
-          <table class="timetable-table teacher-table-{{ forloop.counter }}">
-            <thead>
-              <tr>
-                <th style="width:17%;">TIME</th>
-                {% for day in days %}
-                <th>{{ day|slice:":3"|upper }}</th>
-                {% endfor %}
-              </tr>
-            </thead>
-            <tbody>
-              {% for row in teacher.rows %}
-
-              {% if row.type == 'break' %}
-              <tr class="break-row">
-                <td>{{ row.start|time:"h:i A"|lower }} to {{ row.end|time:"h:i A"|lower }}</td>
-                <td colspan="{{ days|length }}">{{ row.label }}</td>
-              </tr>
-
-              {% else %}
-              <tr>
-                <td class="fw-bold" style="font-size:0.8rem;">{{ row.label }}</td>
-                {% for cell in row.days %}
-                {% if not cell.skipped %}
-                <td {% if cell.rowspan > 1 %}rowspan="{{ cell.rowspan }}" class="align-middle"{% endif %}>
-                  {% if cell.entries %}
-                  {% if cell.is_practical %}
-                  <!-- Practical: multiple batches -->
-                  <div class="d-flex flex-column gap-1 justify-content-center h-100">
-                    {% for entry in cell.entries %}
-                    <div class="d-flex flex-column align-items-center border-bottom pb-1"
-                      style="font-size:0.78rem; border-color:#eee !important;">
-                      <span
-                        class="badge bg-{{ entry.class_color }} text-{% if entry.class_color == 'warning' %}dark{% else %}white{% endif %} mb-1"
-                        style="font-size:0.65rem;">{{ entry.class_label }}</span>
-                      <span class="fw-bold text-dark">{{ entry.batch }} – {{ entry.subject_name }}</span>
-                    </div>
-                    {% endfor %}
-                  </div>
-                  {% else %}
-                  <!-- Theory: single entry -->
-                  {% with entry=cell.entries.0 %}
-                  <div class="text-center">
-                    <span
-                      class="badge bg-{{ entry.class_color }} text-{% if entry.class_color == 'warning' %}dark{% else %}white{% endif %} mb-1"
-                      style="font-size:0.65rem;">{{ entry.class_label }}</span>
-                    <div class="subject-code" style="font-size:0.85rem;">{{ entry.subject_name }}</div>
-                  </div>
-                  {% endwith %}
-                  {% endif %}
-                  {% else %}
-                  <span class="text-muted">—</span>
-                  {% endif %}
-                </td>
-                {% endif %}
-                {% endfor %}
-              </tr>
-              {% endif %}
-
+      <div class="overflow-x-auto">
+        <table class="timetable-table teacher-table-{{ forloop.counter }}">
+          <thead>
+            <tr>
+              <th style="width:17%;">TIME</th>
+              {% for day in days %}
+              <th>{{ day|slice:":3"|upper }}</th>
               {% endfor %}
-            </tbody>
-          </table>
-        </div>
-      </div><!-- end capture area -->
-
+            </tr>
+          </thead>
+          <tbody>
+            {% for row in teacher.rows %}
+            {% if row.type == 'break' %}
+            <tr class="break-row">
+              <td>{{ row.start|time:"h:i A"|lower }} to {{ row.end|time:"h:i A"|lower }}</td>
+              <td colspan="{{ days|length }}">{{ row.label }}</td>
+            </tr>
+            {% else %}
+            <tr>
+              <td class="fw-bold" style="font-size:0.8rem;">{{ row.label }}</td>
+              {% for cell in row.days %}
+              {% if not cell.skipped %}
+              <td {% if cell.rowspan > 1 %}rowspan="{{ cell.rowspan }}" class="align-middle"{% endif %}>
+                {% if cell.entries %}
+                {% if cell.is_practical %}
+                <div style="display:flex;flex-direction:column;gap:4px;justify-content:center;height:100%;">
+                  {% for entry in cell.entries %}
+                  <div style="font-size:0.78rem;border-bottom:1px solid #eee;padding-bottom:4px;">
+                    <span class="badge-pill bg-{{ entry.class_color }}-100 text-{{ entry.class_color }}-800"
+                      style="font-size:0.65rem;">{{ entry.class_label }}</span>
+                    <span style="font-weight:700;">{{ entry.batch }} – {{ entry.subject_name }}</span>
+                  </div>
+                  {% endfor %}
+                </div>
+                {% else %}
+                {% with entry=cell.entries.0 %}
+                <div class="text-center">
+                  <span class="badge-pill bg-{{ entry.class_color }}-100 text-{{ entry.class_color }}-800"
+                    style="font-size:0.65rem;display:inline-flex;margin-bottom:2px;">{{ entry.class_label }}</span>
+                  <div class="subject-code" style="font-size:0.85rem;">{{ entry.subject_name }}</div>
+                </div>
+                {% endwith %}
+                {% endif %}
+                {% else %}
+                <span style="color:#9ca3af;">—</span>
+                {% endif %}
+              </td>
+              {% endif %}
+              {% endfor %}
+            </tr>
+            {% endif %}
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
     </div>
   </div>
   {% endfor %}
 
   {% endif %}
 
-</div><!-- .timetable-container -->
+</div>
 
 <!-- Export libraries -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
@@ -187,48 +174,37 @@
       link.click();
     });
   }
-
   function exportTeacherPDF(idx) {
     const header = document.querySelector('.export-header-' + idx);
-    if (header) header.classList.remove('d-none');
+    if (header) header.classList.remove('hidden');
     window.print();
-    if (header) header.classList.add('d-none');
+    if (header) header.classList.add('hidden');
   }
-
   function filterTeachers(query) {
     const q = query.trim().toLowerCase();
     const cards = document.querySelectorAll('.teacher-card');
     let visibleCount = 0;
-
     cards.forEach(card => {
       const name = card.dataset.teacherName || '';
       const match = name.includes(q);
       card.style.display = match ? '' : 'none';
       if (match) visibleCount++;
     });
-
-    // Update result count label
     const countEl = document.getElementById('searchResultCount');
-    if (q === '') {
-      countEl.textContent = '';
-    } else {
+    if (q === '') { countEl.textContent = ''; }
+    else {
       countEl.textContent = visibleCount === 0
         ? 'No teachers match "' + query + '"'
         : visibleCount + ' teacher' + (visibleCount > 1 ? 's' : '') + ' found';
     }
-
-    // Show/hide the no-results placeholder
-    document.getElementById('noSearchResults').classList.toggle('d-none', visibleCount > 0 || q === '');
+    document.getElementById('noSearchResults').classList.toggle('hidden', visibleCount > 0 || q === '');
   }
-
   function clearSearch() {
     const input = document.getElementById('teacherSearchInput');
     input.value = '';
     filterTeachers('');
     input.focus();
   }
-
-  // Keyboard shortcut: '/' focuses the search box
   document.addEventListener('keydown', e => {
     if (e.key === '/' && document.activeElement.tagName !== 'INPUT') {
       e.preventDefault();
@@ -243,7 +219,6 @@
       visibility: hidden;
     }
 
-    /* Only print the card being exported — triggered by JS removing d-none */
     .teacher-table-1,
     .teacher-table-1 * {
       visibility: visible;

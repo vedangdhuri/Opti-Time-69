@@ -6,64 +6,59 @@
 {% block content %}
 <div class="timetable-container my-4">
     <!-- Capture Container -->
-    <div id="export-container" class="bg-white p-4 shadow-sm rounded position-relative">
+    <div id="export-container" class="bg-white p-6 rounded-2xl shadow-md relative">
 
-        <!-- Actions (Inside card, right aligned, ignored by html2canvas) -->
-        <div class="d-flex justify-content-end gap-2 mb-4 no-print" data-html2canvas-ignore="true">
-            <button onclick="exportPNG()" class="btn btn-outline-primary btn-sm fw-bold">
-                Export PNG
+        <!-- Actions -->
+        <div class="flex justify-end gap-2 mb-6 no-print" data-html2canvas-ignore="true">
+            <button onclick="exportPNG()"
+                class="flex items-center gap-1.5 px-4 py-2 border-2 border-indigo-500 text-indigo-700 font-semibold text-sm rounded-xl hover:bg-indigo-50 transition-all">
+                <i class="bi bi-image"></i> Export PNG
             </button>
-            <button onclick="exportPDF()" class="btn btn-outline-danger btn-sm fw-bold">
-                Export PDF
+            <button onclick="exportPDF()"
+                class="flex items-center gap-1.5 px-4 py-2 border-2 border-red-400 text-red-600 font-semibold text-sm rounded-xl hover:bg-red-50 transition-all">
+                <i class="bi bi-file-pdf"></i> Export PDF
             </button>
-            <button onclick="exportExcel()" class="btn btn-outline-success btn-sm fw-bold">
-                Export Excel
+            <button onclick="exportExcel()"
+                class="flex items-center gap-1.5 px-4 py-2 border-2 border-emerald-500 text-emerald-700 font-semibold text-sm rounded-xl hover:bg-emerald-50 transition-all">
+                <i class="bi bi-file-excel"></i> Export Excel
             </button>
         </div>
 
         <!-- Header -->
         <div class="timetable-header">
-            <div class="row align-items-center mb-3">
-                <div class="col-md-8 text-center mx-auto">
-                    <small class="d-block fw-bold text-uppercase mb-1"
-                        style="font-size: 0.8rem; letter-spacing: 1px;">Shri
-                        Yashwantrao Bhonsale Education Society's</small>
-                    <h2 class="mb-1" style="font-size: 1.8rem;">YASHWANTRAO BHONSALE INSTITUTE OF TECHNOLOGY</h2>
-                    <div class="code-info">
-                        (DTE CODE : 3470) (MSBTE CODE : 1742)
-                    </div>
-                    <small class="d-block text-secondary" style="font-size: 0.85rem;">Approved by AICTE, DTE &
-                        Affiliated to
-                        Mumbai University & MSBTE Mumbai</small>
-                    <small class="d-block text-secondary fw-bold" style="font-size: 0.85rem;">(NBA Accredited ME, CE, EE
-                        Diploma Programs)</small>
-                </div>
+            <div class="text-center mb-3">
+                <small class="block font-bold uppercase tracking-widest mb-1" style="font-size:0.8rem;">Shri Yashwantrao
+                    Bhonsale Education Society's</small>
+                <h2 class="mb-1" style="font-size:1.8rem;">YASHWANTRAO BHONSALE INSTITUTE OF TECHNOLOGY</h2>
+                <div class="code-info">(DTE CODE : 3470) (MSBTE CODE : 1742)</div>
+                <small class="block text-gray-500" style="font-size:0.85rem;">Approved by AICTE, DTE & Affiliated to
+                    Mumbai University & MSBTE Mumbai</small>
+                <small class="block text-gray-500 font-bold" style="font-size:0.85rem;">(NBA Accredited ME, CE, EE
+                    Diploma Programs)</small>
             </div>
-
-            <div class="d-flex justify-content-between align-items-end border-bottom pb-2 mt-4"
-                style="border-color: #000 !important; border-bottom-width: 2px !important;">
-                <h5 class="fw-bold m-0 text-uppercase">{{ class_name }}</h5>
-                <h5 class="fw-bold m-0 text-uppercase">TIME TABLE 2025-2026</h5>
-                <!-- Semester can be dynamic if available, otherwise omitted or hardcoded -->
-                <h5 class="fw-bold m-0 text-uppercase">SEM V</h5>
+            <div class="flex justify-between items-end border-b-2 border-black pb-2 mt-4">
+                <h5 class="font-bold m-0 uppercase">{{ class_name }}</h5>
+                <h5 class="font-bold m-0 uppercase">TIME TABLE 2025-2026</h5>
+                <h5 class="font-bold m-0 uppercase">SEM V</h5>
             </div>
         </div>
 
         <!-- Messages -->
         {% if messages %}
-        <div class="mb-3">
+        <div class="mb-3 space-y-2">
             {% for message in messages %}
-            <div class="alert alert-{{ message.tags }} py-2">{{ message }}</div>
+            <div class="px-4 py-2 rounded-xl text-sm bg-blue-50 border border-blue-200 text-blue-700">{{ message }}
+            </div>
             {% endfor %}
         </div>
         {% endif %}
 
         <!-- Main Table -->
-        <div class="table-responsive mt-3">
+        <div class="overflow-x-auto mt-3">
             <table class="timetable-table" id="timetable-table">
                 <thead>
                     <tr>
-                        <th style="width: 15%;">TIME</th>
+                        <th style="width:15%;">TIME</th>
                         {% for day in days %}
                         <th>{{ day|slice:":3"|upper }}</th>
                         {% endfor %}
@@ -73,42 +68,33 @@
                     {% for row in timetable_rows %}
                     {% if row.type == 'break' %}
                     <tr class="break-row">
-                        <td>
-                            {{ row.start|time:"h:i A"|lower }} to {{ row.end|time:"h:i A"|lower }}
-                        </td>
+                        <td>{{ row.start|time:"h:i A"|lower }} to {{ row.end|time:"h:i A"|lower }}</td>
                         <td colspan="{{ days|length }}">{{ row.label }}</td>
                     </tr>
                     {% else %}
                     <tr>
-                        <td class="fw-bold">
-                            {{ row.label }}
-                        </td>
+                        <td class="fw-bold">{{ row.label }}</td>
                         {% for cell in row.days %}
                         {% if not cell.skipped %}
                         <td {% if cell.rowspan > 1 %}rowspan="{{ cell.rowspan }}"{% endif %}>
                             {% if cell.entries %}
-                            <!-- Check entries count -->
                             {% if cell.is_practical %}
-                            <!-- Practical Block (Stacked Batches) -->
-                            <div class="d-flex flex-column gap-2 justify-content-center h-100">
+                            <div style="display:flex;flex-direction:column;gap:8px;justify-content:center;height:100%;">
                                 {% for entry in cell.entries %}
-                                <div class="d-flex justify-content-center align-items-center border-bottom pb-1"
-                                    style="font-size: 0.85rem; border-color: #ccc !important;">
-                                    <span class="fw-bold text-dark me-2">{{ entry.batch }} -</span>
-                                    <span class="text-dark fw-bold">{{ entry.subject_name }}</span>
+                                <div
+                                    style="font-size:0.85rem;border-color:#ccc;border-bottom:1px solid #ccc;padding-bottom:4px;">
+                                    <span style="font-weight:700;">{{ entry.batch }} -</span>
+                                    <span style="font-weight:700;">{{ entry.subject_name }}</span>
                                 </div>
                                 {% endfor %}
                             </div>
                             {% else %}
-                            <!-- Single Entry (Theory/Extra) -->
                             {% with entry=cell.entries.0 %}
-                            <div class="subject-code">
-                                {{ entry.subject_name }}
-                            </div>
+                            <div class="subject-code">{{ entry.subject_name }}</div>
                             {% endwith %}
                             {% endif %}
                             {% else %}
-                            <span class="text-muted">-</span>
+                            <span style="color:#9ca3af;">-</span>
                             {% endif %}
                         </td>
                         {% endif %}
@@ -119,12 +105,14 @@
                 </tbody>
             </table>
         </div>
-    </div> <!-- End Capture Container -->
-
-    <div class="mt-4 text-center no-print">
-        <a href="{% url 'class_timetable:dashboard' %}" class="btn btn-secondary">Back to Dashboard</a>
     </div>
 
+    <div class="mt-5 text-center no-print">
+        <a href="{% url 'class_timetable:dashboard' %}"
+            class="inline-flex items-center gap-2 px-5 py-2.5 bg-gray-100 text-gray-700 font-semibold text-sm rounded-xl hover:bg-gray-200 transition-all">
+            <i class="bi bi-arrow-left"></i> Back to Dashboard
+        </a>
+    </div>
 </div>
 
 <!-- Scripts for Export -->
@@ -135,33 +123,17 @@
 <script>
     function exportPNG() {
         const element = document.getElementById("export-container");
-
-        // We capture exactly as it looks in the view, avoiding CSS overrides that warp the layout
-        html2canvas(element, {
-            scale: 3, // High quality
-            backgroundColor: '#ffffff', // Guarantee white background
-            useCORS: true,
-            logging: false
-        }).then(canvas => {
+        html2canvas(element, { scale: 3, backgroundColor: '#ffffff', useCORS: true, logging: false }).then(canvas => {
             const link = document.createElement('a');
             link.download = '{{ class_name }}_Timetable.png';
             link.href = canvas.toDataURL('image/png', 1.0);
             link.click();
         });
     }
-
-    function exportPDF() {
-        // Instead of taking a low-quality canvas screenshot, we use the browser's native print-to-PDF engine
-        // which produces crisp, selectable vector text.
-        window.print();
-    }
-
+    function exportPDF() { window.print(); }
     function exportExcel() {
         const table = document.getElementById("timetable-table");
-        // Start the table export at row 9 to leave room for headers
         const ws = XLSX.utils.table_to_sheet(table, { origin: "A10" });
-
-        // Add the organizational header to the Excel spreadsheet
         XLSX.utils.sheet_add_aoa(ws, [
             ["Shri Yashwantrao Bhonsale Education Society's"],
             ["YASHWANTRAO BHONSALE INSTITUTE OF TECHNOLOGY"],
@@ -172,53 +144,9 @@
             ["{{ class_name }}", "TIME TABLE 2025-2026", "", "SEM V"],
             []
         ], { origin: "A1" });
-
         const wb = XLSX.utils.book_new();
         XLSX.utils.book_append_sheet(wb, ws, "Timetable");
         XLSX.writeFile(wb, 'timetable.xlsx');
     }
 </script>
-
-<style>
-    @media print {
-        body * {
-            visibility: hidden;
-            /* Hide everything else */
-        }
-
-        #export-container,
-        #export-container * {
-            visibility: visible;
-        }
-
-        #export-container {
-            position: absolute;
-            left: 0;
-            top: 0;
-            width: 100%;
-            margin: 0;
-            padding: 0;
-            box-shadow: none !important;
-        }
-
-        .timetable-container {
-            margin: 0 !important;
-        }
-
-        .no-print {
-            display: none !important;
-        }
-
-        /* Optimize table borders for print */
-        .timetable-table {
-            border-collapse: collapse;
-            width: 100%;
-        }
-
-        .timetable-table th,
-        .timetable-table td {
-            border: 1px solid #000 !important;
-        }
-    }
-</style>
 {% endblock %}

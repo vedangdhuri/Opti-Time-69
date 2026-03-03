@@ -39,6 +39,7 @@ It handles multiple classes (e.g., FYCO, SYCO, TYCO), subject constraints, pract
 | **🔄 Dynamic Regeneration** | Seamlessly regenerate the timetable with a single click to explore and refine scheduling alternatives.             |
 | **📥 Export Ready**         | Download generated timetables in professional **PDF**, **Excel**, and **PNG** formats.                             |
 | **🌱 Data Seeding**         | Includes scripts to populate initial sample data for robust testing and demonstration.                             |
+| **📐 Architecture Docs**    | Includes detailed System Design and multiple UML diagrams mapping out the core application logic.                  |
 
 ---
 
@@ -65,6 +66,26 @@ This project uses a modern, robust technology stack:
 - **`itertools` & `random`**: For combinatorics and randomized slot allocation.
 - **`reportlab`**: For generating PDF reports.
 - **`xlsxwriter`**: For Excel exports.
+
+---
+
+## 📐 System Architecture & UML Diagrams
+
+Opti-Time's structure and behavior are fully documented with visual diagrams, detailing system components, object models, and algorithmic flows.
+
+<details>
+<summary><b>View Architecture & UML Diagrams</b></summary>
+
+- **[System Architecture](system_design.png)**
+- **[Use Case Diagram](use_case_diagram.png)**
+- **[Class Diagram](class_diagram.png)**
+- **[Sequence Diagram](sequence_diagram.png)**
+- **[Activity Diagram](activity_diagram.png)**
+- **[Component Diagram](component_diagram.png)**
+- **[Deployment Diagram](deployment_diagram.png)**
+- **[State Machine Diagram](state_machine_diagram.png)**
+
+</details>
 
 ---
 
