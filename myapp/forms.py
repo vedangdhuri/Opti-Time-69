@@ -1,6 +1,6 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
-from .models import CustomUser, Feedback
+from .models import CustomUser
 
 
 # ==================================================
@@ -60,28 +60,4 @@ class ProfileForm(BootstrapFormMixin, forms.ModelForm):
             "contact": forms.TextInput(attrs={"placeholder": "Contact number"}),
             "age": forms.NumberInput(attrs={"placeholder": "Age", "min": 18}),
             "gender": forms.Select(),
-        }
-
-
-# ==================================================
-# 🔹 FEEDBACK FORM (UI-ENHANCED)
-# ==================================================
-class FeedbackForm(BootstrapFormMixin, forms.ModelForm):
-    class Meta:
-        model = Feedback
-        fields = ["message"]
-
-        widgets = {
-            "message": forms.Textarea(
-                attrs={
-                    "rows": 4,
-                    "placeholder": "Write your feedback here...",
-                    "class": "shadow-sm rounded-3",
-                    "style": "resize:none; background-color:#ffffff;",
-                }
-            ),
-        }
-
-        labels = {
-            "message": "Your Feedback",
         }
