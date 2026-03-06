@@ -3,7 +3,6 @@ from django.contrib import messages
 from .utils import (
     CLASS_CONFIG,
     generate_timetable_for_class,
-    ACADEMIC_SLOTS,
     analyze_timetable,
     validate_workload_distribution,
 )
@@ -72,7 +71,8 @@ def generate_timetable_view(request, class_key):
     if class_key not in CLASS_CONFIG:
         return redirect("class_timetable:dashboard")
 
-    success, msg = generate_timetable_for_class(class_key)
+    allow_extra = request.POST.get("allow_extra") == "on"
+    success, msg = generate_timetable_for_class(class_key, allow_extra=allow_extra)
     if success:
         messages.success(request, f"Timetable generated for {class_key}")
     else:
@@ -87,10 +87,11 @@ def generate_all_timetables_view(request):
     This ensures the cross-class conflict solver can correctly avoid any
     teacher double-booking across TYCO, SYCO, and FYCO.
     """
+    allow_extra = request.POST.get("allow_extra") == "on"
     successes = []
     errors = []
     for class_key in CLASS_CONFIG.keys():
-        success, msg = generate_timetable_for_class(class_key)
+        success, msg = generate_timetable_for_class(class_key, allow_extra=allow_extra)
         if success:
             successes.append(CLASS_CONFIG[class_key]["name"])
         else:
@@ -105,6 +106,26 @@ def generate_all_timetables_view(request):
         messages.error(request, f"Errors during generation: {'; '.join(errors)}")
 
     return redirect("class_timetable:dashboard")
+
+
+def add_extra_lectures_view(request, class_key):
+    """
+    Admin action: fill remaining empty slots with extra lectures
+    without regenerating the whole timetable.
+    """
+    if class_key not in CLASS_CONFIG:
+        return redirect("class_timetable:dashboard")
+
+    if request.method != "POST":
+        return redirect("class_timetable:view_timetable", class_key=class_key)
+
+    from .utils import fill_extra_lectures_for_class
+
+    fill_extra_lectures_for_class(class_key)
+    messages.success(
+        request, f"Extra lectures added for {CLASS_CONFIG[class_key]['name']}."
+    )
+    return redirect("class_timetable:view_timetable", class_key=class_key)
 
 
 def view_all_timetables_view(request):

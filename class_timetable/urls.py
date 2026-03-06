@@ -25,4 +25,5 @@ urlpatterns = [
     ),
     path("delete/<str:class_key>/", views.delete_timetable, name="delete_timetable"),
     path("teacher-timetable/", views.teacher_timetable_view, name="teacher_timetable"),
+    path("add-extra/<str:class_key>/", views.add_extra_lectures_view, name="add_extra"),
 ]
