@@ -35,7 +35,6 @@ def input_data(request, class_key):
         form = FormClass(request.POST)
         if form.is_valid():
             form.save()
-            messages.success(request, f"Input added for {cfg['name']}")
             return redirect("class_timetable:input_data", class_key=class_key)
     else:
         form = FormClass()
@@ -63,7 +62,6 @@ def delete_input(request, class_key, input_id):
 
     input_obj = get_object_or_404(InputModel, id=input_id)
     input_obj.delete()
-    messages.success(request, f"Input deleted for {cfg['name']}")
     return redirect("class_timetable:input_data", class_key=class_key)
 
 
@@ -636,3 +634,25 @@ def teacher_timetable_view(request):
             "has_data": bool(teachers),
         },
     )
+
+
+def get_master_subjects(request, class_key):
+    from django.http import JsonResponse
+    from .models import MasterSubject
+
+    if class_key not in CLASS_CONFIG:
+        return JsonResponse({"error": "invalid class"}, status=400)
+
+    subjects = MasterSubject.objects.filter(class_name=class_key)
+    data = []
+    for s in subjects:
+        data.append(
+            {
+                "subject_name": s.subject_name,
+                "teacher_name": s.teacher_name,
+                "theory_credits": s.theory_credits,
+                "practical_credits": s.practical_credits,
+            }
+        )
+
+    return JsonResponse({"subjects": data})

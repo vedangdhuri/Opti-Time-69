@@ -78,7 +78,19 @@ SUBJECT_ABBR = {
 
 
 def get_abbr(name):
-    return SUBJECT_ABBR.get(name, name[:3].upper())
+    if name in SUBJECT_ABBR:
+        return SUBJECT_ABBR[name]
+
+    try:
+        from .models import MasterSubject
+
+        ms = MasterSubject.objects.filter(subject_name__iexact=name).first()
+        if ms and ms.abbreviation:
+            return ms.abbreviation.strip().upper()
+    except Exception:
+        pass
+
+    return name[:3].upper()
 
 
 def normalize_teacher_name(name):

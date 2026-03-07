@@ -28,6 +28,7 @@
         <div class="p-6 form-input-tw">
             <form method="post">
                 {% csrf_token %}
+                <datalist id="master-subjects-list"></datalist>
                 {{ form|crispy }}
                 <div class="mt-4">
                     <button type="submit" class="btn-indigo w-full py-3 text-sm rounded-xl">
@@ -87,4 +88,45 @@
     </div>
 
 </div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const classKey = "{{ class_key }}";
+        const subjectInput = document.querySelector('input[name="subject_name"]');
+        const teacherInput = document.querySelector('input[name="teacher_name"]');
+        const theoryInput = document.querySelector('input[name="theory_credits"]');
+        const practicalInput = document.querySelector('input[name="practical_credits"]');
+        const datalist = document.getElementById('master-subjects-list');
+
+        let masterSubjects = [];
+
+        if (subjectInput) {
+            subjectInput.setAttribute('list', 'master-subjects-list');
+            subjectInput.setAttribute('autocomplete', 'off');
+
+            // Fetch master subjects
+            fetch(`/timetable/api/master-subjects/${classKey}/`)
+                .then(response => response.json())
+                .then(data => {
+                    masterSubjects = data.subjects || [];
+                    masterSubjects.forEach(subject => {
+                        const option = document.createElement('option');
+                        option.value = subject.subject_name;
+                        datalist.appendChild(option);
+                    });
+                })
+                .catch(error => console.error('Error fetching master subjects:', error));
+
+            // Auto-fill on selection
+            subjectInput.addEventListener('input', function () {
+                const selected = masterSubjects.find(s => s.subject_name.toLowerCase() === this.value.toLowerCase());
+                if (selected) {
+                    if (teacherInput && !teacherInput.value) teacherInput.value = selected.teacher_name;
+                    if (theoryInput) theoryInput.value = selected.theory_credits;
+                    if (practicalInput) practicalInput.value = selected.practical_credits;
+                }
+            });
+        }
+    });
+</script>
 {% endblock %}

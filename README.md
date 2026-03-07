@@ -34,6 +34,7 @@ It handles multiple classes (e.g., FYCO, SYCO, TYCO), subject constraints, pract
 | **⚡ Conflict Detection**   | Real-time validation ensures no teacher or room is double-booked across different classes.                         |
 | **🧪 Batch Management**     | Automatically handles practical sessions for distinct batches (A1, A2, A3) ensuring unique teacher assignments.    |
 | **⚖️ Smart Allocation**     | Prioritizes practicals (2hr blocks), distributes theory lectures evenly (Max 2/day), and fills gaps intelligently. |
+| **📚 Global Subjects**      | Define Master Subjects in Admin to automatically suggest and auto-fill workloads.                                  |
 | **📈 Global Analytics**     | Dedicated institutional-level dashboards to holistically view overall validations, workload, and conflicts.        |
 | **📊 Class Dashboard**      | Visualizes per-class workload distribution to identify underloaded or overloaded resources.                        |
 | **🔄 Dynamic Regeneration** | Seamlessly regenerate the timetable with a single click to explore and refine scheduling alternatives.             |
@@ -94,9 +95,9 @@ Opti-Time's structure and behavior are fully documented with visual diagrams, de
 The core of **Opti-Time** operates on a **Constrained-Based Randomized Heuristic Algorithm**. It approaches the scheduling problem in distinct, logical phases:
 
 1.  **🧬 Phase 1: Practical Scheduling (Hard Constraint)**
-    - Uses `itertools.product` to generate valid combinations of practical subjects for batches (A1, A2, A3).
-    - **Constraint**: All three teachers in a combined practical slot _must_ be unique.
-    - **Cross-Check**: Verifies teacher availability against other classes (e.g., Is the teacher busy in TYCO while needed for SYCO?).
+    - Uses a robust **Deterministic Greedy-Shuffle Algorithm** to assign exact workload ratios across parallel batches.
+    - Guarantees 100% completion of required blocks for batches (A1, A2, A3) while ensuring unique subject distribution in overlapping times.
+    - **Cross-Check**: Verifies teacher availability against other classes and dynamically _reserves exact slot spaces_ before theory generation to protect practical scheduling blocks.
 
 2.  **🕗 Phase 2: Theory Scheduling**
     - Iterates through available time slots.
