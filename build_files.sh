@@ -1,9 +1,6 @@
 #!/bin/bash
-# Install Python dependencies
-pip install -r requirements.txt
+# Install Python dependencies overriding the PEP-668 system packages block
+python3 -m pip install -r requirements.txt --break-system-packages
 
-# Run migrations (Optional but recommended if not using a separate process)
-python manage.py migrate --noinput
-
-# Collect static files into the `staticfiles` directory
-python manage.py collectstatic --noinput
+python3 manage.py collectstatic --noinput
+python3 manage.py migrate --noinput
