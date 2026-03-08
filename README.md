@@ -8,7 +8,7 @@
 [![Status](https://img.shields.io/badge/Status-Active-success?style=flat-square)]()
 [![PRs Welcome](https://img.shields.io/badge/PRs-Welcome-brightgreen.svg?style=flat-square)](http://makeapullrequest.com)
 [![GitHub issues](https://img.shields.io/github/issues/vedangdhuri/Opti-Time-69?style=flat-square)](https://github.com/vedangdhuri/Opti-Time-69/issues)
-[![GitHub last commit](https://img.shields.io/github/last-commit/vedangdhuri/Opti-Time-69?style=flat-square)](https://github.com/vedangdhuri/Opti-Time-69/commits/main)
+[![GitHub last commit](https://img.shields.io/github/last-commit/vedangdhuri/Opti-Time-69?style=flat-square)](https://github.com/vedangdhuri/Opti-Time-69/commits/master)
 
 **A robust, randomized heuristic-based system for automated academic scheduling.**
 
@@ -34,9 +34,11 @@ It handles multiple classes (e.g., FYCO, SYCO, TYCO), subject constraints, pract
 | **⚡ Conflict Detection**   | Real-time validation ensures no teacher or room is double-booked across different classes.                         |
 | **🧪 Batch Management**     | Automatically handles practical sessions for distinct batches (A1, A2, A3) ensuring unique teacher assignments.    |
 | **⚖️ Smart Allocation**     | Prioritizes practicals (2hr blocks), distributes theory lectures evenly (Max 2/day), and fills gaps intelligently. |
+| **👨‍🏫 Faculty Timetables**   | Aggregated individual schedules for every teacher across all departments and classes.                              |
 | **📚 Global Subjects**      | Define Master Subjects in Admin to automatically suggest and auto-fill workloads.                                  |
 | **📈 Global Analytics**     | Dedicated institutional-level dashboards to holistically view overall validations, workload, and conflicts.        |
 | **📊 Class Dashboard**      | Visualizes per-class workload distribution to identify underloaded or overloaded resources.                        |
+| **🕳️ Smart Gap-Filling**    | Dynamically add extra lectures to remaining empty slots without affecting the optimized core schedule.             |
 | **🔄 Dynamic Regeneration** | Seamlessly regenerate the timetable with a single click to explore and refine scheduling alternatives.             |
 | **📥 Export Ready**         | Download generated timetables in professional **PDF**, **Excel**, and **PNG** formats.                             |
 | **🌱 Data Seeding**         | Includes scripts to populate initial sample data for robust testing and demonstration.                             |
@@ -95,20 +97,20 @@ Opti-Time's structure and behavior are fully documented with visual diagrams, de
 The core of **Opti-Time** operates on a **Constrained-Based Randomized Heuristic Algorithm**. It approaches the scheduling problem in distinct, logical phases:
 
 1.  **🧬 Phase 1: Practical Scheduling (Hard Constraint)**
-    - Uses a robust **Deterministic Greedy-Shuffle Algorithm** to assign exact workload ratios across parallel batches.
-    - Guarantees 100% completion of required blocks for batches (A1, A2, A3) while ensuring unique subject distribution in overlapping times.
-    - **Cross-Check**: Verifies teacher availability against other classes and dynamically _reserves exact slot spaces_ before theory generation to protect practical scheduling blocks.
+    - Uses a cyclic rotation algorithm to assign subject trios (A1, A2, A3) to batches.
+    - Guarantees 100% completion of required blocks while ensuring no batch repeat the same subject in parallel.
+    - **Wait-List Logic**: If a teacher conflict occurs, sessions are queued for the next available slot.
+    - **Slot Reservation**: Dynamically _reserves exact slot spaces_ before theory generation to protect required practical blocks and prevent "algorithm lockout."
 
 2.  **🕗 Phase 2: Theory Scheduling**
-    - Iterates through available time slots.
-    - Selects subjects from a weighted pool.
+    - Iterates through available time slots using a weighted pool.
     - **Constraints**:
-      - **Teacher Availability**: Checks against all other generated timetables.
-      - **Daily Load**: Limits a subject to a maximum of 2 lectures per day.
+      - **Teacher Availability**: Real-time cross-check against all other academic timetables.
+      - **Daily Load**: Strict limit of maximum 2 lectures per subject per day (relaxable to 3 for backfilling).
 
 3.  **🔄 Phase 3: Gap Filling & Optimization**
-    - Scans for remaining empty slots.
-    - Assigns "Extra" lectures or "Library" slots if no teachers are available, ensuring a complete schedule.
+    - Scans for remaining empty slots after core generation.
+    - Assigns "Extra" lectures or "Library" slots based on teacher availability to ensure no dead space in the schedule.
 
 ---
 
