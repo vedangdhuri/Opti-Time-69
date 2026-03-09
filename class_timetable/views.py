@@ -6,8 +6,22 @@ from .utils import (
     analyze_timetable,
     validate_workload_distribution,
 )
-from .forms import TycoInputForm, SycoInputForm, FycoInputForm
-from .models import TycoTimetable, SycoTimetable, FycoTimetable
+from .forms import (
+    TycoInputForm,
+    TycoBInputForm,
+    SycoInputForm,
+    SycoBInputForm,
+    FycoInputForm,
+    FycoBInputForm,
+)
+from .models import (
+    TycoTimetable,
+    TycoBTimetable,
+    SycoTimetable,
+    SycoBTimetable,
+    FycoTimetable,
+    FycoBTimetable,
+)
 from datetime import time
 
 
@@ -26,8 +40,11 @@ def input_data(request, class_key):
 
     form_map = {
         "tyco": TycoInputForm,
+        "tyco_b": TycoBInputForm,
         "syco": SycoInputForm,
+        "syco_b": SycoBInputForm,
         "fyco": FycoInputForm,
+        "fyco_b": FycoBInputForm,
     }
     FormClass = form_map.get(class_key)
 
@@ -82,26 +99,77 @@ def generate_timetable_view(request, class_key):
 def generate_all_timetables_view(request):
     """
     Generates timetables for all classes sequentially.
-    This ensures the cross-class conflict solver can correctly avoid any
-    teacher double-booking across TYCO, SYCO, and FYCO.
+    Uses randomized multi-attempt generation to minimize cross-class teacher conflict
+    and find an arrangement with 0 practical deficit.
     """
+    import random
+    from .utils import fill_practical_deficit_for_class
+
     allow_extra = request.POST.get("allow_extra") == "on"
+
+    class_keys = list(CLASS_CONFIG.keys())
+    best_deficit = float("inf")
+    best_order = list(class_keys)
+    last_deficit = float("inf")
+
     successes = []
     errors = []
-    for class_key in CLASS_CONFIG.keys():
-        success, msg = generate_timetable_for_class(class_key, allow_extra=allow_extra)
-        if success:
-            successes.append(CLASS_CONFIG[class_key]["name"])
+
+    for attempt in range(8):
+        random.shuffle(class_keys)
+
+        # 1) Clear all previously generated timetables
+        for cfg in CLASS_CONFIG.values():
+            cfg["timetable"].objects.all().delete()
+
+        # 2) Generate all in the shuffled order
+        for key in class_keys:
+            generate_timetable_for_class(key, allow_extra=allow_extra)
+
+        # 3) Attempt to backfill any practical deficits
+        for key in class_keys:
+            fill_practical_deficit_for_class(key)
+
+        # 4) Evaluate total practical deficit across all classes
+        current_deficit = sum(
+            validate_workload_distribution(k).get("total_practical_deficit", 0)
+            for k in class_keys
+        )
+        last_deficit = current_deficit
+
+        if current_deficit < best_deficit:
+            best_deficit = current_deficit
+            best_order = list(class_keys)
+
+        if best_deficit == 0:
+            break
+
+    # If our final loop iteration didn't yield the best result, rerun the best_order
+    if last_deficit > best_deficit:
+        for cfg in CLASS_CONFIG.values():
+            cfg["timetable"].objects.all().delete()
+        for key in best_order:
+            generate_timetable_for_class(key, allow_extra=allow_extra)
+        for key in best_order:
+            fill_practical_deficit_for_class(key)
+
+    # Collect success/error messages for the final generated order
+    for key in best_order:
+        val = validate_workload_distribution(key)
+        def_count = val.get("total_practical_deficit", 0)
+        name = CLASS_CONFIG[key]["name"]
+        if def_count == 0:
+            successes.append(name)
         else:
-            errors.append(f"{CLASS_CONFIG[class_key]['name']}: {msg}")
+            errors.append(f"{name} (Deficit: {def_count} blocks)")
 
     if successes:
         messages.success(
             request,
-            f"Successfully generated all timetables for: {', '.join(successes)}",
+            f"Successfully generated timetables for: {', '.join(successes)}",
         )
     if errors:
-        messages.error(request, f"Errors during generation: {'; '.join(errors)}")
+        messages.error(request, f"Generated with workload issues: {'; '.join(errors)}")
 
     return redirect("class_timetable:dashboard")
 
@@ -521,9 +589,12 @@ def teacher_timetable_view(request):
 
     # Class metadata for badge colours
     CLASS_META = [
-        {"model": TycoTimetable, "label": "TYCO", "color": "primary"},
-        {"model": SycoTimetable, "label": "SYCO", "color": "success"},
-        {"model": FycoTimetable, "label": "FYCO", "color": "warning"},
+        {"model": TycoTimetable, "label": "TYCO A", "color": "primary"},
+        {"model": TycoBTimetable, "label": "TYCO B", "color": "primary"},
+        {"model": SycoTimetable, "label": "SYCO A", "color": "success"},
+        {"model": SycoBTimetable, "label": "SYCO B", "color": "success"},
+        {"model": FycoTimetable, "label": "FYCO A", "color": "warning"},
+        {"model": FycoBTimetable, "label": "FYCO B", "color": "warning"},
     ]
 
     # Collect ALL entries annotated with class info

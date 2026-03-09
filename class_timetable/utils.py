@@ -4,10 +4,16 @@ from datetime import time
 from .models import (
     TycoInput,
     TycoTimetable,
+    TycoBInput,
+    TycoBTimetable,
     SycoInput,
     SycoTimetable,
+    SycoBInput,
+    SycoBTimetable,
     FycoInput,
     FycoTimetable,
+    FycoBInput,
+    FycoBTimetable,
     DAYS,
 )
 
@@ -25,9 +31,12 @@ ACADEMIC_SLOTS = [
 ADJACENT_PAIRS = [(0, 1), (2, 3), (4, 5)]
 
 CLASS_CONFIG = {
-    "tyco": {"input": TycoInput, "timetable": TycoTimetable, "name": "TYCO"},
-    "syco": {"input": SycoInput, "timetable": SycoTimetable, "name": "SYCO"},
-    "fyco": {"input": FycoInput, "timetable": FycoTimetable, "name": "FYCO"},
+    "tyco": {"input": TycoInput, "timetable": TycoTimetable, "name": "TYCO A"},
+    "tyco_b": {"input": TycoBInput, "timetable": TycoBTimetable, "name": "TYCO B"},
+    "syco": {"input": SycoInput, "timetable": SycoTimetable, "name": "SYCO A"},
+    "syco_b": {"input": SycoBInput, "timetable": SycoBTimetable, "name": "SYCO B"},
+    "fyco": {"input": FycoInput, "timetable": FycoTimetable, "name": "FYCO A"},
+    "fyco_b": {"input": FycoBInput, "timetable": FycoBTimetable, "name": "FYCO B"},
 }
 
 SUBJECT_ABBR = {

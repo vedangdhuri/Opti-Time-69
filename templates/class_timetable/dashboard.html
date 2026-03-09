@@ -6,7 +6,7 @@
 <div class="text-center mb-8">
     <h2 class="text-3xl font-bold text-gray-900 mb-2" style="font-family:'Outfit',sans-serif;">Class-wise Timetable
         System</h2>
-    <p class="text-gray-500">Manage specific timetables for TYCO, SYCO, and FYCO classes.</p>
+    <p class="text-gray-500">Manage specific timetables for TYCO A/B, SYCO A/B, and FYCO A/B classes.</p>
 </div>
 
 {% if messages %}
@@ -27,7 +27,7 @@
 <!-- Master Controls -->
 <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
     <a href="{% url 'class_timetable:generate_all' %}"
-        onclick="return confirm('Generate ALL timetables now? This will overwrite the existing schedules for TYCO, SYCO, and FYCO, ensuring no teacher is double-booked.');"
+        onclick="return confirm('Generate ALL timetables now? This will overwrite the existing schedules for TYCO A/B, SYCO A/B, and FYCO A/B, ensuring no teacher is double-booked.');"
         class="flex items-center justify-center gap-3 py-4 bg-gradient-to-r from-amber-400 to-orange-500 text-white font-bold rounded-2xl shadow-lg hover:shadow-xl hover:-translate-y-1 transition-all text-sm">
         <i class="bi bi-magic text-xl"></i>
         <span>Generate All Classes</span>
@@ -46,8 +46,8 @@
 
         <!-- Card Header -->
         <div class="px-6 py-5 bg-gradient-to-r
-      {% if class_key == 'tyco' %}from-indigo-500 to-purple-600
-      {% elif class_key == 'syco' %}from-emerald-500 to-teal-600
+      {% if class_key == 'tyco' or class_key == 'tyco_b' %}from-indigo-500 to-purple-600
+      {% elif class_key == 'syco' or class_key == 'syco_b' %}from-emerald-500 to-teal-600
       {% else %}from-sky-500 to-blue-600{% endif %}">
             <h3 class="text-xl font-bold text-white" style="font-family:'Outfit',sans-serif;">{{ cfg.name }}</h3>
             <p class="text-white/70 text-xs mt-0.5">Class Management</p>

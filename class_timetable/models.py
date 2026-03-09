@@ -52,7 +52,7 @@ class ClassTimetableBase(models.Model):
         return f"{self.day} {self.start_time}-{self.end_time}: {self.subject_name} ({self.batch})"
 
 
-# --- TYCO ---
+# --- TYCO A ---
 class TycoInput(ClassInputBase):
     pass
 
@@ -61,7 +61,16 @@ class TycoTimetable(ClassTimetableBase):
     pass
 
 
-# --- SYCO ---
+# --- TYCO B ---
+class TycoBInput(ClassInputBase):
+    pass
+
+
+class TycoBTimetable(ClassTimetableBase):
+    pass
+
+
+# --- SYCO A ---
 class SycoInput(ClassInputBase):
     pass
 
@@ -70,7 +79,16 @@ class SycoTimetable(ClassTimetableBase):
     pass
 
 
-# --- FYCO ---
+# --- SYCO B ---
+class SycoBInput(ClassInputBase):
+    pass
+
+
+class SycoBTimetable(ClassTimetableBase):
+    pass
+
+
+# --- FYCO A ---
 class FycoInput(ClassInputBase):
     pass
 
@@ -79,12 +97,24 @@ class FycoTimetable(ClassTimetableBase):
     pass
 
 
+# --- FYCO B ---
+class FycoBInput(ClassInputBase):
+    pass
+
+
+class FycoBTimetable(ClassTimetableBase):
+    pass
+
+
 # --- MASTER SUBJECTS ---
 class MasterSubject(models.Model):
     CLASS_CHOICES = [
-        ("tyco", "TYCO"),
-        ("syco", "SYCO"),
-        ("fyco", "FYCO"),
+        ("tyco", "TYCO A"),
+        ("tyco_b", "TYCO B"),
+        ("syco", "SYCO A"),
+        ("syco_b", "SYCO B"),
+        ("fyco", "FYCO A"),
+        ("fyco_b", "FYCO B"),
     ]
     class_name = models.CharField(max_length=10, choices=CLASS_CHOICES)
     subject_name = models.CharField(max_length=100)
