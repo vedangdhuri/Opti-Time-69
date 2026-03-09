@@ -1,0 +1,71 @@
+{% extends 'base.html' %}
+{% block title %}Teacher Workload & Conflicts{% endblock %}
+
+{% block content %}
+<div class="container mx-auto px-4 py-8">
+    <div class="mb-8 flex items-center justify-between">
+        <div>
+            <h2 class="text-3xl font-bold text-gray-900" style="font-family:'Outfit',sans-serif;">Teacher Workload &
+                Conflicts</h2>
+            <p class="text-gray-500 mt-2">Combined weekly workload analysis across all classes.</p>
+        </div>
+        <a href="{% url 'class_timetable:dashboard' %}"
+            class="px-5 py-2.5 bg-white border border-gray-200 text-gray-700 font-semibold rounded-xl shadow-sm hover:bg-gray-50 transition-all flex items-center gap-2">
+            <i class="bi bi-arrow-left"></i> Back to Dashboard
+        </a>
+    </div>
+
+    <div class="bg-white rounded-3xl shadow-sm border border-gray-100 overflow-hidden">
+        <div class="overflow-x-auto">
+            <table class="w-full text-left border-collapse">
+                <thead>
+                    <tr class="bg-gray-50 border-b border-gray-100">
+                        <th class="px-6 py-4 text-sm font-semibold text-gray-600">Teacher Name</th>
+                        <th class="px-6 py-4 text-sm font-semibold text-gray-600">Classes Taught</th>
+                        <th class="px-6 py-4 text-sm font-semibold text-gray-600">Total Hours / Week</th>
+                        <th class="px-6 py-4 text-sm font-semibold text-gray-600">Double Bookings (Conflicts)</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-gray-100">
+                    {% for stat in teacher_stats %}
+                    <tr class="hover:bg-gray-50/50 transition-colors">
+                        <td class="px-6 py-4">
+                            <span class="font-bold text-gray-900">{{ stat.name }}</span>
+                        </td>
+                        <td class="px-6 py-4 text-sm text-gray-600">
+                            {{ stat.classes }}
+                        </td>
+                        <td class="px-6 py-4">
+                            <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium
+                                {% if stat.total_slots > 20 %}bg-red-100 text-red-700
+                                {% elif stat.total_slots > 16 %}bg-amber-100 text-amber-700
+                                {% else %}bg-green-100 text-green-700{% endif %}">
+                                <i class="bi bi-clock-history mr-1.5"></i> {{ stat.total_slots }} hrs
+                            </span>
+                        </td>
+                        <td class="px-6 py-4">
+                            {% if stat.conflicts %}
+                            <div class="space-y-2">
+                                {% for conflict in stat.conflicts %}
+                                <div class="bg-red-50 border border-red-100 text-red-700 px-3 py-2 rounded-lg text-sm">
+                                    <i class="bi bi-exclamation-triangle-fill mr-1"></i>
+                                    <strong>Conflict:</strong> {{ conflict.day }} at {{ conflict.time }}
+                                    <div class="text-xs mt-1 text-red-600">{{ conflict.details }}</div>
+                                </div>
+                                {% endfor %}
+                            </div>
+                            {% else %}
+                            <span
+                                class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-emerald-50 text-emerald-600 border border-emerald-100">
+                                <i class="bi bi-check-circle-fill mr-1"></i> No Conflicts
+                            </span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

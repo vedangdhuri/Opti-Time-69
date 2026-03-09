@@ -727,3 +727,88 @@ def get_master_subjects(request, class_key):
         )
 
     return JsonResponse({"subjects": data})
+
+
+def teacher_workload_view(request):
+    """
+    Shows overall workload per teacher and flags any double bookings.
+    Calculates total hours based on 1 slot = 1 hour.
+    """
+    CLASS_META = [
+        {"model": TycoTimetable, "label": "TYCO A", "color": "primary"},
+        {"model": TycoBTimetable, "label": "TYCO B", "color": "primary"},
+        {"model": SycoTimetable, "label": "SYCO A", "color": "success"},
+        {"model": SycoBTimetable, "label": "SYCO B", "color": "success"},
+        {"model": FycoTimetable, "label": "FYCO A", "color": "warning"},
+        {"model": FycoBTimetable, "label": "FYCO B", "color": "warning"},
+    ]
+
+    all_entries = []
+    for meta in CLASS_META:
+        entries = meta["model"].objects.exclude(teacher_name__in=["-", "Free"]).all()
+        for e in entries:
+            all_entries.append(
+                {
+                    "teacher": e.teacher_name.strip(),
+                    "subject": e.subject_name,
+                    "batch": e.batch,
+                    "day": e.day,
+                    "start_time": e.start_time,
+                    "end_time": e.end_time,
+                    "class_label": meta["label"],
+                }
+            )
+
+    teacher_data = {}
+    for e in all_entries:
+        t = e["teacher"]
+        if t not in teacher_data:
+            teacher_data[t] = []
+        teacher_data[t].append(e)
+
+    teacher_stats = []
+    for teacher, entries in teacher_data.items():
+        slot_map = {}
+        for e in entries:
+            k = (e["day"], e["start_time"])
+            if k not in slot_map:
+                slot_map[k] = []
+            slot_map[k].append(e)
+
+        total_hours = 0
+        conflicts = []
+        seen_classes = set()
+
+        for (day, start_time), overlapping in slot_map.items():
+            total_hours += 1
+            for o in overlapping:
+                seen_classes.add(o["class_label"])
+
+            if len(overlapping) > 1:
+                unique_tasks = set(
+                    (o["class_label"], o["subject"]) for o in overlapping
+                )
+                if len(unique_tasks) > 1:
+                    fmt_time = start_time.strftime("%I:%M %p")
+                    conflict_details = ", ".join(
+                        [f"{u[0]} ({u[1]})" for u in unique_tasks]
+                    )
+                    conflicts.append(
+                        {"day": day, "time": fmt_time, "details": conflict_details}
+                    )
+
+        teacher_stats.append(
+            {
+                "name": teacher,
+                "total_slots": total_hours,
+                "classes": ", ".join(sorted(list(seen_classes))),
+                "conflicts": conflicts,
+            }
+        )
+
+    teacher_stats.sort(key=lambda x: x["name"])
+    return render(
+        request,
+        "class_timetable/teacher_workload.html",
+        {"teacher_stats": teacher_stats},
+    )

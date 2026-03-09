@@ -4,166 +4,176 @@
 {% block title %}About | Opti-Time{% endblock %}
 
 {% block content %}
-<div>
+<div class="max-w-5xl mx-auto pb-12">
 
     <!-- Hero Section -->
-    <div class="text-center mb-10 animate-slide-up">
+    <div class="text-center mb-16 animate-slide-up mt-8">
         <span
-            class="inline-block px-4 py-1.5 bg-indigo-100 text-indigo-700 text-xs font-bold rounded-full uppercase tracking-widest mb-4">
-            Opti-Time
+            class="inline-block px-4 py-1.5 bg-indigo-100 text-indigo-700 text-xs font-bold rounded-full uppercase tracking-widest mb-6">
+            About The Project
         </span>
-        <h1 class="text-4xl font-bold text-gray-900 mb-3" style="font-family:'Outfit',sans-serif;">
-            About <span
+        <h1 class="text-5xl font-extrabold text-gray-900 mb-6 tracking-tight" style="font-family:'Outfit',sans-serif;">
+            Meet <span
                 class="text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 to-purple-600">Opti-Time</span>
         </h1>
-        <p class="text-gray-500 max-w-xl mx-auto text-base leading-relaxed">
-            An advanced Academic Timetable Management System designed to simplify scheduling, eliminate conflicts, and
-            optimize resource allocation for educational institutes.
+        <p class="text-gray-500 text-lg leading-relaxed max-w-2xl mx-auto">
+            An advanced, intelligent Academic Timetable Management System designed to eliminate the headaches of manual
+            scheduling through automated conflict resolution and algorithmic constraint solving.
         </p>
     </div>
 
-    <div class="h-px bg-gradient-to-r from-transparent via-gray-200 to-transparent mb-10"></div>
-
     <!-- How to Use -->
-    <div class="mb-10">
-        <div class="text-center mb-7">
-            <h2 class="text-2xl font-bold text-gray-900 mb-2" style="font-family:'Outfit',sans-serif;">How to Use This
-                System</h2>
-            <p class="text-gray-500 text-sm">Follow these simple steps to generate and manage your class timetables.</p>
+    <div class="mb-16">
+        <div class="text-center mb-10">
+            <h2 class="text-3xl font-bold text-gray-900 mb-3" style="font-family:'Outfit',sans-serif;">How it Works</h2>
+            <p class="text-gray-500">A streamlined workflow from data entry to PDF export.</p>
         </div>
 
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
-
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
             <!-- Step 1 -->
-            <div class="bg-white rounded-2xl shadow-md border border-gray-100 p-6 card-hover">
-                <div class="flex items-center gap-4 mb-4">
+            <div
+                class="bg-white rounded-3xl shadow-sm border border-gray-100 p-8 hover:shadow-lg transition-all duration-300">
+                <div class="flex items-center gap-4 mb-5">
                     <div
-                        class="w-10 h-10 rounded-xl bg-indigo-600 text-white flex items-center justify-center font-bold text-lg flex-shrink-0">
+                        class="w-12 h-12 rounded-2xl bg-indigo-50 text-indigo-600 flex items-center justify-center font-bold text-xl flex-shrink-0">
                         1</div>
-                    <h4 class="font-bold text-gray-900 text-lg" style="font-family:'Outfit',sans-serif;">Input Data</h4>
+                    <h4 class="font-bold text-gray-900 text-xl" style="font-family:'Outfit',sans-serif;">Input
+                        Constraints</h4>
                 </div>
                 <p class="text-gray-500 text-sm leading-relaxed">
-                    Navigate to the <strong class="text-gray-700">Class-wise System</strong>. Select a class (e.g.,
-                    TYCO). Use the <strong class="text-gray-700">"Fill Input Data"</strong> form to add subjects,
-                    teachers, and workload details (Theory/Practical credits).
+                    Set up your classes, teachers, subjects, and batch divisions. Specify the precise theory and
+                    practical credit requirements according to the MSBTE curriculum guidelines.
                 </p>
             </div>
 
             <!-- Step 2 -->
-            <div class="bg-white rounded-2xl shadow-md border border-gray-100 p-6 card-hover">
-                <div class="flex items-center gap-4 mb-4">
+            <div
+                class="bg-white rounded-3xl shadow-sm border border-gray-100 p-8 hover:shadow-lg transition-all duration-300">
+                <div class="flex items-center gap-4 mb-5">
                     <div
-                        class="w-10 h-10 rounded-xl bg-purple-600 text-white flex items-center justify-center font-bold text-lg flex-shrink-0">
+                        class="w-12 h-12 rounded-2xl bg-purple-50 text-purple-600 flex items-center justify-center font-bold text-xl flex-shrink-0">
                         2</div>
-                    <h4 class="font-bold text-gray-900 text-lg" style="font-family:'Outfit',sans-serif;">Generate
-                        Timetable</h4>
+                    <h4 class="font-bold text-gray-900 text-xl" style="font-family:'Outfit',sans-serif;">Algorithmic
+                        Generation</h4>
                 </div>
                 <p class="text-gray-500 text-sm leading-relaxed">
-                    Once data is entered, click the <strong class="text-gray-700">"Generate Timetable"</strong> button
-                    on the dashboard. The system's algorithm will automatically process the inputs, resolve conflicts,
-                    and create a schedule.
+                    With a single click, Opti-Time runs thousands of randomized iterations. It calculates the optimal
+                    distribution of lectures and practicals, strictly avoiding teacher overlaps across all divisions.
                 </p>
             </div>
 
             <!-- Step 3 -->
-            <div class="bg-white rounded-2xl shadow-md border border-gray-100 p-6 card-hover">
-                <div class="flex items-center gap-4 mb-4">
+            <div
+                class="bg-white rounded-3xl shadow-sm border border-gray-100 p-8 hover:shadow-lg transition-all duration-300">
+                <div class="flex items-center gap-4 mb-5">
                     <div
-                        class="w-10 h-10 rounded-xl bg-emerald-600 text-white flex items-center justify-center font-bold text-lg flex-shrink-0">
+                        class="w-12 h-12 rounded-2xl bg-emerald-50 text-emerald-600 flex items-center justify-center font-bold text-xl flex-shrink-0">
                         3</div>
-                    <h4 class="font-bold text-gray-900 text-lg" style="font-family:'Outfit',sans-serif;">View & Analyze
-                    </h4>
+                    <h4 class="font-bold text-gray-900 text-xl" style="font-family:'Outfit',sans-serif;">Review &
+                        Validation</h4>
                 </div>
                 <p class="text-gray-500 text-sm leading-relaxed">
-                    Click <strong class="text-gray-700">"View Timetable"</strong> to see the generated schedule. The
-                    view is color-coded and organized. You can verify workload distribution and ensure all sessions are
-                    placed correctly.
+                    Use our built-in Validation Dashboard to ensure every class has precisely the right number of theory
+                    and practical hours. Check the Teacher Workload page to prevent faculty burnout.
                 </p>
             </div>
 
             <!-- Step 4 -->
-            <div class="bg-white rounded-2xl shadow-md border border-gray-100 p-6 card-hover">
-                <div class="flex items-center gap-4 mb-4">
+            <div
+                class="bg-white rounded-3xl shadow-sm border border-gray-100 p-8 hover:shadow-lg transition-all duration-300">
+                <div class="flex items-center gap-4 mb-5">
                     <div
-                        class="w-10 h-10 rounded-xl bg-sky-600 text-white flex items-center justify-center font-bold text-lg flex-shrink-0">
+                        class="w-12 h-12 rounded-2xl bg-sky-50 text-sky-600 flex items-center justify-center font-bold text-xl flex-shrink-0">
                         4</div>
-                    <h4 class="font-bold text-gray-900 text-lg" style="font-family:'Outfit',sans-serif;">Export</h4>
+                    <h4 class="font-bold text-gray-900 text-xl" style="font-family:'Outfit',sans-serif;">Export &
+                        Publish</h4>
                 </div>
                 <p class="text-gray-500 text-sm leading-relaxed">
-                    Need a hard copy? Use the export buttons at the top right of the timetable view to download the
-                    schedule in <strong class="text-gray-700">PNG, PDF, or Excel</strong> formats instantly.
+                    Once satisfied, seamlessly export visual, color-coded timetables into high-res PNGs or PDFs, ready
+                    to print and distribute to students and faculty.
                 </p>
             </div>
-
         </div>
     </div>
 
-    <!-- About Project -->
-    <div class="bg-gradient-to-br from-indigo-50 to-purple-50 rounded-2xl p-6 md:p-10 mb-10 border border-indigo-100">
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
-            <div>
-                <h3 class="text-2xl font-bold text-gray-900 mb-4" style="font-family:'Outfit',sans-serif;">About the
-                    Project</h3>
-                <p class="text-gray-500 text-sm leading-relaxed mb-5">
-                    Opti-Time addresses the complex problem of manual academic scheduling. By leveraging intelligent
-                    algorithms, it ensures:
-                </p>
-                <ul class="space-y-3">
-                    <li class="flex items-center gap-3 text-sm text-gray-700">
-                        <div class="w-6 h-6 bg-emerald-100 rounded-full flex items-center justify-center flex-shrink-0">
-                            <i class="bi bi-check text-emerald-600 text-xs font-bold"></i>
-                        </div>
-                        Conflict-free teacher allocation
-                    </li>
-                    <li class="flex items-center gap-3 text-sm text-gray-700">
-                        <div class="w-6 h-6 bg-emerald-100 rounded-full flex items-center justify-center flex-shrink-0">
-                            <i class="bi bi-check text-emerald-600 text-xs font-bold"></i>
-                        </div>
-                        Balanced workload distribution
-                    </li>
-                    <li class="flex items-center gap-3 text-sm text-gray-700">
-                        <div class="w-6 h-6 bg-emerald-100 rounded-full flex items-center justify-center flex-shrink-0">
-                            <i class="bi bi-check text-emerald-600 text-xs font-bold"></i>
-                        </div>
-                        Support for Theory and Practical batches
-                    </li>
-                    <li class="flex items-center gap-3 text-sm text-gray-700">
-                        <div class="w-6 h-6 bg-emerald-100 rounded-full flex items-center justify-center flex-shrink-0">
-                            <i class="bi bi-check text-emerald-600 text-xs font-bold"></i>
-                        </div>
-                        User-friendly interface for administration
-                    </li>
-                </ul>
+    <!-- Advanced Features -->
+    <div class="mb-16 bg-white rounded-3xl shadow-sm border border-gray-100 p-8 md:p-12 relative overflow-hidden">
+        <h3 class="text-2xl font-bold text-gray-900 mb-10 text-center relative z-10"
+            style="font-family:'Outfit',sans-serif;">Why Opti-Time?</h3>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-y-10 gap-x-12 relative z-10">
+            <div class="flex gap-4">
+                <div class="pt-1"><i
+                        class="bi bi-diagram-3 text-2xl text-indigo-500 bg-indigo-50 w-10 h-10 rounded-lg flex items-center justify-center"></i>
+                </div>
+                <div>
+                    <h4 class="font-bold text-gray-900 mb-2">Cross-Class Conflict Avoidance</h4>
+                    <p class="text-sm text-gray-500 leading-relaxed">Most basic generators fail when a professor teaches
+                        multiple years and divisions. Opti-Time actively checks against a global registry, guaranteeing
+                        a teacher is never booked in two places at once.</p>
+                </div>
             </div>
-            <div class="flex justify-center">
-                <div
-                    class="w-36 h-36 rounded-3xl bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center shadow-xl">
-                    <i class="bi bi-calendar-range text-white" style="font-size:4rem;"></i>
+            <div class="flex gap-4">
+                <div class="pt-1"><i
+                        class="bi bi-grid-1x2 text-2xl text-purple-500 bg-purple-50 w-10 h-10 rounded-lg flex items-center justify-center"></i>
+                </div>
+                <div>
+                    <h4 class="font-bold text-gray-900 mb-2">Batch Management</h4>
+                    <p class="text-sm text-gray-500 leading-relaxed">Seamlessly schedules 2-hour consecutive practical
+                        blocks, correctly dividing classes into separate batches running simultaneous labs.</p>
+                </div>
+            </div>
+            <div class="flex gap-4">
+                <div class="pt-1"><i
+                        class="bi bi-activity text-2xl text-emerald-500 bg-emerald-50 w-10 h-10 rounded-lg flex items-center justify-center"></i>
+                </div>
+                <div>
+                    <h4 class="font-bold text-gray-900 mb-2">Workload Balancing</h4>
+                    <p class="text-sm text-gray-500 leading-relaxed">It dynamically shuffles and evaluates the schedules
+                        to distribute a teacher's lectures evenly throughout the week, isolating and fixing any
+                        timetable deficits.</p>
+                </div>
+            </div>
+            <div class="flex gap-4">
+                <div class="pt-1"><i
+                        class="bi bi-shield-check text-2xl text-sky-500 bg-sky-50 w-10 h-10 rounded-lg flex items-center justify-center"></i>
+                </div>
+                <div>
+                    <h4 class="font-bold text-gray-900 mb-2">Data Integrity Controls</h4>
+                    <p class="text-sm text-gray-500 leading-relaxed">The system is built on a robust Django backend with
+                        SQLite, ensuring class data is saved safely, forms are validated securely, and access is
+                        protected behind an authentication wrapper.</p>
                 </div>
             </div>
         </div>
     </div>
 
+
     <!-- Developed By -->
-    <div class="text-center">
-        <h5 class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-5">Developed By</h5>
-        <div class="flex flex-wrap justify-center gap-3">
-            <span
-                class="px-4 py-2 bg-white border border-gray-200 text-gray-700 text-sm font-medium rounded-full shadow-sm hover:border-indigo-300 hover:text-indigo-700 transition-all">
-                Vedang Dhuri — Full Stack
-            </span>
-            <span
-                class="px-4 py-2 bg-white border border-gray-200 text-gray-700 text-sm font-medium rounded-full shadow-sm hover:border-indigo-300 hover:text-indigo-700 transition-all">
-                Yash Bhurkhe — Backend Developer
-            </span>
-            <span
-                class="px-4 py-2 bg-white border border-gray-200 text-gray-700 text-sm font-medium rounded-full shadow-sm hover:border-indigo-300 hover:text-indigo-700 transition-all">
-                Utkarsh Dicholkar — Frontend &amp; UI/UX
-            </span>
-            <span
-                class="px-4 py-2 bg-white border border-gray-200 text-gray-700 text-sm font-medium rounded-full shadow-sm hover:border-indigo-300 hover:text-indigo-700 transition-all">
-                Saish Desai — Documentation &amp; Presentation
-            </span>
+    <div class="text-center pt-8 border-t border-gray-100 mt-20">
+        <h5 class="text-sm font-bold text-gray-400 uppercase tracking-widest mb-8">Meet The Team</h5>
+        <div class="flex flex-col sm:flex-row flex-wrap justify-center gap-4">
+            <div
+                class="bg-white border border-gray-200 px-6 py-4 rounded-2xl shadow-sm flex flex-col items-center hover:border-indigo-300 hover:shadow-md transition-all">
+                <span class="font-bold text-gray-900">Vedang Dhuri</span>
+                <span class="text-xs text-indigo-600 font-semibold mt-1 uppercase tracking-wide">Full Stack Lead &
+                    PM</span>
+            </div>
+            <div
+                class="bg-white border border-gray-200 px-6 py-4 rounded-2xl shadow-sm flex flex-col items-center hover:border-indigo-300 hover:shadow-md transition-all">
+                <span class="font-bold text-gray-900">Yash Bhurkhe</span>
+                <span class="text-xs text-indigo-600 font-semibold mt-1 uppercase tracking-wide">Backend Logic</span>
+            </div>
+            <div
+                class="bg-white border border-gray-200 px-6 py-4 rounded-2xl shadow-sm flex flex-col items-center hover:border-indigo-300 hover:shadow-md transition-all">
+                <span class="font-bold text-gray-900">Utkarsh Dicholkar</span>
+                <span class="text-xs text-indigo-600 font-semibold mt-1 uppercase tracking-wide">UI/UX & Frontend</span>
+            </div>
+            <div
+                class="bg-white border border-gray-200 px-6 py-4 rounded-2xl shadow-sm flex flex-col items-center hover:border-indigo-300 hover:shadow-md transition-all">
+                <span class="font-bold text-gray-900">Saish Desai</span>
+                <span class="text-xs text-indigo-600 font-semibold mt-1 uppercase tracking-wide">Documentation</span>
+            </div>
         </div>
     </div>
 

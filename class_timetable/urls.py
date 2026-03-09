@@ -5,6 +5,7 @@ app_name = "class_timetable"
 
 urlpatterns = [
     path("", views.dashboard, name="dashboard"),
+    path("teacher-workload/", views.teacher_workload_view, name="teacher_workload"),
     path("overall_analytics/", views.overall_analytics_view, name="overall_analytics"),
     path(
         "overall_validation/", views.overall_validation_view, name="overall_validation"
