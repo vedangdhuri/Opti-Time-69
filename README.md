@@ -35,6 +35,8 @@ It handles multiple classes (e.g., FYCO, SYCO, TYCO), subject constraints, pract
 | **🧪 Batch Management**     | Automatically handles practical sessions for distinct batches (A1, A2, A3) ensuring unique teacher assignments.    |
 | **⚖️ Smart Allocation**     | Prioritizes practicals (2hr blocks), distributes theory lectures evenly (Max 2/day), and fills gaps intelligently. |
 | **👨‍🏫 Faculty Timetables**   | Aggregated individual schedules for every teacher across all departments and classes.                              |
+| **🧑‍💻 Teacher Workload**     | Custom dashboard to track total weekly hours per teacher and actively highlight any double-booking conflicts.      |
+| **🎨 Modern UI/UX**         | Completely redesigned interface featuring glassmorphism, responsive navigation, and beautiful Tailwind styling.    |
 | **📚 Global Subjects**      | Define Master Subjects in Admin to automatically suggest and auto-fill workloads.                                  |
 | **📈 Global Analytics**     | Dedicated institutional-level dashboards to holistically view overall validations, workload, and conflicts.        |
 | **📊 Class Dashboard**      | Visualizes per-class workload distribution to identify underloaded or overloaded resources.                        |
@@ -108,7 +110,8 @@ The core of **Opti-Time** operates on a **Constrained-Based Randomized Heuristic
       - **Teacher Availability**: Real-time cross-check against all other academic timetables.
       - **Daily Load**: Strict limit of maximum 2 lectures per subject per day (relaxable to 3 for backfilling).
 
-3.  **🔄 Phase 3: Gap Filling & Optimization**
+3.  **🔄 Phase 3: Multi-Class Orchestration & Gap Filling**
+    - **Randomized Class Generation**: Randomly shuffles the generation order for classes during "Generate All" to prevent algorithm starvation and ensure balanced workload distribution across the entire institute.
     - Scans for remaining empty slots after core generation.
     - Assigns "Extra" lectures or "Library" slots based on teacher availability to ensure no dead space in the schedule.
 
