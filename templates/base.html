@@ -272,9 +272,16 @@
 
         <!-- Logo + Institute Name -->
         <a class="flex items-center gap-3 no-underline" href="/">
-          <img src="{% static 'images/college_logo.png' %}" alt="College Logo" height="60" style="height:60px;">
+          <!-- College Logo -->
+          <img src="{% static 'images/college_logo.png' %}" alt="College Logo"
+            style="height:52px; width:auto; object-fit:contain;">
+          <!-- Divider -->
+          <div class="hidden md:block w-px h-9 bg-gray-200"></div>
+          <!-- Opti-Time Logo -->
+          <img src="{% static 'images/optitime_logo.png' %}" alt="Opti-Time Logo"
+            style="height:40px; width:40px; border-radius:10px; object-fit:contain; box-shadow:0 0 12px rgba(99,102,241,0.4);">
           <div class="hidden md:flex flex-col justify-center">
-            <span class="text-gray-900 font-extrabold text-xl leading-tight tracking-tight mt-1"
+            <span class="text-gray-900 font-extrabold text-xl leading-tight tracking-tight"
               style="font-family:'Outfit',sans-serif;">
               Opti-Time
             </span>
@@ -577,17 +584,133 @@
 
 
   <!-- ===================== FOOTER ===================== -->
-  <footer class="bg-white border-t border-gray-100 py-6 mt-auto">
-    <div class="max-w-screen-xl mx-auto px-4 text-center">
-      <div class="mb-1">
-        <span class="font-bold text-gray-800" style="font-family:'Outfit',sans-serif;">Opti-Time</span>
-        <span class="mx-2 text-gray-300">|</span>
-        <span class="text-gray-400 text-sm">AI Integrated Timetable Generator</span>
+  <footer style="background:#f8fafc; border-top:1px solid #e2e8f0; font-family:'Inter',sans-serif;">
+
+    <!-- Main footer grid -->
+    <div style="max-width:1280px; margin:0 auto; padding:56px 24px 48px; display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:40px;">
+
+      <!-- Col 1: Branding + Logos -->
+      <div style="display:flex;flex-direction:column;gap:16px;">
+        <!-- Opti-Time brand -->
+        <div style="display:flex;align-items:center;gap:12px;">
+          <img src="{% static 'images/optitime_logo.png' %}" alt="Opti-Time"
+            style="height:42px;width:42px;border-radius:10px;object-fit:contain;box-shadow:0 0 12px rgba(99,102,241,0.35);">
+          <div>
+            <p style="margin:0;font-family:'Outfit',sans-serif;font-weight:800;font-size:1.05rem;color:#1e1b4b;line-height:1.1;">Opti-Time</p>
+            <p style="margin:0;font-size:10px;font-weight:600;color:#6366f1;letter-spacing:.12em;text-transform:uppercase;">AI Timetable Generator</p>
+          </div>
+        </div>
+        <p style="font-size:13px;color:#64748b;line-height:1.65;max-width:260px;margin:0;">
+          Constraint-based academic scheduling — conflict-free timetables generated in seconds.
+        </p>
+        <!-- College logo -->
+        <div style="display:flex;align-items:center;gap:12px;padding-top:14px;margin-top:6px;border-top:1px solid #e2e8f0;">
+          <img src="{% static 'images/college_logo.png' %}" alt="YBIT"
+            style="height:44px;width:auto;object-fit:contain;">
+          <div>
+            <p style="margin:0;font-size:12px;font-weight:700;color:#334155;line-height:1.35;">Yashwantrao Bhonsale</p>
+            <p style="margin:0;font-size:12px;font-weight:700;color:#334155;line-height:1.35;">Institute of Technology</p>
+            <p style="margin:0;font-size:10px;color:#94a3b8;">Sawantwadi, Maharashtra · 2025–26</p>
+          </div>
+        </div>
       </div>
-      <small class="text-gray-400 text-xs">
-        © {{ now|date:"Y" }} Yashwantrao Bhonsale Institute of Technology, Sawantwadi
-      </small>
+
+      <!-- Col 2: Quick Links -->
+      <div>
+        <p style="margin:0 0 16px;font-family:'Outfit',sans-serif;font-weight:700;font-size:12px;color:#1e293b;text-transform:uppercase;letter-spacing:.1em;">Quick Links</p>
+        <ul style="list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:10px;">
+          <li><a href="/" style="font-size:13px;color:#475569;text-decoration:none;display:flex;align-items:center;gap:8px;" onmouseover="this.style.color='#6366f1'" onmouseout="this.style.color='#475569'"><i class="bi bi-house-door" style="color:#6366f1;"></i> Home</a></li>
+          {% if user.is_authenticated %}
+          <li><a href="{% url 'class_timetable:dashboard' %}" style="font-size:13px;color:#475569;text-decoration:none;display:flex;align-items:center;gap:8px;" onmouseover="this.style.color='#6366f1'" onmouseout="this.style.color='#475569'"><i class="bi bi-grid-1x2" style="color:#6366f1;"></i> Dashboard</a></li>
+          <li><a href="{% url 'class_timetable:overall_analytics' %}" style="font-size:13px;color:#475569;text-decoration:none;display:flex;align-items:center;gap:8px;" onmouseover="this.style.color='#6366f1'" onmouseout="this.style.color='#475569'"><i class="bi bi-graph-up" style="color:#6366f1;"></i> Analytics</a></li>
+          <li><a href="{% url 'class_timetable:overall_validation' %}" style="font-size:13px;color:#475569;text-decoration:none;display:flex;align-items:center;gap:8px;" onmouseover="this.style.color='#6366f1'" onmouseout="this.style.color='#475569'"><i class="bi bi-check-circle" style="color:#6366f1;"></i> Validation</a></li>
+          <li><a href="{% url 'class_timetable:teacher_timetable' %}" style="font-size:13px;color:#475569;text-decoration:none;display:flex;align-items:center;gap:8px;" onmouseover="this.style.color='#6366f1'" onmouseout="this.style.color='#475569'"><i class="bi bi-calendar-event" style="color:#6366f1;"></i> Teacher Timetable</a></li>
+          <li><a href="{% url 'class_timetable:teacher_workload' %}" style="font-size:13px;color:#475569;text-decoration:none;display:flex;align-items:center;gap:8px;" onmouseover="this.style.color='#6366f1'" onmouseout="this.style.color='#475569'"><i class="bi bi-speedometer2" style="color:#6366f1;"></i> Teacher Workload</a></li>
+          {% endif %}
+          <li><a href="{% url 'about' %}" style="font-size:13px;color:#475569;text-decoration:none;display:flex;align-items:center;gap:8px;" onmouseover="this.style.color='#6366f1'" onmouseout="this.style.color='#475569'"><i class="bi bi-info-circle" style="color:#6366f1;"></i> About</a></li>
+        </ul>
+      </div>
+
+      <!-- Col 3: Team -->
+      <div>
+        <p style="margin:0 0 16px;font-family:'Outfit',sans-serif;font-weight:700;font-size:12px;color:#1e293b;text-transform:uppercase;letter-spacing:.1em;">Project Team</p>
+        <div style="display:flex;flex-direction:column;gap:12px;">
+
+          <!-- Team member card -->
+          <div style="display:flex;align-items:center;gap:10px;">
+            <div style="width:34px;height:34px;border-radius:50%;background:linear-gradient(135deg,#6366f1,#8b5cf6);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:#fff;flex-shrink:0;">V</div>
+            <div>
+              <p style="margin:0;font-size:13px;font-weight:600;color:#1e293b;">Vedang Dhuri</p>
+              <p style="margin:0;font-size:11px;color:#94a3b8;">Full Stack · Team Lead</p>
+            </div>
+          </div>
+
+          <div style="display:flex;align-items:center;gap:10px;">
+            <div style="width:34px;height:34px;border-radius:50%;background:linear-gradient(135deg,#0ea5e9,#6366f1);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:#fff;flex-shrink:0;">Y</div>
+            <div>
+              <p style="margin:0;font-size:13px;font-weight:600;color:#1e293b;">Yash Bhurkhe</p>
+              <p style="margin:0;font-size:11px;color:#94a3b8;">Backend Logic</p>
+            </div>
+          </div>
+
+          <div style="display:flex;align-items:center;gap:10px;">
+            <div style="width:34px;height:34px;border-radius:50%;background:linear-gradient(135deg,#10b981,#6366f1);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:#fff;flex-shrink:0;">U</div>
+            <div>
+              <p style="margin:0;font-size:13px;font-weight:600;color:#1e293b;">Utkarsh Dicholkar</p>
+              <p style="margin:0;font-size:11px;color:#94a3b8;">UI/UX &amp; Frontend</p>
+            </div>
+          </div>
+
+          <div style="display:flex;align-items:center;gap:10px;">
+            <div style="width:34px;height:34px;border-radius:50%;background:linear-gradient(135deg,#f59e0b,#6366f1);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:#fff;flex-shrink:0;">S</div>
+            <div>
+              <p style="margin:0;font-size:13px;font-weight:600;color:#1e293b;">Saish Desai</p>
+              <p style="margin:0;font-size:11px;color:#94a3b8;">Documentation</p>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- Col 4: Account + Built With -->
+      <div>
+        <p style="margin:0 0 16px;font-family:'Outfit',sans-serif;font-weight:700;font-size:12px;color:#1e293b;text-transform:uppercase;letter-spacing:.1em;">Account</p>
+        <ul style="list-style:none;padding:0;margin:0 0 28px;display:flex;flex-direction:column;gap:10px;">
+          {% if user.is_authenticated %}
+          <li><a href="{% url 'profile' %}" style="font-size:13px;color:#475569;text-decoration:none;display:flex;align-items:center;gap:8px;" onmouseover="this.style.color='#6366f1'" onmouseout="this.style.color='#475569'"><i class="bi bi-person" style="color:#6366f1;"></i> Profile</a></li>
+          <li><a href="{% url 'edit_profile' %}" style="font-size:13px;color:#475569;text-decoration:none;display:flex;align-items:center;gap:8px;" onmouseover="this.style.color='#6366f1'" onmouseout="this.style.color='#475569'"><i class="bi bi-pencil" style="color:#6366f1;"></i> Edit Profile</a></li>
+          <li><a href="{% url 'change_password' %}" style="font-size:13px;color:#475569;text-decoration:none;display:flex;align-items:center;gap:8px;" onmouseover="this.style.color='#6366f1'" onmouseout="this.style.color='#475569'"><i class="bi bi-shield-lock" style="color:#6366f1;"></i> Security</a></li>
+          {% else %}
+          <li><a href="{% url 'login' %}" style="font-size:13px;color:#475569;text-decoration:none;display:flex;align-items:center;gap:8px;" onmouseover="this.style.color='#6366f1'" onmouseout="this.style.color='#475569'"><i class="bi bi-box-arrow-in-right" style="color:#6366f1;"></i> Login</a></li>
+          <li><a href="{% url 'signup' %}" style="font-size:13px;color:#475569;text-decoration:none;display:flex;align-items:center;gap:8px;" onmouseover="this.style.color='#6366f1'" onmouseout="this.style.color='#475569'"><i class="bi bi-person-plus" style="color:#6366f1;"></i> Sign Up</a></li>
+          {% endif %}
+        </ul>
+
+        <!-- Built With badges -->
+        <p style="margin:0 0 10px;font-size:11px;font-weight:600;color:#94a3b8;text-transform:uppercase;letter-spacing:.1em;">Built With</p>
+        <div style="display:flex;flex-wrap:wrap;gap:6px;">
+          <span style="padding:4px 10px;background:#f1f5f9;border:1px solid #e2e8f0;border-radius:8px;font-size:11px;font-weight:600;color:#475569;">Python</span>
+          <span style="padding:4px 10px;background:#f1f5f9;border:1px solid #e2e8f0;border-radius:8px;font-size:11px;font-weight:600;color:#475569;">Django</span>
+          <span style="padding:4px 10px;background:#f1f5f9;border:1px solid #e2e8f0;border-radius:8px;font-size:11px;font-weight:600;color:#475569;">Next.js</span>
+          <span style="padding:4px 10px;background:#f1f5f9;border:1px solid #e2e8f0;border-radius:8px;font-size:11px;font-weight:600;color:#475569;">Tailwind</span>
+          <span style="padding:4px 10px;background:#eef2ff;border:1px solid #c7d2fe;border-radius:8px;font-size:11px;font-weight:700;color:#6366f1;">AI Powered</span>
+        </div>
+      </div>
+
     </div>
+
+    <!-- Copyright bar -->
+    <div style="border-top:1px solid #e2e8f0;background:#f1f5f9;">
+      <div style="max-width:1280px;margin:0 auto;padding:14px 24px;display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:8px;">
+        <p style="margin:0;font-size:12px;color:#94a3b8;">
+          &copy; {{ now|date:"Y" }} Yashwantrao Bhonsale Institute of Technology, Sawantwadi. All rights reserved.
+        </p>
+        <p style="margin:0;font-size:12px;color:#cbd5e1;display:flex;align-items:center;gap:6px;">
+          Opti-Time v1.0 &nbsp;·&nbsp; Academic Year 2025–26
+        </p>
+      </div>
+    </div>
+
   </footer>
   <!-- ===================== FOOTER END ===================== -->
 
