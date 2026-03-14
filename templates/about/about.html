@@ -1,112 +1,347 @@
 {% extends "base.html" %}
+{% load static %}
 
-{% block title %}
-About | Yashwantrao Bhonsale Institute of Technology
-{% endblock %}
+{% block title %}About | Opti-Time — AI Timetable Generator{% endblock %}
 
 {% block content %}
 
-<div class="row justify-content-center">
-  <div class="col-lg-10">
+<!-- ── HERO ─────────────────────────────────────────────────── -->
+<div class="relative bg-gradient-to-br from-indigo-900 via-indigo-800 to-purple-900 rounded-[2rem] overflow-hidden px-6 py-16 text-center mb-12 shadow-2xl border border-indigo-700">
+  <!-- glow blobs -->
+  <div class="absolute top-0 right-0 w-96 h-96 bg-purple-500/30 rounded-full mix-blend-screen filter blur-[90px] translate-x-1/3 -translate-y-1/3 pointer-events-none"></div>
+  <div class="absolute bottom-0 left-0 w-96 h-96 bg-indigo-500/30 rounded-full mix-blend-screen filter blur-[90px] -translate-x-1/3 translate-y-1/3 pointer-events-none"></div>
+  <div class="relative z-10 max-w-3xl mx-auto">
+    <span class="inline-flex items-center gap-2 px-4 py-1.5 bg-white/10 text-indigo-100 text-xs font-semibold rounded-full border border-white/20 backdrop-blur-sm mb-6">
+      <i class="bi bi-info-circle-fill text-indigo-300"></i> About the Project
+    </span>
+    <h1 class="text-4xl md:text-5xl font-extrabold text-white mb-4 leading-tight" style="font-family:'Outfit',sans-serif;">
+      Opti-Time — AI <br class="hidden sm:block"/> Timetable Generator
+    </h1>
+    <p class="text-indigo-200/80 text-lg max-w-2xl mx-auto leading-relaxed">
+      A constraint-based academic scheduling engine built to eliminate conflicts, balance workloads, and deliver perfectly structured timetables in seconds — designed exclusively for Yashwantrao Bhonsale Institute of Technology.
+    </p>
+  </div>
+</div>
 
-    <!-- Page Header -->
-    <div class="text-center mb-5 mt-4">
-        <h2 class="fw-bold display-6 mb-2">Yashwantrao Bhonsale Institute of Technology</h2>
-        <p class="text-muted fs-5">Sawantwadi, Maharashtra</p>
+<!-- ── METADATA BAR ──────────────────────────────────────────── -->
+<div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-12">
+  <div class="bg-white rounded-2xl p-5 text-center shadow-sm border border-gray-100">
+    <div class="text-2xl font-bold text-indigo-600 mb-1" style="font-family:'Outfit',sans-serif;">v 1.0</div>
+    <div class="text-gray-500 text-xs font-semibold uppercase tracking-wider">Version</div>
+  </div>
+  <div class="bg-white rounded-2xl p-5 text-center shadow-sm border border-gray-100">
+    <div class="text-2xl font-bold text-purple-600 mb-1" style="font-family:'Outfit',sans-serif;">2025–26</div>
+    <div class="text-gray-500 text-xs font-semibold uppercase tracking-wider">Academic Year</div>
+  </div>
+  <div class="bg-white rounded-2xl p-5 text-center shadow-sm border border-gray-100">
+    <div class="text-2xl font-bold text-emerald-600 mb-1" style="font-family:'Outfit',sans-serif;">4</div>
+    <div class="text-gray-500 text-xs font-semibold uppercase tracking-wider">Team Members</div>
+  </div>
+  <div class="bg-white rounded-2xl p-5 text-center shadow-sm border border-gray-100">
+    <div class="text-2xl font-bold text-sky-600 mb-1" style="font-family:'Outfit',sans-serif;">BE IT</div>
+    <div class="text-gray-500 text-xs font-semibold uppercase tracking-wider">Department</div>
+  </div>
+</div>
+
+<!-- ── ABOUT INSTITUTE ───────────────────────────────────────── -->
+<!-- <div class="bg-white rounded-3xl shadow-sm border border-gray-100 p-8 md:p-10 mb-10">
+  <div class="flex flex-col md:flex-row gap-8 items-start">
+    <div class="flex-1">
+      <span class="text-indigo-600 font-bold uppercase tracking-widest text-xs mb-3 block">Institute</span>
+      <h2 class="text-2xl font-bold text-gray-900 mb-4" style="font-family:'Outfit',sans-serif;">Yashwantrao Bhonsale Institute of Technology</h2>
+      <p class="text-gray-500 text-[15px] leading-relaxed mb-3">
+        Located in Sawantwadi, Maharashtra, YBIT is a reputed technical institute committed to delivering quality education in engineering and technology. The institute focuses on academic excellence, practical learning, and industry-oriented skill development.
+      </p>
+      <p class="text-gray-500 text-[15px] leading-relaxed">
+        The curriculum is designed to bridge the gap between theoretical concepts and real-world applications, preparing students for professional careers and higher education in an ever-evolving technological landscape.
+      </p>
+    </div>
+    <div class="flex-shrink-0 flex flex-col items-center justify-center gap-3 bg-indigo-50 rounded-2xl p-6 border border-indigo-100 w-full md:w-48">
+      <img src="{% static 'images/college_logo.png' %}" alt="YBIT Logo" style="height:72px;width:auto;object-fit:contain;">
+      <p class="text-xs font-semibold text-center text-gray-600 leading-snug">Sawantwadi, Maharashtra</p>
+      <span class="text-[10px] text-indigo-600 font-bold uppercase tracking-widest">Est. Institute</span>
+    </div>
+  </div>
+</div> -->
+
+<!-- ── PROJECT OVERVIEW ──────────────────────────────────────── -->
+<div class="bg-gradient-to-br from-indigo-50 to-purple-50 rounded-3xl border border-indigo-100 p-8 md:p-10 mb-10">
+  <span class="text-indigo-600 font-bold uppercase tracking-widest text-xs mb-3 block">Project Overview</span>
+  <h2 class="text-2xl font-bold text-gray-900 mb-4" style="font-family:'Outfit',sans-serif;">What is Opti-Time?</h2>
+  <p class="text-gray-600 text-[15px] leading-relaxed mb-4">
+    Opti-Time is a full-stack web application that automates the creation of college timetables using a constraint-based scheduling algorithm. Traditional manual scheduling is error-prone, time-consuming, and frequently leads to teacher clashes, free periods, and unbalanced workloads. Opti-Time eliminates all of these problems by treating timetable generation as a constraint satisfaction problem (CSP).
+  </p>
+  <p class="text-gray-600 text-[15px] leading-relaxed mb-4">
+    The system accepts structured input — divisions, teachers, subjects, and credit hours — and deterministically produces a full week's schedule for every division simultaneously. Practical subjects are automatically paired into continuous 2-hour blocks and distributed evenly across the week. No two teachers are assigned to the same time slot for the same division, and each teacher's weekly workload is enforced within defined limits.
+  </p>
+  <p class="text-gray-600 text-[15px] leading-relaxed">
+    Beyond generation, Opti-Time provides a suite of analytical tools: real-time workload dashboards, conflict detection validators, division-wise and teacher-wise timetable views, and printable PDF-ready outputs — all accessible from a single, unified admin interface.
+  </p>
+</div>
+
+<!-- ── HOW IT WORKS ──────────────────────────────────────────── -->
+<div class="mb-10">
+  <div class="text-center mb-8">
+    <span class="text-indigo-600 font-bold uppercase tracking-widest text-xs mb-3 block">Algorithm</span>
+    <h2 class="text-2xl font-bold text-gray-900" style="font-family:'Outfit',sans-serif;">How the Scheduler Works</h2>
+  </div>
+  <div class="grid grid-cols-1 md:grid-cols-5 gap-4">
+    <!-- Step 1 -->
+    <div class="bg-white rounded-2xl p-5 shadow-sm border border-gray-100 text-center">
+      <div class="w-10 h-10 bg-indigo-100 rounded-xl flex items-center justify-center mx-auto mb-3">
+        <span class="text-indigo-700 font-black text-sm" style="font-family:'Outfit',sans-serif;">1</span>
+      </div>
+      <h3 class="font-bold text-gray-800 text-sm mb-2" style="font-family:'Outfit',sans-serif;">Input Collection</h3>
+      <p class="text-gray-400 text-xs leading-relaxed">Admin enters divisions, subjects, teachers, credit hours, and practical flags.</p>
+    </div>
+    <!-- Step 2 -->
+    <div class="bg-white rounded-2xl p-5 shadow-sm border border-gray-100 text-center">
+      <div class="w-10 h-10 bg-purple-100 rounded-xl flex items-center justify-center mx-auto mb-3">
+        <span class="text-purple-700 font-black text-sm" style="font-family:'Outfit',sans-serif;">2</span>
+      </div>
+      <h3 class="font-bold text-gray-800 text-sm mb-2" style="font-family:'Outfit',sans-serif;">Slot Allocation</h3>
+      <p class="text-gray-400 text-xs leading-relaxed">Time slots (Mon–Sat, periods 1–6) are ranked and matched to subjects by priority.</p>
+    </div>
+    <!-- Step 3 -->
+    <div class="bg-white rounded-2xl p-5 shadow-sm border border-gray-100 text-center">
+      <div class="w-10 h-10 bg-emerald-100 rounded-xl flex items-center justify-center mx-auto mb-3">
+        <span class="text-emerald-700 font-black text-sm" style="font-family:'Outfit',sans-serif;">3</span>
+      </div>
+      <h3 class="font-bold text-gray-800 text-sm mb-2" style="font-family:'Outfit',sans-serif;">Constraint Check</h3>
+      <p class="text-gray-400 text-xs leading-relaxed">Each assignment is verified against teacher availability, division limits, and workload caps.</p>
+    </div>
+    <!-- Step 4 -->
+    <div class="bg-white rounded-2xl p-5 shadow-sm border border-gray-100 text-center">
+      <div class="w-10 h-10 bg-sky-100 rounded-xl flex items-center justify-center mx-auto mb-3">
+        <span class="text-sky-700 font-black text-sm" style="font-family:'Outfit',sans-serif;">4</span>
+      </div>
+      <h3 class="font-bold text-gray-800 text-sm mb-2" style="font-family:'Outfit',sans-serif;">Practical Pairing</h3>
+      <p class="text-gray-400 text-xs leading-relaxed">Lab subjects are auto-paired into continuous 2-hour blocks with batch rotation logic.</p>
+    </div>
+    <!-- Step 5 -->
+    <div class="bg-white rounded-2xl p-5 shadow-sm border border-gray-100 text-center">
+      <div class="w-10 h-10 bg-rose-100 rounded-xl flex items-center justify-center mx-auto mb-3">
+        <span class="text-rose-700 font-black text-sm" style="font-family:'Outfit',sans-serif;">5</span>
+      </div>
+      <h3 class="font-bold text-gray-800 text-sm mb-2" style="font-family:'Outfit',sans-serif;">Output & Export</h3>
+      <p class="text-gray-400 text-xs leading-relaxed">Final timetables are stored in the database, rendered on-screen, and available for print.</p>
+    </div>
+  </div>
+</div>
+
+<!-- ── KEY FEATURES ──────────────────────────────────────────── -->
+<div class="mb-10">
+  <div class="text-center mb-8">
+    <span class="text-indigo-600 font-bold uppercase tracking-widest text-xs mb-3 block">Capabilities</span>
+    <h2 class="text-2xl font-bold text-gray-900" style="font-family:'Outfit',sans-serif;">Key Features</h2>
+  </div>
+  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+    {% for feature in features_list %}{% endfor %}
+
+    <div class="bg-white rounded-2xl p-6 shadow-sm border border-gray-100 hover:-translate-y-1 transition-transform duration-200">
+      <div class="w-11 h-11 bg-indigo-50 rounded-xl flex items-center justify-center mb-4 border border-indigo-100">
+        <i class="bi bi-cpu text-xl text-indigo-600"></i>
+      </div>
+      <h3 class="font-bold text-gray-800 text-sm mb-2" style="font-family:'Outfit',sans-serif;">AI-Driven Scheduling</h3>
+      <p class="text-gray-400 text-xs leading-relaxed">Constraint satisfaction algorithm automatically resolves conflicts across all divisions and staff simultaneously.</p>
     </div>
 
-    <!-- About College -->
-    <div class="card border-0 shadow-sm mb-5 overflow-hidden">
-      <div class="card-body p-4 p-md-5">
-        <h4 class="fw-bold mb-4 text-primary">About the Institute</h4>
-        <div class="row g-4 align-items-center">
-            <div class="col-md-8">
-                <p class="text-secondary lead fs-6">
-                Yashwantrao Bhonsale Institute of Technology, Sawantwadi is a reputed
-                technical institute committed to delivering quality education in the
-                field of engineering and technology. The institute focuses on
-                academic excellence, practical learning, and industry-oriented
-                skill development.
-                </p>
-                <p class="text-secondary">
-                The curriculum is designed to bridge the gap between theoretical
-                concepts and real-world applications, preparing students for
-                professional careers and higher education.
-                </p>
-            </div>
-             <div class="col-md-4 text-center">
-                <!-- Optional placeholder for a college image -->
-                <div class="bg-light rounded p-4 d-inline-block">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="80" height="80" fill="currentColor" class="bi bi-building text-primary opacity-50" viewBox="0 0 16 16">
-                        <path fill-rule="evenodd" d="M14.763.075A.5.5 0 0 1 15 .5v15a.5.5 0 0 1-.5.5h-3a.5.5 0 0 1-.5-.5V14h-1v1.5a.5.5 0 0 1-.5.5h-9a.5.5 0 0 1-.5-.5V10a.5.5 0 0 1 .342-.474L6 7.64V4.5a.5.5 0 0 1 .276-.447l8-4a.5.5 0 0 1 .487.022zM6 8.694 1 10.36V15h5V8.694zM7 15h2v-1.5a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 .5.5V15h2V1.309l-7 3.5V15z"/>
-                        <path d="M2 11h1v1H2v-1zm2 0h1v1H4v-1zm-2 2h1v1H2v-1zm2 0h1v1H4v-1zm4-4h1v1H8V9zm2 0h1v1h-1V9zm-2 2h1v1H8v-1zm2 0h1v1h-1v-1zm2-2h1v1h-1V9zm0 2h1v1h-1v-1zM8 7h1v1H8V7zm2 0h1v1h-1V7zm2 0h1v1h-1V7zM8 5h1v1H8V5zm2 0h1v1h-1V5zm2 0h1v1h-1V5zm0-2h1v1h-1V3z"/>
-                    </svg>
-                </div>
-             </div>
-        </div>
+    <div class="bg-white rounded-2xl p-6 shadow-sm border border-gray-100 hover:-translate-y-1 transition-transform duration-200">
+      <div class="w-11 h-11 bg-purple-50 rounded-xl flex items-center justify-center mb-4 border border-purple-100">
+        <i class="bi bi-diagram-3 text-xl text-purple-600"></i>
+      </div>
+      <h3 class="font-bold text-gray-800 text-sm mb-2" style="font-family:'Outfit',sans-serif;">Practical Block Logic</h3>
+      <p class="text-gray-400 text-xs leading-relaxed">Labs are automatically scheduled as 2-hour consecutive slots with automatic batch (A/B) rotation.</p>
+    </div>
+
+    <div class="bg-white rounded-2xl p-6 shadow-sm border border-gray-100 hover:-translate-y-1 transition-transform duration-200">
+      <div class="w-11 h-11 bg-emerald-50 rounded-xl flex items-center justify-center mb-4 border border-emerald-100">
+        <i class="bi bi-shield-check text-xl text-emerald-600"></i>
+      </div>
+      <h3 class="font-bold text-gray-800 text-sm mb-2" style="font-family:'Outfit',sans-serif;">Conflict Validator</h3>
+      <p class="text-gray-400 text-xs leading-relaxed">Post-generation validation catches any teacher double-bookings, missing periods, or workload violations instantly.</p>
+    </div>
+
+    <div class="bg-white rounded-2xl p-6 shadow-sm border border-gray-100 hover:-translate-y-1 transition-transform duration-200">
+      <div class="w-11 h-11 bg-sky-50 rounded-xl flex items-center justify-center mb-4 border border-sky-100">
+        <i class="bi bi-graph-up-arrow text-xl text-sky-600"></i>
+      </div>
+      <h3 class="font-bold text-gray-800 text-sm mb-2" style="font-family:'Outfit',sans-serif;">Workload Analytics</h3>
+      <p class="text-gray-400 text-xs leading-relaxed">Interactive bar charts reveal per-teacher weekly load, highlighting overloaded or underutilised staff at a glance.</p>
+    </div>
+
+    <div class="bg-white rounded-2xl p-6 shadow-sm border border-gray-100 hover:-translate-y-1 transition-transform duration-200">
+      <div class="w-11 h-11 bg-amber-50 rounded-xl flex items-center justify-center mb-4 border border-amber-100">
+        <i class="bi bi-person-badge text-xl text-amber-600"></i>
+      </div>
+      <h3 class="font-bold text-gray-800 text-sm mb-2" style="font-family:'Outfit',sans-serif;">Teacher Timetable View</h3>
+      <p class="text-gray-400 text-xs leading-relaxed">Every teacher gets a personalised weekly view showing exactly which division and subject they teach each period.</p>
+    </div>
+
+    <div class="bg-white rounded-2xl p-6 shadow-sm border border-gray-100 hover:-translate-y-1 transition-transform duration-200">
+      <div class="w-11 h-11 bg-rose-50 rounded-xl flex items-center justify-center mb-4 border border-rose-100">
+        <i class="bi bi-printer text-xl text-rose-600"></i>
+      </div>
+      <h3 class="font-bold text-gray-800 text-sm mb-2" style="font-family:'Outfit',sans-serif;">Print-Ready Export</h3>
+      <p class="text-gray-400 text-xs leading-relaxed">Dedicated print stylesheets render clean, paginated timetables suitable for notice boards and faculty handouts.</p>
+    </div>
+
+    <div class="bg-white rounded-2xl p-6 shadow-sm border border-gray-100 hover:-translate-y-1 transition-transform duration-200">
+      <div class="w-11 h-11 bg-teal-50 rounded-xl flex items-center justify-center mb-4 border border-teal-100">
+        <i class="bi bi-sliders text-xl text-teal-600"></i>
+      </div>
+      <h3 class="font-bold text-gray-800 text-sm mb-2" style="font-family:'Outfit',sans-serif;">Admin Control Panel</h3>
+      <p class="text-gray-400 text-xs leading-relaxed">Django's admin interface lets authorised users manage all master data — subjects, teachers, divisions — without touching code.</p>
+    </div>
+
+    <div class="bg-white rounded-2xl p-6 shadow-sm border border-gray-100 hover:-translate-y-1 transition-transform duration-200">
+      <div class="w-11 h-11 bg-fuchsia-50 rounded-xl flex items-center justify-center mb-4 border border-fuchsia-100">
+        <i class="bi bi-pie-chart-fill text-xl text-fuchsia-600"></i>
+      </div>
+      <h3 class="font-bold text-gray-800 text-sm mb-2" style="font-family:'Outfit',sans-serif;">Overall Analytics</h3>
+      <p class="text-gray-400 text-xs leading-relaxed">Institute-wide statistics: subject distribution, period utilisation rates, and multi-division comparison charts.</p>
+    </div>
+  </div>
+</div>
+
+<!-- ── TECH STACK ────────────────────────────────────────────── -->
+<div class="bg-white rounded-3xl shadow-sm border border-gray-100 p-8 md:p-10 mb-10">
+  <span class="text-indigo-600 font-bold uppercase tracking-widest text-xs mb-3 block">Stack</span>
+  <h2 class="text-2xl font-bold text-gray-900 mb-6" style="font-family:'Outfit',sans-serif;">Technologies Used</h2>
+  <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
+    {% for tech in tech_stack %}{% endfor %}
+
+    <div class="flex items-center gap-3 bg-gray-50 rounded-xl px-4 py-3 border border-gray-100">
+      <span class="w-8 h-8 bg-indigo-100 rounded-lg flex items-center justify-center flex-shrink-0">
+        <i class="bi bi-filetype-py text-indigo-600"></i>
+      </span>
+      <div>
+        <p class="text-sm font-bold text-gray-700">Python 3.11</p>
+        <p class="text-[10px] text-gray-400">Core Language</p>
       </div>
     </div>
 
-    <div class="row g-4 mb-5">
-        <!-- About Project -->
-        <div class="col-md-7">
-            <div class="card h-100 border-0 shadow-sm p-3">
-            <div class="card-body">
-                <h5 class="fw-bold mb-3 d-flex align-items-center gap-2">
-                    <span class="text-success">
-                         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-code-square" viewBox="0 0 16 16">
-                            <path d="M14 1a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1h12zM2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2z"/>
-                            <path d="M6.854 4.646a.5.5 0 0 1 0 .708L4.207 8l2.647 2.646a.5.5 0 0 1-.708.708l-3-3a.5.5 0 0 1 0-.708l3-3a.5.5 0 0 1 .708 0zm2.292 0a.5.5 0 0 0 0 .708L11.793 8l-2.647 2.646a.5.5 0 0 0 .708.708l3-3a.5.5 0 0 0 0-.708l-3-3a.5.5 0 0 0-.708 0z"/>
-                        </svg>
-                    </span>
-                    About the Project
-                </h5>
-                <p class="text-muted">
-                    The <strong>College Timetable Management System</strong> is a web-based
-                    application developed using modern web technologies to automate the process 
-                    of academic scheduling.
-                </p>
-                <ul class="list-unstyled text-muted ps-2">
-                    <li class="mb-2 d-flex align-items-center gap-2">
-                        <span class="text-success small">✔</span> Automatic timetable generation
-                    </li>
-                    <li class="mb-2 d-flex align-items-center gap-2">
-                         <span class="text-success small">✔</span> Admin-controlled data management
-                    </li>
-                    <li class="mb-2 d-flex align-items-center gap-2">
-                         <span class="text-success small">✔</span>  Batch-wise and day-wise scheduling
-                    </li>
-                    <li class="mb-2 d-flex align-items-center gap-2">
-                         <span class="text-success small">✔</span>  Analytics dashboard for insights
-                    </li>
-                </ul>
-            </div>
-            </div>
-        </div>
-
-        <!-- Technologies Used -->
-        <div class="col-md-5">
-            <div class="card h-100 border-0 shadow-sm p-3">
-            <div class="card-body">
-                <h5 class="fw-bold mb-3">Tech Stack</h5>
-                <div class="d-flex flex-wrap gap-2">
-                    <span class="badge rounded-pill bg-light text-dark border py-2 px-3">Python</span>
-                    <span class="badge rounded-pill bg-light text-dark border py-2 px-3">Django</span>
-                    <span class="badge rounded-pill bg-light text-dark border py-2 px-3">SQLite</span>
-                    <span class="badge rounded-pill bg-light text-dark border py-2 px-3">Bootstrap 5</span>
-                    <span class="badge rounded-pill bg-light text-dark border py-2 px-3">CSS3</span>
-                    <span class="badge rounded-pill bg-light text-dark border py-2 px-3">HTML5</span>
-                </div>
-                
-                <div class="mt-4 pt-3 border-top">
-                    <small class="text-muted d-block text-uppercase fw-bold mb-1" style="font-size: 0.7rem;">Academic Year</small>
-                    <span class="fw-semibold">2025–2026</span>
-                </div>
-            </div>
-            </div>
-        </div>
+    <div class="flex items-center gap-3 bg-gray-50 rounded-xl px-4 py-3 border border-gray-100">
+      <span class="w-8 h-8 bg-emerald-100 rounded-lg flex items-center justify-center flex-shrink-0">
+        <i class="bi bi-server text-emerald-600"></i>
+      </span>
+      <div>
+        <p class="text-sm font-bold text-gray-700">Django 4.x</p>
+        <p class="text-[10px] text-gray-400">Web Framework</p>
+      </div>
     </div>
 
+    <div class="flex items-center gap-3 bg-gray-50 rounded-xl px-4 py-3 border border-gray-100">
+      <span class="w-8 h-8 bg-sky-100 rounded-lg flex items-center justify-center flex-shrink-0">
+        <i class="bi bi-database text-sky-600"></i>
+      </span>
+      <div>
+        <p class="text-sm font-bold text-gray-700">SQLite 3</p>
+        <p class="text-[10px] text-gray-400">Database</p>
+      </div>
+    </div>
+
+    <div class="flex items-center gap-3 bg-gray-50 rounded-xl px-4 py-3 border border-gray-100">
+      <span class="w-8 h-8 bg-purple-100 rounded-lg flex items-center justify-center flex-shrink-0">
+        <i class="bi bi-palette text-purple-600"></i>
+      </span>
+      <div>
+        <p class="text-sm font-bold text-gray-700">Tailwind CSS</p>
+        <p class="text-[10px] text-gray-400">Styling</p>
+      </div>
+    </div>
+
+    <div class="flex items-center gap-3 bg-gray-50 rounded-xl px-4 py-3 border border-gray-100">
+      <span class="w-8 h-8 bg-amber-100 rounded-lg flex items-center justify-center flex-shrink-0">
+        <i class="bi bi-filetype-html text-amber-600"></i>
+      </span>
+      <div>
+        <p class="text-sm font-bold text-gray-700">HTML 5</p>
+        <p class="text-[10px] text-gray-400">Markup</p>
+      </div>
+    </div>
+
+    <div class="flex items-center gap-3 bg-gray-50 rounded-xl px-4 py-3 border border-gray-100">
+      <span class="w-8 h-8 bg-rose-100 rounded-lg flex items-center justify-center flex-shrink-0">
+        <i class="bi bi-bar-chart-fill text-rose-600"></i>
+      </span>
+      <div>
+        <p class="text-sm font-bold text-gray-700">Chart.js</p>
+        <p class="text-[10px] text-gray-400">Data Visualisation</p>
+      </div>
+    </div>
+
+    <div class="flex items-center gap-3 bg-gray-50 rounded-xl px-4 py-3 border border-gray-100">
+      <span class="w-8 h-8 bg-teal-100 rounded-lg flex items-center justify-center flex-shrink-0">
+        <i class="bi bi-gear text-teal-600"></i>
+      </span>
+      <div>
+        <p class="text-sm font-bold text-gray-700">Django ORM</p>
+        <p class="text-[10px] text-gray-400">Data Layer</p>
+      </div>
+    </div>
+
+    <div class="flex items-center gap-3 bg-indigo-50 rounded-xl px-4 py-3 border border-indigo-100">
+      <span class="w-8 h-8 bg-indigo-200 rounded-lg flex items-center justify-center flex-shrink-0">
+        <i class="bi bi-stars text-indigo-700"></i>
+      </span>
+      <div>
+        <p class="text-sm font-bold text-indigo-700">CSP Algorithm</p>
+        <p class="text-[10px] text-indigo-400">AI Engine</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ── TEAM ──────────────────────────────────────────────────── -->
+<div class="mb-10">
+  <div class="text-center mb-8">
+    <span class="text-indigo-600 font-bold uppercase tracking-widest text-xs mb-3 block">People</span>
+    <h2 class="text-2xl font-bold text-gray-900" style="font-family:'Outfit',sans-serif;">Project Team</h2>
+  </div>
+  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+    <!-- Vedang -->
+    <div class="bg-white rounded-2xl p-6 shadow-sm border border-gray-100 text-center hover:-translate-y-1 transition-transform duration-200">
+      <div class="w-16 h-16 rounded-full bg-gradient-to-tr from-indigo-600 to-purple-600 text-white flex items-center justify-center font-black text-2xl mx-auto mb-4 shadow-md" style="font-family:'Outfit',sans-serif;">V</div>
+      <h3 class="font-bold text-gray-800 text-sm" style="font-family:'Outfit',sans-serif;">Vedang Dhuri</h3>
+      <p class="text-indigo-600 text-xs font-semibold mb-2">Team Lead</p>
+      <p class="text-gray-400 text-xs leading-relaxed">Full-stack development, scheduling algorithm design, backend architecture & deployment.</p>
+    </div>
+    <!-- Yash -->
+    <div class="bg-white rounded-2xl p-6 shadow-sm border border-gray-100 text-center hover:-translate-y-1 transition-transform duration-200">
+      <div class="w-16 h-16 rounded-full bg-gradient-to-tr from-sky-500 to-indigo-600 text-white flex items-center justify-center font-black text-2xl mx-auto mb-4 shadow-md" style="font-family:'Outfit',sans-serif;">Y</div>
+      <h3 class="font-bold text-gray-800 text-sm" style="font-family:'Outfit',sans-serif;">Yash Bhurkhe</h3>
+      <p class="text-sky-600 text-xs font-semibold mb-2">Backend Developer</p>
+      <p class="text-gray-400 text-xs leading-relaxed">Core business logic, database modeling, Django views, and timetable generation pipeline.</p>
+    </div>
+    <!-- Utkarsh -->
+    <div class="bg-white rounded-2xl p-6 shadow-sm border border-gray-100 text-center hover:-translate-y-1 transition-transform duration-200">
+      <div class="w-16 h-16 rounded-full bg-gradient-to-tr from-emerald-500 to-indigo-600 text-white flex items-center justify-center font-black text-2xl mx-auto mb-4 shadow-md" style="font-family:'Outfit',sans-serif;">U</div>
+      <h3 class="font-bold text-gray-800 text-sm" style="font-family:'Outfit',sans-serif;">Utkarsh Dicholkar</h3>
+      <p class="text-emerald-600 text-xs font-semibold mb-2">UI / UX & Frontend</p>
+      <p class="text-gray-400 text-xs leading-relaxed">Responsive interface design, Tailwind implementation, dashboard components, and print layouts.</p>
+    </div>
+    <!-- Saish -->
+    <div class="bg-white rounded-2xl p-6 shadow-sm border border-gray-100 text-center hover:-translate-y-1 transition-transform duration-200">
+      <div class="w-16 h-16 rounded-full bg-gradient-to-tr from-amber-400 to-indigo-600 text-white flex items-center justify-center font-black text-2xl mx-auto mb-4 shadow-md" style="font-family:'Outfit',sans-serif;">S</div>
+      <h3 class="font-bold text-gray-800 text-sm" style="font-family:'Outfit',sans-serif;">Saish Desai</h3>
+      <p class="text-amber-600 text-xs font-semibold mb-2">Documentation</p>
+      <p class="text-gray-400 text-xs leading-relaxed">Project documentation, requirement analysis, testing, and technical report preparation.</p>
+    </div>
+  </div>
+</div>
+
+<!-- ── SUPERVISOR ────────────────────────────────────────────── -->
+<div class="bg-gradient-to-r from-indigo-50 to-purple-50 rounded-3xl border border-indigo-100 p-8 flex flex-col sm:flex-row items-center gap-6 mb-4">
+  <div class="w-16 h-16 rounded-full bg-gradient-to-tr from-indigo-700 to-purple-700 text-white flex items-center justify-center text-2xl flex-shrink-0 shadow-md">
+    <i class="bi bi-mortarboard-fill"></i>
+  </div>
+  <div>
+    <p class="text-xs font-bold text-indigo-600 uppercase tracking-widest mb-1">Project Guide</p>
+    <h3 class="text-lg font-bold text-gray-900" style="font-family:'Outfit',sans-serif;">Department of Computer Engineering</h3>
+    <p class="text-gray-500 text-sm mt-1 leading-relaxed">
+      This project was developed as part of the Diploma in Computer Engineering final-year project at Yashwantrao Bhonsale Institute of Technology, Sawantwadi, under the guidance of HOD of Computer Engineering Department P. D. Kate, Academic Year 2025–2026.
+    </p>
   </div>
 </div>
 

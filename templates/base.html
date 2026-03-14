@@ -672,20 +672,8 @@
         </div>
       </div>
 
-      <!-- Col 4: Account + Built With -->
+      <!-- Col 4: Built With -->
       <div>
-        <p style="margin:0 0 16px;font-family:'Outfit',sans-serif;font-weight:700;font-size:12px;color:#1e293b;text-transform:uppercase;letter-spacing:.1em;">Account</p>
-        <ul style="list-style:none;padding:0;margin:0 0 28px;display:flex;flex-direction:column;gap:10px;">
-          {% if user.is_authenticated %}
-          <li><a href="{% url 'profile' %}" style="font-size:13px;color:#475569;text-decoration:none;display:flex;align-items:center;gap:8px;" onmouseover="this.style.color='#6366f1'" onmouseout="this.style.color='#475569'"><i class="bi bi-person" style="color:#6366f1;"></i> Profile</a></li>
-          <li><a href="{% url 'edit_profile' %}" style="font-size:13px;color:#475569;text-decoration:none;display:flex;align-items:center;gap:8px;" onmouseover="this.style.color='#6366f1'" onmouseout="this.style.color='#475569'"><i class="bi bi-pencil" style="color:#6366f1;"></i> Edit Profile</a></li>
-          <li><a href="{% url 'change_password' %}" style="font-size:13px;color:#475569;text-decoration:none;display:flex;align-items:center;gap:8px;" onmouseover="this.style.color='#6366f1'" onmouseout="this.style.color='#475569'"><i class="bi bi-shield-lock" style="color:#6366f1;"></i> Security</a></li>
-          {% else %}
-          <li><a href="{% url 'login' %}" style="font-size:13px;color:#475569;text-decoration:none;display:flex;align-items:center;gap:8px;" onmouseover="this.style.color='#6366f1'" onmouseout="this.style.color='#475569'"><i class="bi bi-box-arrow-in-right" style="color:#6366f1;"></i> Login</a></li>
-          <li><a href="{% url 'signup' %}" style="font-size:13px;color:#475569;text-decoration:none;display:flex;align-items:center;gap:8px;" onmouseover="this.style.color='#6366f1'" onmouseout="this.style.color='#475569'"><i class="bi bi-person-plus" style="color:#6366f1;"></i> Sign Up</a></li>
-          {% endif %}
-        </ul>
-
         <!-- Built With badges -->
         <p style="margin:0 0 10px;font-size:11px;font-weight:600;color:#94a3b8;text-transform:uppercase;letter-spacing:.1em;">Built With</p>
         <div style="display:flex;flex-wrap:wrap;gap:6px;">
