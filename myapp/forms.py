@@ -52,12 +52,9 @@ class CustomUserCreationForm(BootstrapFormMixin, UserCreationForm):
 class ProfileForm(BootstrapFormMixin, forms.ModelForm):
     class Meta:
         model = CustomUser
-        fields = ["name", "email", "contact", "age", "gender"]
+        fields = ["name", "email"]
 
         widgets = {
             "name": forms.TextInput(attrs={"placeholder": "Full name"}),
             "email": forms.EmailInput(attrs={"placeholder": "Email address"}),
-            "contact": forms.TextInput(attrs={"placeholder": "Contact number"}),
-            "age": forms.NumberInput(attrs={"placeholder": "Age", "min": 18}),
-            "gender": forms.Select(),
         }

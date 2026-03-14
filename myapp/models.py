@@ -6,13 +6,7 @@ from django.db import models
 class CustomUser(AbstractUser):
     name = models.CharField(max_length=100)
     email = models.EmailField(unique=True)
-    contact = models.CharField(max_length=15, blank=True)
-    age = models.PositiveIntegerField(null=True, blank=True)
-    gender = models.CharField(
-        max_length=10,
-        choices=[("male", "Male"), ("female", "Female"), ("other", "Other")],
-        blank=True,
-    )
+    # Removed age, contact, gender
 
     USERNAME_FIELD = "email"
     REQUIRED_FIELDS = ["username", "name"]

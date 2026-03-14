@@ -3,40 +3,41 @@
 {% block content1 %}{% endblock %}
 
 {% block content %}
-<div class="container my-5">
-    <!-- <h2 class="text-center fw-bold mb-4 text-primary">Edit Profile</h2> -->
+<div class="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8 py-12 animate-fade-in">
+    <!-- Header text -->
+    <div class="text-center mb-10">
+        <div class="inline-flex items-center justify-center w-16 h-16 rounded-[1.25rem] bg-indigo-50 text-indigo-600 mb-5 border border-indigo-100 shadow-sm">
+            <i class="bi bi-pencil-fill text-2xl"></i>
+        </div>
+        <h2 class="text-4xl font-extrabold text-gray-900 tracking-tight" style="font-family:'Outfit',sans-serif;">
+            Edit Profile
+        </h2>
+        <p class="text-gray-500 mt-3 text-lg">Update your personal information and account preferences.</p>
+    </div>
 
-    <div class="row justify-content-center">
-        <div class="col-md-8 col-lg-6">
-            <div class="card shadow-sm border-0 rounded-4">
-                <div class="card-body p-4">
-                    <h2 class="card-title text-center mb-4 text-secondary">
-                        <i class="bi bi-pencil-fill me-2 text-primary"></i>Edit Profile
-                    </h2>
+    <!-- Form container -->
+    <div class="bg-white rounded-[2rem] shadow-xl border border-gray-100 overflow-hidden relative">
+        <!-- Decorative bg elements -->
+        <div class="absolute top-0 right-0 w-64 h-64 bg-indigo-50/70 rounded-full mix-blend-multiply filter blur-3xl translate-x-1/2 -translate-y-1/2 pointer-events-none"></div>
+        <div class="absolute bottom-0 left-0 w-64 h-64 bg-purple-50/70 rounded-full mix-blend-multiply filter blur-3xl -translate-x-1/2 translate-y-1/2 pointer-events-none"></div>
 
-                    <form method="post" class="needs-validation" novalidate>
-                        {% csrf_token %}
-                        
-                        <!-- Form fields -->
-                        <div class="mb-3">
-                            {{ form|crispy }}
-                        </div>
-
-                        <!-- Action buttons -->
-                        <div class="d-flex flex-wrap justify-content-between align-items-center mt-4 gap-2">
-                            <a href="{% url 'profile' %}" class="btn btn-outline-secondary btn-sm rounded-pill px-3">
-                                <i class="bi bi-arrow-left-circle me-1"></i>Back to Profile
-                            </a>
-                            <a href="{% url 'dashboard' %}" class="btn btn-outline-primary btn-sm rounded-pill px-3">
-                                <i class="bi bi-house-door-fill me-1"></i>Dashboard
-                            </a>
-                            <button type="submit" class="btn btn-success btn-sm rounded-pill px-4 ms-auto">
-                                <i class="bi bi-check2-circle me-1"></i>Save Changes
-                            </button>
-                        </div>
-                    </form>
+        <div class="p-8 sm:p-10 relative z-10">
+            <form method="post" class="needs-validation" novalidate>
+                {% csrf_token %}
+                
+                <div class="form-input-tw space-y-6">
+                    {{ form|crispy }}
                 </div>
-            </div>
+
+                <div class="mt-10 flex flex-col-reverse sm:flex-row items-center justify-end gap-3 pt-8 border-t border-gray-100/80">
+                    <a href="{% url 'class_timetable:dashboard' %}" class="w-full sm:w-auto px-6 py-3 bg-white border-2 border-gray-200 text-gray-700 font-bold rounded-xl hover:bg-gray-50 hover:border-gray-300 transition-all text-center">
+                        Cancel
+                    </a>
+                    <button type="submit" class="w-full sm:w-auto px-8 py-3 btn-indigo text-white font-bold rounded-xl transition-all shadow-md hover:shadow-lg flex items-center justify-center gap-2">
+                        <i class="bi bi-check-circle-fill"></i> Save Changes
+                    </button>
+                </div>
+            </form>
         </div>
     </div>
 </div>
