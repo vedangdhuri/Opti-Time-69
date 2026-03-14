@@ -36,6 +36,7 @@ It handles multiple classes (e.g., FYCO, SYCO, TYCO), subject constraints, pract
 | **⚖️ Smart Allocation**     | Prioritizes practicals (2hr blocks), distributes theory lectures evenly (Max 2/day), and fills gaps intelligently. |
 | **👨‍🏫 Faculty Timetables**   | Aggregated individual schedules for every teacher across all departments and classes.                              |
 | **🧑‍💻 Teacher Workload**     | Custom dashboard to track total weekly hours per teacher and actively highlight any double-booking conflicts.      |
+| **👤 User Profiles**        | Secure authentication system with visually stunning, Tailwind-styled profile pages and simplified user details.    |
 | **🎨 Modern UI/UX**         | Completely redesigned interface featuring glassmorphism, responsive navigation, and beautiful Tailwind styling.    |
 | **📚 Global Subjects**      | Define Master Subjects in Admin to automatically suggest and auto-fill workloads.                                  |
 | **📈 Global Analytics**     | Dedicated institutional-level dashboards to holistically view overall validations, workload, and conflicts.        |
@@ -71,26 +72,6 @@ This project uses a modern, robust technology stack:
 - **`itertools` & `random`**: For combinatorics and randomized slot allocation.
 - **`reportlab`**: For generating PDF reports.
 - **`xlsxwriter`**: For Excel exports.
-
----
-
-## 📐 System Architecture & UML Diagrams
-
-Opti-Time's structure and behavior are fully documented with visual diagrams, detailing system components, object models, and algorithmic flows.
-
-<details>
-<summary><b>View Architecture & UML Diagrams</b></summary>
-
-- **[System Architecture](system_design.png)**
-- **[Use Case Diagram](use_case_diagram.png)**
-- **[Class Diagram](class_diagram.png)**
-- **[Sequence Diagram](sequence_diagram.png)**
-- **[Activity Diagram](activity_diagram.png)**
-- **[Component Diagram](component_diagram.png)**
-- **[Deployment Diagram](deployment_diagram.png)**
-- **[State Machine Diagram](state_machine_diagram.png)**
-
-</details>
 
 ---
 
@@ -160,15 +141,6 @@ Get the project running locally in just a few steps.
     python manage.py migrate
     ```
 
-5.  **Seed Sample Data (Optional)**
-    _Populate the database with initial data for testing:_
-
-    ```bash
-    python populate_fyco_real.py
-    python populate_syco_real.py
-    python populate_tyco_real.py
-    ```
-
 6.  **Run the Server**
     ```bash
     python manage.py runserver
@@ -187,7 +159,6 @@ Opti-Time/
 │   └── models.py          # Data models (Teachers, Subjects)
 ├── templates/             # 🎨 HTML Templates
 ├── static/                # 💅 CSS/JS assets
-├── populate_*.py          # 🌱 Data seeding scripts
 ├── manage.py              # ⚙️ Django CLI utility
 └── requirements.txt       # 📦 Project dependencies
 ```
