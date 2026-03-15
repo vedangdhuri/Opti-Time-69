@@ -1,0 +1,139 @@
+/* Google Fonts Import */
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@500;600;700&display=swap");
+
+/* ============================================================
+   TIMETABLE TABLE STYLES (used for print/export – keep these)
+   ============================================================ */
+
+.timetable-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  background: white;
+  padding: 2rem;
+  border-radius: 4px;
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+}
+
+.timetable-header {
+  text-align: center;
+  margin-bottom: 2rem;
+  font-family: "Arial", sans-serif;
+  color: #000;
+}
+
+.timetable-header h2 {
+  font-weight: 800;
+  text-transform: uppercase;
+  margin-bottom: 0.5rem;
+  letter-spacing: 0.5px;
+  color: #000;
+}
+
+.code-info {
+  font-size: 0.9rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+  color: #000;
+}
+
+.timetable-table {
+  width: 100%;
+  border-collapse: collapse;
+  border: 2px solid #555;
+  font-family: "Arial", sans-serif;
+}
+
+.timetable-table th,
+.timetable-table td {
+  border: 1px solid #777;
+  padding: 0.75rem;
+  vertical-align: middle;
+  text-align: center;
+  font-size: 0.9rem;
+  color: #000;
+}
+
+.timetable-table thead th {
+  background-color: #6c757d;
+  color: white;
+  text-transform: uppercase;
+  font-weight: 700;
+  border-bottom: 2px solid #555;
+}
+
+.break-row td {
+  background-color: #495057 !important;
+  color: white;
+  font-weight: bold;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  padding: 0.5rem;
+}
+
+.subject-code {
+  font-weight: 700;
+  display: block;
+}
+
+.batch-info {
+  font-size: 0.8rem;
+  color: #000;
+}
+
+.footer-table {
+  width: 100%;
+  margin-top: 2rem;
+  border-collapse: collapse;
+  font-family: "Arial", sans-serif;
+}
+
+.footer-table th,
+.footer-table td {
+  border: 1px solid #777;
+  padding: 0.5rem;
+  text-align: left;
+  font-size: 0.85rem;
+  color: #000;
+}
+
+.footer-table th {
+  background-color: #6c757d;
+  color: white;
+  text-align: center;
+}
+
+/* ============================================================
+   PRINT STYLES
+   ============================================================ */
+@media print {
+  body * {
+    visibility: hidden;
+  }
+  #export-container,
+  #export-container * {
+    visibility: visible;
+  }
+  #export-container {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    box-shadow: none !important;
+  }
+  .timetable-container {
+    margin: 0 !important;
+  }
+  .no-print {
+    display: none !important;
+  }
+  .timetable-table {
+    border-collapse: collapse;
+    width: 100%;
+  }
+  .timetable-table th,
+  .timetable-table td {
+    border: 1px solid #000 !important;
+  }
+}

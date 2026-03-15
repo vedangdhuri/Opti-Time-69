@@ -1,0 +1,93 @@
+{% extends "base.html" %}
+{% load static %}
+{% block content1 %}{% endblock %}
+
+{% block content %}
+<div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-10 animate-fade-in">
+    <!-- Profile Header Card -->
+    <div class="bg-white rounded-[2rem] shadow-xl overflow-hidden border border-gray-100 pb-8">
+        <!-- Cover Photo Area -->
+        <div class="h-48 bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 relative">
+            <div class="absolute inset-0 bg-black/10"></div>
+        </div>
+        
+        <!-- Profile Info -->
+        <div class="relative px-8">
+            <!-- Avatar -->
+            <div class="absolute -top-16 left-8">
+                <div class="w-32 h-32 rounded-[2rem] border-4 border-white bg-white shadow-xl flex items-center justify-center bg-gradient-to-tr from-indigo-600 to-purple-600 text-white font-extrabold text-6xl">
+                    {{ user.username|first|upper }}
+                </div>
+            </div>
+            
+            <!-- Actions -->
+            <div class="flex justify-end pt-5 gap-3">
+                <a href="{% url 'class_timetable:dashboard' %}" class="px-5 py-2.5 bg-gray-50 hover:bg-gray-100 text-gray-700 font-semibold rounded-xl transition-all flex items-center gap-2 border border-gray-200">
+                    <i class="bi bi-grid-1x2-fill text-indigo-600"></i> <span class="hidden sm:inline">Dashboard</span>
+                </a>
+                <a href="{% url 'edit_profile' %}" class="px-6 py-2.5 btn-indigo text-white font-semibold rounded-xl transition-all shadow-md flex items-center gap-2">
+                    <i class="bi bi-pencil-square"></i> <span class="hidden sm:inline">Edit Profile</span>
+                </a>
+            </div>
+            
+            <!-- User Details -->
+            <div class="mt-8">
+                <h1 class="text-4xl font-extrabold text-gray-900 mb-1" style="font-family:'Outfit',sans-serif;">{{ user.username }}</h1>
+                <p class="text-gray-500 flex items-center gap-2 font-medium text-[15px]">
+                    <i class="bi bi-envelope-fill text-indigo-400"></i> {{ user.email }}
+                </p>
+                
+                <div class="mt-8 flex flex-wrap gap-4">
+                    <div class="bg-indigo-50/50 rounded-2xl px-5 py-3 border border-indigo-50/80 min-w[140px]">
+                        <p class="text-indigo-600/60 text-xs font-bold uppercase tracking-wider mb-1">Status</p>
+                        <p class="font-semibold text-gray-900 flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.5)]"></span> Active</p>
+                    </div>
+                    <div class="bg-purple-50/50 rounded-2xl px-5 py-3 border border-purple-50/80 min-w[140px]">
+                        <p class="text-purple-600/60 text-xs font-bold uppercase tracking-wider mb-1">Joined</p>
+                        <p class="font-semibold text-gray-900 flex items-center gap-1.5"><i class="bi bi-calendar-event text-purple-500"></i> {{ user.date_joined|date:"M Y" }}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Account Settings Section -->
+    <div class="mt-12 mb-8">
+        <h2 class="text-2xl font-bold text-gray-900 mb-6 px-2 flex items-center gap-2" style="font-family:'Outfit',sans-serif;">
+            <i class="bi bi-gear-fill text-indigo-500"></i> Account Options
+        </h2>
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <!-- Change Password Card -->
+            <a href="{% url 'change_password' %}" class="bg-white p-6 rounded-[2rem] shadow-sm border border-gray-100 hover:shadow-xl hover:-translate-y-1 transition-all duration-300 flex items-start gap-5 group relative overflow-hidden">
+                <div class="absolute top-0 right-0 w-32 h-32 bg-indigo-50 rounded-full mix-blend-multiply filter blur-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"></div>
+                <div class="w-14 h-14 rounded-2xl bg-indigo-50 text-indigo-600 flex items-center justify-center text-2xl group-hover:bg-indigo-600 group-hover:text-white transition-colors relative z-10 flex-shrink-0">
+                    <i class="bi bi-shield-lock-fill"></i>
+                </div>
+                <div class="flex-1 relative z-10">
+                    <h3 class="font-bold text-gray-900 mb-1 text-lg" style="font-family:'Outfit',sans-serif;">Change Password</h3>
+                    <p class="text-[13px] text-gray-500 mb-4 leading-relaxed pr-2">Regularly update your password to keep your account safe and secure.</p>
+                    <span class="text-indigo-600 font-semibold text-sm inline-flex items-center gap-1 group-hover:text-indigo-800 transition-colors">
+                        Update Password <i class="bi bi-arrow-right"></i>
+                    </span>
+                </div>
+            </a>
+
+            <!-- Reset Password Card -->
+            <a href="{% url 'password_reset' %}" class="bg-white p-6 rounded-[2rem] shadow-sm border border-gray-100 hover:shadow-xl hover:-translate-y-1 transition-all duration-300 flex items-start gap-5 group relative overflow-hidden">
+                <div class="absolute top-0 right-0 w-32 h-32 bg-purple-50 rounded-full mix-blend-multiply filter blur-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"></div>
+                <div class="w-14 h-14 rounded-2xl bg-purple-50 text-purple-600 flex items-center justify-center text-2xl group-hover:bg-purple-600 group-hover:text-white transition-colors relative z-10 flex-shrink-0">
+                    <i class="bi bi-envelope-check-fill"></i>
+                </div>
+                <div class="flex-1 relative z-10">
+                    <h3 class="font-bold text-gray-900 mb-1 text-lg" style="font-family:'Outfit',sans-serif;">Reset Password</h3>
+                    <p class="text-[13px] text-gray-500 mb-4 leading-relaxed pr-2">Forgot your password? Send a recovery link to your registered email address.</p>
+                    <span class="text-purple-600 font-semibold text-sm inline-flex items-center gap-1 group-hover:text-purple-800 transition-colors">
+                        Reset via Email <i class="bi bi-arrow-right"></i>
+                    </span>
+                </div>
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %}

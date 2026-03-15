@@ -1,0 +1,187 @@
+﻿{% extends "base.html" %}
+
+{% block title %}Overall Validation{% endblock %}
+
+{% block content %}
+<div>
+    <!-- Header -->
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
+        <h1 class="text-2xl font-bold text-gray-900" style="font-family:'Outfit',sans-serif;">
+            Overall Project Validation
+        </h1>
+        <a href="{% url 'class_timetable:overall_analytics' %}"
+            class="flex items-center gap-2 px-4 py-2 bg-sky-100 text-sky-800 font-semibold text-sm rounded-xl hover:bg-sky-200 transition-all self-start sm:self-auto">
+            <i class="bi bi-graph-up-arrow"></i> Go to Analytics
+        </a>
+    </div>
+
+    {% for key, val in results.items %}
+    <div class="bg-white rounded-2xl shadow-md border border-gray-100 overflow-hidden mb-6">
+
+        <!-- Class Header -->
+        <div class="flex items-center justify-between px-6 py-4 bg-gradient-to-r from-emerald-500 to-teal-600">
+            <div>
+                <h3 class="text-lg font-bold text-white" style="font-family:'Outfit',sans-serif;">{{ val.name }}</h3>
+                <span class="text-xs text-white/70 font-mono">{{ key|upper }}</span>
+            </div>
+            <div class="flex items-center gap-2">
+                {% if val.overall_status == 'BALANCED' %}
+                <span class="badge-pill bg-white/30 text-white"><i
+                        class="bi bi-check-circle-fill mr-1"></i>BALANCED</span>
+                {% elif 'CRITICAL' in val.overall_status %}
+                <span class="badge-pill bg-red-500 text-white"><i
+                        class="bi bi-exclamation-triangle-fill mr-1"></i>CRITICAL</span>
+                {% else %}
+                <span class="badge-pill bg-amber-400 text-white"><i
+                        class="bi bi-exclamation-triangle-fill mr-1"></i>WARNING</span>
+                {% endif %}
+                <a href="{% url 'class_timetable:view_timetable' val.class_key %}"
+                    class="px-3 py-1.5 bg-white/20 hover:bg-white/30 text-white text-xs font-bold rounded-full transition-all">
+                    View Timetable
+                </a>
+            </div>
+        </div>
+
+        <div class="p-5">
+            <!-- Theory & Practical Summary -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-5">
+                <div class="bg-indigo-50 rounded-xl p-4 border-l-4 border-indigo-500">
+                    <p class="text-xs text-indigo-600 font-bold uppercase mb-1">Theory Status</p>
+                    <div class="flex items-center gap-3">
+                        <span
+                            class="text-xl font-bold {% if val.theory_balanced %}text-emerald-600{% else %}text-red-600{% endif %}">
+                            {% if val.theory_balanced %}Balanced{% else %}Unbalanced{% endif %}
+                        </span>
+                        {% if val.total_theory_deficit > 0 %}
+                        <span class="badge-pill bg-red-200 text-red-800">Deficit: {{ val.total_theory_deficit }}</span>
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="bg-emerald-50 rounded-xl p-4 border-l-4 border-emerald-500">
+                    <p class="text-xs text-emerald-600 font-bold uppercase mb-1">Practical Status</p>
+                    <div class="flex items-center gap-3">
+                        <span
+                            class="text-xl font-bold {% if val.practical_balanced %}text-emerald-600{% else %}text-red-600{% endif %}">
+                            {% if val.practical_balanced %}Balanced{% else %}Unbalanced{% endif %}
+                        </span>
+                        {% if val.total_practical_deficit > 0 %}
+                        <span class="badge-pill bg-red-200 text-red-800">Deficit: {{ val.total_practical_deficit }}</span>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+
+            <!-- Recommendations -->
+            {% if val.recommendations %}
+            <div class="bg-amber-50 border border-amber-200 rounded-xl p-4 mb-5">
+                <h6 class="text-amber-800 font-bold mb-2">
+                    <i class="bi bi-lightbulb-fill mr-2"></i>Action Items
+                </h6>
+                <ul class="space-y-1.5">
+                    {% for rec in val.recommendations %}
+                    <li class="flex items-start gap-2 text-sm text-amber-800">
+                        <i class="bi bi-arrow-right text-amber-600 flex-shrink-0 mt-0.5"></i>
+                        {{ rec }}
+                    </li>
+                    {% endfor %}
+                </ul>
+            </div>
+            {% endif %}
+
+            <!-- Accordion-like sections -->
+            <div class="space-y-3">
+                <!-- Theory Detail -->
+                <details class="rounded-xl border border-gray-200 overflow-hidden group">
+                    <summary
+                        class="flex items-center justify-between px-5 py-3 bg-gray-50 cursor-pointer font-semibold text-indigo-700 text-sm hover:bg-indigo-50 transition-all">
+                        <span><i class="bi bi-book mr-2"></i>Theory Distribution Detail</span>
+                        <i class="bi bi-chevron-down transition-transform group-open:rotate-180"></i>
+                    </summary>
+                    <div class="overflow-x-auto">
+                        <table class="w-full data-table">
+                            <thead>
+                                <tr>
+                                    <th class="text-left">Subject</th>
+                                    <th class="text-left">Teacher</th>
+                                    <th class="text-center">Exp</th>
+                                    <th class="text-center">Act</th>
+                                    <th class="text-center">Extra</th>
+                                    <th class="text-center">Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for t_dist in val.theory_distribution %}
+                                <tr>
+                                    <td>{{ t_dist.subject }}</td>
+                                    <td class="text-gray-500 text-sm">{{ t_dist.teacher }}</td>
+                                    <td class="text-center">{{ t_dist.expected }}</td>
+                                    <td
+                                        class="text-center font-bold {% if t_dist.actual < t_dist.expected %}text-red-600{% elif t_dist.actual > t_dist.expected %}text-amber-600{% else %}text-emerald-600{% endif %}">
+                                        {{ t_dist.actual }}
+                                    </td>
+                                    <td class="text-center text-gray-500">{{ t_dist.extra }}</td>
+                                    <td class="text-center">
+                                        {% if 'DEFICIT' in t_dist.status %}
+                                        <span class="badge-pill bg-red-100 text-red-700">Deficit</span>
+                                        {% elif 'EXCESS' in t_dist.status %}
+                                        <span class="badge-pill bg-amber-100 text-amber-800">Excess</span>
+                                        {% else %}
+                                        <i class="bi bi-check-circle text-emerald-500"></i>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </details>
+
+                <!-- Practical Detail -->
+                <details class="rounded-xl border border-gray-200 overflow-hidden group">
+                    <summary
+                        class="flex items-center justify-between px-5 py-3 bg-gray-50 cursor-pointer font-semibold text-emerald-700 text-sm hover:bg-emerald-50 transition-all">
+                        <span><i class="bi bi-laptop mr-2"></i>Practical Distribution Detail</span>
+                        <i class="bi bi-chevron-down transition-transform group-open:rotate-180"></i>
+                    </summary>
+                    <div class="overflow-x-auto">
+                        <table class="w-full data-table">
+                            <thead>
+                                <tr>
+                                    <th class="text-left">Subject</th>
+                                    <th class="text-center">Batch</th>
+                                    <th class="text-center">Exp Blocks</th>
+                                    <th class="text-center">Act Blocks</th>
+                                    <th class="text-center">Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for p_dist in val.practical_distribution %}
+                                <tr>
+                                    <td>{{ p_dist.subject }}</td>
+                                    <td class="text-center"><span class="badge-pill bg-gray-100 text-gray-700">{{ p_dist.batch }}</span></td>
+                                    <td class="text-center">{{ p_dist.expected_blocks }}</td>
+                                    <td
+                                        class="text-center font-bold {% if p_dist.actual_blocks < p_dist.expected_blocks %}text-red-600{% elif p_dist.actual_blocks > p_dist.expected_blocks %}text-amber-600{% else %}text-emerald-600{% endif %}">
+                                        {{ p_dist.actual_blocks }}
+                                    </td>
+                                    <td class="text-center">
+                                        {% if 'DEFICIT' in p_dist.status %}
+                                        <span class="badge-pill bg-red-100 text-red-700">Deficit</span>
+                                        {% elif 'EXCESS' in p_dist.status %}
+                                        <span class="badge-pill bg-amber-100 text-amber-800">Excess</span>
+                                        {% else %}
+                                        <i class="bi bi-check-circle text-emerald-500"></i>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </details>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}

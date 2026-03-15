@@ -1,0 +1,150 @@
+﻿{% extends "base.html" %}
+
+{% block title %}Analytics - {{ class_name }}{% endblock %}
+
+{% block content %}
+<div>
+    <!-- Page Header -->
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
+        <h2 class="text-2xl font-bold text-gray-900" style="font-family:'Outfit',sans-serif;">
+            {{ class_name }} Analytics Report
+        </h2>
+        <div class="flex gap-2">
+            <a href="{% url 'class_timetable:view_timetable' class_key %}"
+                class="btn-outline-indigo px-4 py-2 text-sm rounded-xl">
+                View Timetable
+            </a>
+            <a href="{% url 'class_timetable:dashboard' %}"
+                class="flex items-center gap-1.5 px-4 py-2 bg-gray-100 text-gray-700 font-semibold text-sm rounded-xl hover:bg-gray-200 transition-all">
+                <i class="bi bi-arrow-left"></i> Dashboard
+            </a>
+        </div>
+    </div>
+
+    <!-- Status Overview -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-5 mb-6">
+        <!-- Workload -->
+        <div class="bg-white rounded-2xl shadow-md border border-gray-100 overflow-hidden">
+            <div class="h-1 {% if analysis.is_balanced %}bg-emerald-400{% else %}bg-amber-400{% endif %}"></div>
+            <div class="p-5">
+                <h5 class="font-bold text-gray-900 mb-3">Workload Distribution</h5>
+                {% if analysis.is_balanced %}
+                <div class="flex items-center gap-2 text-emerald-600">
+                    <i class="bi bi-check-circle-fill text-2xl"></i>
+                    <span class="text-lg font-bold">Balanced</span>
+                </div>
+                <p class="text-gray-500 text-sm mt-2">All subjects meet their theory and practical requirements.</p>
+                {% else %}
+                <div class="flex items-center gap-2 text-amber-600">
+                    <i class="bi bi-exclamation-triangle-fill text-2xl"></i>
+                    <span class="text-lg font-bold">Issues Found</span>
+                </div>
+                <p class="text-gray-500 text-sm mt-2">Some subjects have discrepancies in assigned hours.</p>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- Conflicts -->
+        <div class="bg-white rounded-2xl shadow-md border border-gray-100 overflow-hidden">
+            <div class="h-1 {% if analysis.has_conflicts %}bg-red-400{% else %}bg-emerald-400{% endif %}"></div>
+            <div class="p-5">
+                <h5 class="font-bold text-gray-900 mb-3">Teacher Conflicts</h5>
+                {% if not analysis.has_conflicts %}
+                <div class="flex items-center gap-2 text-emerald-600">
+                    <i class="bi bi-shield-check text-2xl"></i>
+                    <span class="text-lg font-bold">No Conflicts</span>
+                </div>
+                <p class="text-gray-500 text-sm mt-2">No teachers are scheduled in other classes at the same time.</p>
+                {% else %}
+                <div class="flex items-center gap-2 text-red-600">
+                    <i class="bi bi-x-circle-fill text-2xl"></i>
+                    <span class="text-lg font-bold">Conflicts Detected</span>
+                </div>
+                <p class="text-gray-500 text-sm mt-2">Teachers are overlapping with other class schedules.</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <!-- Conflicts Detail -->
+    {% if analysis.has_conflicts %}
+    <div class="bg-white rounded-2xl shadow-md border border-gray-100 overflow-hidden mb-6">
+        <div class="bg-red-500 px-6 py-4">
+            <h5 class="text-white font-bold" style="font-family:'Outfit',sans-serif;">
+                <i class="bi bi-exclamation-octagon mr-2"></i>Conflict Details
+            </h5>
+        </div>
+        <div class="overflow-x-auto">
+            <table class="w-full data-table">
+                <thead>
+                    <tr>
+                        <th class="text-left">Teacher</th>
+                        <th class="text-left">Day</th>
+                        <th class="text-left">Time</th>
+                        <th class="text-left">Conflict With</th>
+                        <th class="text-left">Subject</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for c in analysis.conflicts %}
+                    <tr>
+                        <td class="font-bold text-red-600">{{ c.teacher }}</td>
+                        <td>{{ c.day }}</td>
+                        <td>{{ c.time }}</td>
+                        <td>{{ c.other_class }}</td>
+                        <td>{{ c.other_subject }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- Workload Breakdown -->
+    <div class="bg-white rounded-2xl shadow-md border border-gray-100 overflow-hidden">
+        <div class="px-6 py-4 border-b border-gray-100">
+            <h5 class="font-bold text-gray-900" style="font-family:'Outfit',sans-serif;">Workload Breakdown</h5>
+        </div>
+        <div class="overflow-x-auto">
+            <table class="w-full data-table">
+                <thead>
+                    <tr>
+                        <th class="text-left" style="width:25%;">Subject</th>
+                        <th class="text-left" style="width:20%;">Teacher</th>
+                        <th class="text-center">Theory (Exp / Act)</th>
+                        <th class="text-center">Practical (Exp / B-Act)</th>
+                        <th class="text-center">Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in analysis.distribution %}
+                    <tr>
+                        <td class="font-semibold">{{ item.subject }}</td>
+                        <td class="text-gray-500 text-sm">{{ item.teacher }}</td>
+                        <td class="text-center">
+                            <span
+                                class="badge-pill {% if item.actual_th < item.expected_th %}bg-amber-100 text-amber-800{% elif item.actual_th > item.expected_th|add:2 %}bg-sky-100 text-sky-800{% else %}bg-emerald-100 text-emerald-800{% endif %}">
+                                {{ item.expected_th }} / {{ item.actual_th }}
+                            </span>
+                        </td>
+                        <td class="text-center">
+                            <span class="block text-xs text-gray-500">Exp: {{ item.expected_pr }} hrs</span>
+                            <span
+                                class="text-xs font-bold {% if item.practical_status == 'OK' %}text-emerald-600{% else %}text-red-600{% endif %}">{{ item.practical_status }}</span>
+                        </td>
+                        <td class="text-center">
+                            {% if item.status == 'Balanced' and item.practical_status == 'OK' %}
+                            <span class="badge-pill bg-emerald-100 text-emerald-800">OK</span>
+                            {% else %}
+                            <span class="badge-pill bg-red-100 text-red-700">Check</span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

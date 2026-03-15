@@ -1,0 +1,132 @@
+﻿{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+
+{% block title %}Manage Inputs - {{ class_name }}{% endblock %}
+
+{% block content %}
+<div class="max-w-3xl mx-auto">
+
+    <!-- Page Header -->
+    <div class="flex items-center justify-between mb-6">
+        <div>
+            <h2 class="text-2xl font-bold text-gray-900" style="font-family:'Outfit',sans-serif;">Inputs for {{ class_name }}</h2>
+            <p class="text-gray-500 text-sm mt-0.5">Add or remove subject requirements for this class</p>
+        </div>
+        <a href="{% url 'class_timetable:dashboard' %}"
+            class="flex items-center gap-2 px-4 py-2 rounded-xl bg-gray-100 text-gray-600 font-semibold text-sm hover:bg-gray-200 transition-all">
+            <i class="bi bi-arrow-left"></i> Back
+        </a>
+    </div>
+
+    <!-- Input Form Card -->
+    <div class="bg-white rounded-2xl shadow-md border border-gray-100 overflow-hidden mb-6">
+        <div class="bg-gradient-to-r from-indigo-500 to-purple-600 px-6 py-4">
+            <h5 class="text-white font-bold" style="font-family:'Outfit',sans-serif;">
+                <i class="bi bi-plus-circle-fill me-2"></i>Add New Subject Requirement
+            </h5>
+        </div>
+        <div class="p-6 form-input-tw">
+            <form method="post">
+                {% csrf_token %}
+                <datalist id="master-subjects-list"></datalist>
+                {{ form|crispy }}
+                <div class="mt-4">
+                    <button type="submit" class="btn-indigo w-full py-3 text-sm rounded-xl">
+                        <i class="bi bi-plus-lg mr-2"></i>Add Input
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Existing Inputs Table -->
+    <div class="bg-white rounded-2xl shadow-md border border-gray-100 overflow-hidden">
+        <div class="px-6 py-4 border-b border-gray-100">
+            <h5 class="font-bold text-gray-900" style="font-family:'Outfit',sans-serif;">Existing Inputs</h5>
+        </div>
+        <div class="overflow-x-auto">
+            <table class="w-full data-table">
+                <thead>
+                    <tr>
+                        <th class="text-left">Subject</th>
+                        <th class="text-left">Teacher</th>
+                        <th class="text-center">Theory (Hrs)</th>
+                        <th class="text-center">Practical (Hrs)</th>
+                        <th class="text-center">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for input in inputs %}
+                    <tr>
+                        <td class="font-semibold text-gray-900">{{ input.subject_name }}</td>
+                        <td class="text-gray-600">{{ input.teacher_name }}</td>
+                        <td class="text-center">
+                            <span class="badge-pill bg-indigo-100 text-indigo-700">{{ input.theory_credits }}</span>
+                        </td>
+                        <td class="text-center">
+                            <span class="badge-pill bg-emerald-100 text-emerald-700">{{ input.practical_credits }}</span>
+                        </td>
+                        <td class="text-center">
+                            <a href="{% url 'class_timetable:delete_input' class_key input.id %}"
+                                class="inline-flex items-center justify-center w-8 h-8 bg-red-100 text-red-600 rounded-lg hover:bg-red-500 hover:text-white transition-all text-sm font-bold"
+                                onclick="return confirm('Delete this input?');">
+                                <i class="bi bi-trash"></i>
+                            </a>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="5" class="text-center text-gray-400 py-10">
+                            <i class="bi bi-inbox text-3xl block mb-2"></i>
+                            No inputs added yet.
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const classKey = "{{ class_key }}";
+        const subjectInput = document.querySelector('input[name="subject_name"]');
+        const teacherInput = document.querySelector('input[name="teacher_name"]');
+        const theoryInput = document.querySelector('input[name="theory_credits"]');
+        const practicalInput = document.querySelector('input[name="practical_credits"]');
+        const datalist = document.getElementById('master-subjects-list');
+
+        let masterSubjects = [];
+
+        if (subjectInput) {
+            subjectInput.setAttribute('list', 'master-subjects-list');
+            subjectInput.setAttribute('autocomplete', 'off');
+
+            // Fetch master subjects
+            fetch(`/timetable/api/master-subjects/${classKey}/`)
+                .then(response => response.json())
+                .then(data => {
+                    masterSubjects = data.subjects || [];
+                    masterSubjects.forEach(subject => {
+                        const option = document.createElement('option');
+                        option.value = subject.subject_name;
+                        datalist.appendChild(option);
+                    });
+                })
+                .catch(error => console.error('Error fetching master subjects:', error));
+
+            // Auto-fill on selection
+            subjectInput.addEventListener('input', function () {
+                const selected = masterSubjects.find(s => s.subject_name.toLowerCase() === this.value.toLowerCase());
+                if (selected) {
+                    if (teacherInput && !teacherInput.value) teacherInput.value = selected.teacher_name;
+                    if (theoryInput) theoryInput.value = selected.theory_credits;
+                    if (practicalInput) practicalInput.value = selected.practical_credits;
+                }
+            });
+        }
+    });
+</script>
+{% endblock %}
