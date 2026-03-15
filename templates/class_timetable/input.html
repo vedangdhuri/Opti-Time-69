@@ -1,4 +1,4 @@
-﻿{% extends 'base.html' %}
+{% extends 'base.html' %}
 {% load crispy_forms_tags %}
 
 {% block title %}Manage Inputs - {{ class_name }}{% endblock %}
@@ -105,7 +105,7 @@
             subjectInput.setAttribute('autocomplete', 'off');
 
             // Fetch master subjects
-            fetch(`/timetable/api/master-subjects/${classKey}/`)
+            fetch(`/class-timetable/api/master-subjects/${classKey}/`)
                 .then(response => response.json())
                 .then(data => {
                     masterSubjects = data.subjects || [];
