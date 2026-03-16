@@ -1,12 +1,3 @@
----
-title: Opti-Time
-emoji: ⏱️
-colorFrom: blue
-colorTo: green
-sdk: docker
-pinned: false
----
-
 <div align="center">
 
 # 🗓️ Opti-Time: Automated Class Timetable Generator

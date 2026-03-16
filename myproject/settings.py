@@ -34,12 +34,6 @@ else:
     # Allow all in development
     ALLOWED_HOSTS.append("*")
 
-# Hugging Face CSRF Trusted Origins
-CSRF_TRUSTED_ORIGINS = [
-    "https://*.hf.space",
-    "https://*.huggingface.co",
-]
-
 AUTH_USER_MODEL = "myapp.CustomUser"
 
 INSTALLED_APPS = [
